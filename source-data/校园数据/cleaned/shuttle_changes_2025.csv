@@ -1,0 +1,5 @@
+﻿change_id,change_type,from_name,to_name,departure_time,day_type,trial,source_id,source_published_at,effective_from,current_verified,enabled_for_live_routing,note,vehicles_before,vehicles_after
+SH25_01,added_departure,九里校区,犀浦校区,08:50,weekday,false,S06,2025-02-25,2025-02-24,false,false,Incremental historical announcement; do not overlay on 2022 table to claim a complete current timetable.,,
+SH25_02,vehicle_count_change,犀浦校区,九里校区,22:00,weekday,false,S06,2025-02-25,2025-02-24,false,false,Incremental historical announcement; do not overlay on 2022 table to claim a complete current timetable.,2,3
+SH25_03,trial_added_departure,九里校区校车站,犀浦校区北区校车站,22:20,weekday,true,S06,2025-02-25,2025-02-24,false,false,Incremental historical announcement; do not overlay on 2022 table to claim a complete current timetable.,,
+SH25_04,trial_added_departure,综合楼乘车点（国旗台附近）,九里校区南风餐厅门口,22:50,weekday,true,S06,2025-02-25,2025-02-24,false,false,Incremental historical announcement; do not overlay on 2022 table to claim a complete current timetable.,,

@@ -1,0 +1,1678 @@
+{
+  "official_places": {
+    "place_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "campus_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "category": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "category_raw": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "location_text": {
+      "types": [
+        "str"
+      ],
+      "null_count": 1
+    },
+    "source_longitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "source_latitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "coordinate_system": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "position_role": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_record_ids": {
+      "types": [
+        "list"
+      ],
+      "null_count": 0
+    },
+    "source_entity": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_file": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_published_at": {
+      "types": [],
+      "null_count": 199
+    },
+    "collected_on": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "availability": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "routing_ready": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    }
+  },
+  "official_transit_references": {
+    "place_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "campus_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "category": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "category_raw": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "location_text": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_longitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "source_latitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "coordinate_system": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "position_role": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_record_ids": {
+      "types": [
+        "list"
+      ],
+      "null_count": 0
+    },
+    "source_entity": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_file": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_published_at": {
+      "types": [],
+      "null_count": 16
+    },
+    "collected_on": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "availability": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "routing_ready": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    }
+  },
+  "place_aliases": {
+    "place_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "alias": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "alias_kind": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 28
+    },
+    "campus_context_required": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    }
+  },
+  "official_supplementary_names": {
+    "label_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "campus_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "category": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "longitude": {
+      "types": [],
+      "null_count": 23
+    },
+    "latitude": {
+      "types": [],
+      "null_count": 23
+    },
+    "coordinate_system": {
+      "types": [],
+      "null_count": 23
+    },
+    "availability": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "routing_ready": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "evidence_kind": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "note": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    }
+  },
+  "osm_campus_places": {
+    "place_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "campus_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 154
+    },
+    "name_zh": {
+      "types": [
+        "str"
+      ],
+      "null_count": 212
+    },
+    "category": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "longitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "latitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "coordinate_system": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "position_role": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_type": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_version": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_updated_at": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "collected_on": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "scope": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "availability": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "routing_ready": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "tags": {
+      "types": [
+        "dict"
+      ],
+      "null_count": 0
+    }
+  },
+  "osm_buildings": {
+    "place_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "campus_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 40
+    },
+    "name_zh": {
+      "types": [
+        "str"
+      ],
+      "null_count": 56
+    },
+    "category": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "longitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "latitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "coordinate_system": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "position_role": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_type": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_version": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_updated_at": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "collected_on": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "scope": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "availability": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "routing_ready": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "tags": {
+      "types": [
+        "dict"
+      ],
+      "null_count": 0
+    }
+  },
+  "nearby_transit_osm": {
+    "place_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "campus_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 7
+    },
+    "name_zh": {
+      "types": [
+        "str"
+      ],
+      "null_count": 13
+    },
+    "category": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "longitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "latitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "coordinate_system": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "position_role": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_type": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_version": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_updated_at": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "collected_on": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "scope": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "availability": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "routing_ready": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "tags": {
+      "types": [
+        "dict"
+      ],
+      "null_count": 0
+    }
+  },
+  "nearby_campus_named_osm": {
+    "place_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "campus_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "name_zh": {
+      "types": [
+        "str"
+      ],
+      "null_count": 3
+    },
+    "category": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "longitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "latitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "coordinate_system": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "position_role": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_type": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_version": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_updated_at": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "collected_on": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "scope": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "availability": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "routing_ready": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "tags": {
+      "types": [
+        "dict"
+      ],
+      "null_count": 0
+    }
+  },
+  "graph_nodes_candidates": {
+    "node_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "longitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "latitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "coordinate_system": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "component_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "degree": {
+      "types": [
+        "int"
+      ],
+      "null_count": 0
+    },
+    "barrier": {
+      "types": [
+        "str"
+      ],
+      "null_count": 1271
+    },
+    "access": {
+      "types": [
+        "str"
+      ],
+      "null_count": 1292
+    },
+    "foot": {
+      "types": [
+        "str"
+      ],
+      "null_count": 1291
+    },
+    "entrance": {
+      "types": [
+        "str"
+      ],
+      "null_count": 1293
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_updated_at": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "routing_ready": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    }
+  },
+  "graph_edges_candidates": {
+    "edge_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "from_node_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "to_node_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_way_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "segment_index": {
+      "types": [
+        "int"
+      ],
+      "null_count": 0
+    },
+    "name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 1391
+    },
+    "highway": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "length_m": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "length_method": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "walk_permission": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "access": {
+      "types": [
+        "str"
+      ],
+      "null_count": 1435
+    },
+    "foot": {
+      "types": [
+        "str"
+      ],
+      "null_count": 1512
+    },
+    "foot_direction": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "vehicle_oneway": {
+      "types": [
+        "str"
+      ],
+      "null_count": 1475
+    },
+    "layer": {
+      "types": [
+        "str"
+      ],
+      "null_count": 1456
+    },
+    "bridge": {
+      "types": [
+        "str"
+      ],
+      "null_count": 1478
+    },
+    "tunnel": {
+      "types": [],
+      "null_count": 1517
+    },
+    "surface": {
+      "types": [
+        "str"
+      ],
+      "null_count": 1493
+    },
+    "crosses_campus_boundary": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_updated_at": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "routing_ready": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    }
+  },
+  "osm_barrier_points": {
+    "gate_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 24
+    },
+    "role": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "longitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "latitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "coordinate_system": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "barrier": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "access": {
+      "types": [
+        "str"
+      ],
+      "null_count": 29
+    },
+    "foot": {
+      "types": [
+        "str"
+      ],
+      "null_count": 28
+    },
+    "opening_hours": {
+      "types": [],
+      "null_count": 31
+    },
+    "boundary_distance_m": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "on_graph_node": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_updated_at": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "current_passability": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "routing_ready": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    }
+  },
+  "campus_gate_candidates": {
+    "gate_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "role": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "longitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "latitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "coordinate_system": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "barrier": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "access": {
+      "types": [],
+      "null_count": 6
+    },
+    "foot": {
+      "types": [],
+      "null_count": 6
+    },
+    "opening_hours": {
+      "types": [],
+      "null_count": 6
+    },
+    "boundary_distance_m": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "on_graph_node": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_updated_at": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "current_passability": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "routing_ready": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    }
+  },
+  "mvp_seed_candidates": {
+    "place_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "campus_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "name_zh": {
+      "types": [
+        "str"
+      ],
+      "null_count": 2
+    },
+    "category": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "longitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "latitude": {
+      "types": [
+        "float"
+      ],
+      "null_count": 0
+    },
+    "coordinate_system": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "position_role": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_type": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_version": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_updated_at": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "collected_on": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "scope": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "availability": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "routing_ready": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "entry_node_id": {
+      "types": [],
+      "null_count": 10
+    },
+    "review_needed": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    }
+  },
+  "place_crosswalk_candidates": {
+    "official_place_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_place_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "official_name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "osm_name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "match_method": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "match_status": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "coordinate_merge_allowed": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    }
+  },
+  "connector_evidence": {
+    "evidence_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "from_name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "to_name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "mode": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "distance_m": {
+      "types": [
+        "int"
+      ],
+      "null_count": 0
+    },
+    "distance_precision": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_published_at": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "context": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "current_verified": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "geometry": {
+      "types": [],
+      "null_count": 3
+    }
+  },
+  "historical_shuttle_departures_2022": {
+    "departure_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "from_name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "to_name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "day_type": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "departure_time": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_published_at": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "effective_from": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "effective_until": {
+      "types": [],
+      "null_count": 36
+    },
+    "temporal_status": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "current_verified": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "enabled_for_live_routing": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "exceptions": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    }
+  },
+  "shuttle_changes_2025": {
+    "change_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "change_type": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "from_name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "to_name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "departure_time": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "day_type": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "trial": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_published_at": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "effective_from": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "current_verified": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "enabled_for_live_routing": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "note": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "vehicles_before": {
+      "types": [
+        "int"
+      ],
+      "null_count": 3
+    },
+    "vehicles_after": {
+      "types": [
+        "int"
+      ],
+      "null_count": 3
+    }
+  },
+  "construction_notices": {
+    "notice_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "name": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_id": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "source_published_at": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "planned_start": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "planned_end": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "daily_hours": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "location_text": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "notice_effect": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    },
+    "geometry": {
+      "types": [],
+      "null_count": 1
+    },
+    "automatic_road_closure": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "current_verified": {
+      "types": [
+        "bool"
+      ],
+      "null_count": 0
+    },
+    "note": {
+      "types": [
+        "str"
+      ],
+      "null_count": 0
+    }
+  }
+}

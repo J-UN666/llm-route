@@ -1,0 +1,4 @@
+﻿evidence_id,from_name,to_name,mode,distance_m,distance_precision,source_id,source_published_at,context,current_verified,geometry
+CON01,兴业北街站D2出口,犀浦校区西门,walking,500,source_approximate,S07,2023-12-19,2024年硕士研究生考试到校说明；不延用其考试通行限制作为日常规则,false,
+CON02,犀浦校区西门,1号/2号教学楼考场区域,walking,900,source_approximate_aggregate,S07,2023-12-19,面向多个考场建筑的约数，不拆分成各楼独立精确距离,false,
+CON03,交大兴业北街站D2口,犀浦校区西门,walking,300,source_approximate,S11,2025-08-08,2025级新生报到指南；与CON01的500米描述不同，保留两条证据等待核实,false,

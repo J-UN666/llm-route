@@ -1,0 +1,7 @@
+﻿gate_id,name,role,longitude,latitude,coordinate_system,barrier,access,foot,opening_hours,boundary_distance_m,on_graph_node,source_id,source_updated_at,current_passability,routing_ready
+osm_node_2178309445,南门,campus_gate_candidate,103.9897905,30.7629679,WGS84,gate,,,,39.1,true,S04,2022-07-17T13:37:21Z,unverified,false
+osm_node_2178323767,西北一门,campus_gate_candidate,103.9751882,30.7699378,WGS84,gate,,,,0.0,true,S04,2024-02-27T10:15:37Z,unverified,false
+osm_node_4150911420,东门,campus_gate_candidate,103.9912343,30.771786,WGS84,gate,,,,42.0,true,S04,2026-01-20T02:33:53Z,unverified,false
+osm_node_8386702126,风洞门,campus_gate_candidate,103.9801381,30.7731062,WGS84,gate,,,,0.0,true,S04,2021-02-02T09:31:53Z,unverified,false
+osm_node_9893305424,西南门,campus_gate_candidate,103.9825419,30.759961,WGS84,gate,,,,0.0,true,S04,2022-11-19T10:37:58Z,unverified,false
+osm_node_13469658219,东门,campus_gate_candidate,103.9912939,30.7716985,WGS84,gate,,,,40.5,true,S04,2026-01-20T02:33:53Z,unverified,false

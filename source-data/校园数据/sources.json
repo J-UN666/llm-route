@@ -1,0 +1,182 @@
+[
+  {
+    "source_id": "S01",
+    "title": "学校官网校园地图：犀浦校区当前展示图",
+    "publisher": "西南交通大学",
+    "url": "https://www.swjtu.edu.cn/xxgk/xydt.htm",
+    "asset_url": "https://www.swjtu.edu.cn/__local/C/6B/82/5A19AA3E55B3659D6E6055B35C9_4547BA90_AB703.jpg",
+    "published_at": null,
+    "collected_on": "2026-11-03",
+    "local_files": [
+      "maps/official_map_current.jpg"
+    ],
+    "role": "地图图像与可见名称核对；网页未明确标注图件年份",
+    "license": "No explicit open-data licence found; retain school attribution; publication/reuse of original map needs rights review.",
+    "data_files": [
+      "cleaned/official_supplementary_names.json"
+    ]
+  },
+  {
+    "source_id": "S02",
+    "title": "犀浦校区总平面图（2023版）",
+    "publisher": "西南交通大学基建规划与校园管理处",
+    "url": "https://jjgh.swjtu.edu.cn/info/1025/1861.htm",
+    "asset_url": "https://jjgh.swjtu.edu.cn/__local/1/4E/80/B38D0C1718E2D99D4EC34A7612E_ED72596A_A1AC0.jpg",
+    "published_at": "2023-11-28",
+    "collected_on": "2026-11-03",
+    "local_files": [
+      "maps/official_map_2023.jpg"
+    ],
+    "role": "近五年官方平面图参考；不能证明当前建成或开放状态",
+    "license": "No explicit open-data licence found; school attribution required; do not assume permission to redistribute original graphics.",
+    "data_files": [
+      "cleaned/official_supplementary_names.json"
+    ]
+  },
+  {
+    "source_id": "S03",
+    "title": "西南交通大学位置服务平台：犀浦校区公开建筑和生活设施目录",
+    "publisher": "西南交通大学",
+    "url": "https://gis.swjtu.edu.cn/",
+    "published_at": null,
+    "collected_on": "2026-11-03",
+    "local_files": [],
+    "role": "匿名访客可见地点目录；仅保留公共地点字段，排除联系信息；矢量坐标系未明确说明，平台图示坐标未纳入精简数据包。",
+    "license": "Publicly accessible, but no explicit open-data/republication licence found; factual project reference, not an authorization to republish the entire school service.",
+    "data_files": [
+      "cleaned/official_places.json",
+      "cleaned/place_aliases.json",
+      "cleaned/official_transit_references.json"
+    ]
+  },
+  {
+    "source_id": "S04",
+    "title": "OpenStreetMap 犀浦校区及周边有界地图快照",
+    "publisher": "OpenStreetMap contributors",
+    "url": "https://www.openstreetmap.org/api/0.6/map?bbox=103.974,30.755,103.994,30.780",
+    "published_at": null,
+    "collected_on": "2026-11-03",
+    "local_files": [],
+    "role": "WGS84 校园边界、建筑、道路、设施与周边交通点；单个要素编辑时间见 source_updated_at，不代表现场核验日期",
+    "license": "ODbL 1.0",
+    "attribution": "© OpenStreetMap contributors",
+    "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+    "attribution_url": "https://www.openstreetmap.org/copyright",
+    "data_files": [
+      "cleaned/osm_campus_places.json",
+      "cleaned/osm_buildings.json",
+      "cleaned/nearby_transit_osm.json",
+      "cleaned/nearby_campus_named_osm.json",
+      "cleaned/graph_nodes_candidates.json",
+      "cleaned/graph_edges_candidates.json",
+      "cleaned/osm_barrier_points.json",
+      "cleaned/campus_gate_candidates.json",
+      "cleaned/mvp_seed_candidates.json",
+      "geojson/osm_campus_boundary.geojson",
+      "geojson/osm_campus_roads.geojson",
+      "geojson/osm_road_areas.geojson"
+    ]
+  },
+  {
+    "source_id": "S05",
+    "title": "交通车服务（2022年历史表）",
+    "publisher": "西南交通大学后勤微平台",
+    "url": "https://hqfw.swjtu.edu.cn/xnjdhouqin/phone_article.html?id=46",
+    "published_at": "2022-06-16",
+    "effective_from": "2022-05-09",
+    "collected_on": "2026-11-03",
+    "local_files": [],
+    "role": "36条历史发车记录；禁止默认为当前有效班次",
+    "license": "No explicit open-data licence found; factual schedule reference with source attribution.",
+    "data_files": [
+      "cleaned/historical_shuttle_departures_2022.json"
+    ]
+  },
+  {
+    "source_id": "S06",
+    "title": "叮！新学期副本正式开启！：校车优化与试运行晚班说明",
+    "publisher": "西南交通大学官方澎湃号／交大新媒体",
+    "url": "https://m.thepaper.cn/newsDetail_forward_30242488",
+    "published_at": "2025-02-25",
+    "effective_from": "2025-02-24",
+    "collected_on": "2026-11-03",
+    "local_files": [],
+    "role": "4条增量变更；含试运行通知，不能拼成2026完整时刻表",
+    "license": "No explicit open-data licence found; retain source attribution; article graphics are not freely licensed.",
+    "data_files": [
+      "cleaned/shuttle_changes_2025.json"
+    ]
+  },
+  {
+    "source_id": "S07",
+    "title": "2024年全国硕士研究生招生考试西南交通大学考点考生须知",
+    "publisher": "西南交通大学研究生招生网",
+    "url": "https://yz.swjtu.edu.cn/vatuu/WebAction?newsId=AC54231391BDDC89&setAction=newsDetail&viewType=web",
+    "published_at": "2023-12-19",
+    "collected_on": "2026-11-03",
+    "local_files": [],
+    "role": "D2口到西门约500米、西门到考场区域约900米的历史接驳线索；考试规则不延用为日常规则",
+    "license": "No explicit open-data licence found; factual reference with source attribution.",
+    "data_files": [
+      "cleaned/connector_evidence.json"
+    ]
+  },
+  {
+    "source_id": "S08",
+    "title": "关于犀浦校区快递中心（南区）改扩建项目施工公告",
+    "publisher": "西南交通大学后勤保障部",
+    "url": "https://hbb.swjtu.edu.cn/info/1018/82282.htm",
+    "published_at": "2026-09-14",
+    "collected_on": "2026-11-03",
+    "local_files": [
+      "maps/official_construction_plan.jpg"
+    ],
+    "role": "计划施工期2026-09-16至2026-12-30；无地理配准围挡多边形，不能据此自动封路",
+    "license": "No explicit open-data licence found; school attribution required; original plan image is a reference.",
+    "data_files": [
+      "cleaned/construction_notices.json"
+    ]
+  },
+  {
+    "source_id": "S09",
+    "title": "2026年直饮水设备合作项目公告中的指定学生公寓名称",
+    "publisher": "西南交通大学后勤保障部",
+    "url": "https://hbb.swjtu.edu.cn/info/2311/82002.htm",
+    "published_at": "2026-08-16",
+    "collected_on": "2026-11-03",
+    "local_files": [],
+    "role": "明确提到鸿哲斋1/2/3号公寓、天佑斋16/17号公寓；仅提供名称证据，不提供导航入口",
+    "license": "No explicit open-data licence found; factual name reference with source attribution.",
+    "data_files": [
+      "cleaned/official_supplementary_names.json"
+    ]
+  },
+  {
+    "source_id": "S10",
+    "title": "学校官网校园地图页中的校区地址",
+    "publisher": "西南交通大学",
+    "url": "https://www.swjtu.edu.cn/xxgk/xydt.htm",
+    "published_at": null,
+    "collected_on": "2026-11-03",
+    "local_files": [],
+    "role": "犀浦校区地址与校区名称；与S01共用同一网页，不是独立交叉验证来源",
+    "license": "Factual address reference; retain school attribution.",
+    "data_files": [
+      "dataset_summary.json"
+    ]
+  },
+  {
+    "source_id": "S11",
+    "title": "等栗来｜利兹学院2025级新生报到指南",
+    "publisher": "西南交通大学利兹学院",
+    "url": "https://leeds.swjtu.edu.cn/info/1015/16884.htm",
+    "published_at": "2025-08-08",
+    "collected_on": "2026-11-03",
+    "local_files": [],
+    "role": "D2口到西门前行300米描述；与S07距离不同，保留冲突而非选择一个当精确值",
+    "license": "No explicit open-data licence found; factual reference with source attribution.",
+    "data_files": [
+      "cleaned/connector_evidence.json"
+    ]
+  }
+]

@@ -1,0 +1,4 @@
+[
+  { "type": "click", "sel": "#exampleChips .chip" },
+  { "type": "wait", "ms": 2500 }
+]

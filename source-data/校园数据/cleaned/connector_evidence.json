@@ -1,0 +1,41 @@
+[
+  {
+    "evidence_id": "CON01",
+    "from_name": "兴业北街站D2出口",
+    "to_name": "犀浦校区西门",
+    "mode": "walking",
+    "distance_m": 500,
+    "distance_precision": "source_approximate",
+    "source_id": "S07",
+    "source_published_at": "2023-12-19",
+    "context": "2024年硕士研究生考试到校说明；不延用其考试通行限制作为日常规则",
+    "current_verified": false,
+    "geometry": null
+  },
+  {
+    "evidence_id": "CON02",
+    "from_name": "犀浦校区西门",
+    "to_name": "1号/2号教学楼考场区域",
+    "mode": "walking",
+    "distance_m": 900,
+    "distance_precision": "source_approximate_aggregate",
+    "source_id": "S07",
+    "source_published_at": "2023-12-19",
+    "context": "面向多个考场建筑的约数，不拆分成各楼独立精确距离",
+    "current_verified": false,
+    "geometry": null
+  },
+  {
+    "evidence_id": "CON03",
+    "from_name": "交大兴业北街站D2口",
+    "to_name": "犀浦校区西门",
+    "mode": "walking",
+    "distance_m": 300,
+    "distance_precision": "source_approximate",
+    "source_id": "S11",
+    "source_published_at": "2025-08-08",
+    "context": "2025级新生报到指南；与CON01的500米描述不同，保留两条证据等待核实",
+    "current_verified": false,
+    "geometry": null
+  }
+]

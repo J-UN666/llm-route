@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>交大智行 · 犀浦校区智能出行规划</title>
+<meta name="description" content="基于 LLM Agent 的校园与城市一体化路线规划原型 —— 西南交通大学犀浦校区" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b2545'/%3E%3Cpath d='M16 7 L24 11 v6 c0 4.6-3.6 7.6-8 8.6-4.4-1-8-4-8-8.6 v-6 Z' fill='none' stroke='%239fd0ff' stroke-width='1.6'/%3E%3Ccircle cx='16' cy='15' r='2.2' fill='%239fd0ff'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+
+<!-- ============ 顶栏 ============ -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
+        <path d="M16 3 L27 9 v9 c0 6-5 10-11 11-6-1-11-5-11-11 V9 Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M16 9.5 L21 12.5 v5 c0 3.2-2.4 5.6-5 6.3-2.6-.7-5-3.1-5-6.3 v-5 Z" fill="currentColor" opacity=".16"/>
+        <circle cx="16" cy="15.5" r="2.4" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <h1>交大智行</h1>
+      <p>LLM Agent 驱动的校园 · 城市一体化出行规划</p>
+    </div>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-view="planner" role="tab">路线规划</button>
+    <button class="tab" data-view="quality" role="tab">数据可信度</button>
+    <button class="tab" data-view="about" role="tab">项目说明</button>
+  </nav>
+
+  <div class="topbar-right">
+    <div class="status-pill" id="dataStatusPill">
+      <span class="dot"></span>
+      <span id="dataStatusText">数据加载中…</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 主体 ============ -->
+<main class="layout" id="viewPlanner">
+
+  <!-- ---------- 左侧：输入 ---------- -->
+  <aside class="panel panel-left">
+    <section class="block agent-input">
+      <div class="block-head">
+        <h2><span class="ico">✦</span> 告诉 Agent 你要去哪</h2>
+        <span class="badge-soft">自然语言</span>
+      </div>
+      <div class="nl-box">
+        <textarea id="nlInput" rows="3" placeholder="例如：我从图书馆出发，想去天府广场，怎么走最快？"></textarea>
+        <div class="nl-actions">
+          <button class="btn-ghost" id="btnClear" type="button">清空</button>
+          <button class="btn-primary" id="btnPlan" type="button">
+            <span class="btn-label">生成路线</span>
+            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="chips" id="exampleChips">
+        <button class="chip" data-q="我从图书馆出发，想去天府广场，怎么走最快？">图书馆 → 天府广场</button>
+        <button class="chip" data-q="从天佑斋1号楼到成都东客站">天佑斋1号楼 → 成都东客站</button>
+        <button class="chip" data-q="四食堂到东门怎么走">四食堂 → 东门</button>
+        <button class="chip" data-q="体育馆到春熙路">体育馆 → 春熙路</button>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <h2><span class="ico">◎</span> 起终点</h2>
+        <button class="link-btn" id="btnSwap" type="button">交换</button>
+      </div>
+
+      <div class="field">
+        <label for="originInput"><span class="tag tag-start">起</span> 出发地</label>
+        <div class="combo">
+          <input id="originInput" type="text" autocomplete="off" placeholder="搜索校内地点 / 校门" value="图书馆" />
+          <div class="combo-list" id="originList"></div>
+        </div>
+        <div class="field-hint" id="originHint">已识别：图书馆（楼宇质心，入口未核实）</div>
+      </div>
+
+      <div class="field">
+        <label for="destInput"><span class="tag tag-end">终</span> 目的地</label>
+        <div class="combo">
+          <input id="destInput" type="text" autocomplete="off" placeholder="校内地点，或成都市区目的地" />
+          <div class="combo-list" id="destList"></div>
+        </div>
+        <div class="field-hint" id="destHint">可输入：天府广场 / 成都东客站 / 春熙路 …</div>
+      </div>
+
+      <div class="mode-row" role="group" aria-label="出行方式">
+        <button class="mode active" data-mode="walk">步行</button>
+        <button class="mode" data-mode="bike">骑行</button>
+        <button class="mode" data-mode="accessible">无障碍</button>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="block-head"><h2><span class="ico">◈</span> 图层</h2></div>
+      <div class="layer-list" id="layerList">
+        <label class="switch"><input type="checkbox" data-layer="buildings" checked /><span>建筑轮廓</span></label>
+        <label class="switch"><input type="checkbox" data-layer="roads" checked /><span>校园道路</span></label>
+        <label class="switch"><input type="checkbox" data-layer="network" /><span>候选路网（1294 节点）</span></label>
+        <label class="switch"><input type="checkbox" data-layer="places" checked /><span>校园地点</span></label>
+        <label class="switch"><input type="checkbox" data-layer="gates" checked /><span>校门</span></label>
+        <label class="switch"><input type="checkbox" data-layer="transit" checked /><span>周边交通点</span></label>
+      </div>
+    </section>
+
+    <section class="block block-data">
+      <div class="data-line"><span>路网</span><b id="statEdges">—</b></div>
+      <div class="data-line"><span>可步行边</span><b id="statWalk">—</b></div>
+      <div class="data-line"><span>禁行边</span><b id="statProh">—</b></div>
+      <div class="data-line"><span>数据采集</span><b id="statDate">—</b></div>
+    </section>
+  </aside>
+
+  <!-- ---------- 中间：地图 ---------- -->
+  <section class="map-wrap">
+    <div id="map" class="map"></div>
+
+    <div class="map-toolbar">
+      <button class="map-btn" id="zoomIn" title="放大" type="button">+</button>
+      <button class="map-btn" id="zoomOut" title="缩小" type="button">−</button>
+      <button class="map-btn" id="btnReset" title="回到校园全景" type="button">
+        <svg viewBox="0 0 16 16" width="15" height="15"><path d="M2 6V3.5A1.5 1.5 0 0 1 3.5 2H6M10 2h2.5A1.5 1.5 0 0 1 14 3.5V6M14 10v2.5a1.5 1.5 0 0 1-1.5 1.5H10M6 14H3.5A1.5 1.5 0 0 1 2 12.5V10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="map-legend" id="mapLegend">
+      <div class="legend-title">图例</div>
+      <div class="legend-row"><i class="lg-line lg-route"></i>推荐路线</div>
+      <div class="legend-row"><i class="lg-line lg-alt"></i>备选路线</div>
+      <div class="legend-row"><i class="lg-dot lg-gate"></i>校门（待核实）</div>
+      <div class="legend-row"><i class="lg-dot lg-place"></i>校园地点</div>
+      <div class="legend-row"><i class="lg-dot lg-transit"></i>地铁 / 公交</div>
+    </div>
+
+    <div class="map-scale" id="mapScale"><span class="scale-bar"></span><span class="scale-text">100 m</span></div>
+    <div class="map-attrib">底图数据 © OpenStreetMap contributors · ODbL 1.0 · 数据版本 2026-11-03</div>
+
+    <div class="map-toast" id="mapToast"></div>
+  </section>
+
+  <!-- ---------- 右侧：结果 + Agent 轨迹 ---------- -->
+  <aside class="panel panel-right">
+    <div class="result-head">
+      <h2>规划结果</h2>
+      <button class="link-btn" id="btnCollapse" type="button">收起</button>
+    </div>
+
+    <div class="result-body" id="resultBody">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-ico">🧭</div>
+        <p>输入一句话，Agent 会自动完成<br />「理解 → 选门 → 算路 → 校验」</p>
+      </div>
+    </div>
+
+    <div class="trace-head">
+      <h3>Agent 执行轨迹</h3>
+      <span class="trace-count" id="traceCount">0 步</span>
+    </div>
+    <div class="trace" id="trace"></div>
+  </aside>
+</main>
+
+<!-- ============ 数据可信度视图 ============ -->
+<section class="page-view" id="viewQuality" hidden>
+  <div class="page-inner">
+    <h2 class="page-title">数据可信度与待核实事项</h2>
+    <p class="page-lead">
+      本项目的数据包是<strong>公开、可追溯但尚未实地验收</strong>的资料。下表把"能做什么"和"还缺什么"分开呈现，
+      避免把静态参考当成实时事实。所有 <code>routing_ready</code> 均为 <code>false</code>。
+    </p>
+    <div class="quality-grid" id="qualityGrid"></div>
+    <h3 class="sub-title">完整待核实清单（16 项）</h3>
+    <div class="issue-table" id="issueTable"></div>
+  </div>
+</section>
+
+<!-- ============ 项目说明视图 ============ -->
+<section class="page-view" id="viewAbout" hidden>
+  <div class="page-inner">
+    <h2 class="page-title">项目说明</h2>
+    <div class="about-grid">
+      <div class="about-card">
+        <h3>项目背景</h3>
+        <p>立足城市交通出行、校园通勤、便民交通服务的<strong>轻量化场景痛点</strong>，针对传统交通服务软件开发周期长、功能固化、小众场景适配性差、运维成本高的问题，
+        依托 LLM Agent 智能体技术与 OPC 个人公司实践模式，面向本科生开展智慧交通类 APP 全流程开发与创业实践。</p>
+      </div>
+      <div class="about-card">
+        <h3>核心工具</h3>
+        <p>以 <strong>Claude、龙虾 Skill（OpenClaw）</strong>为核心开发工具，结合交通行业高频刚需场景，打造轻量化、可迭代、个性化的智慧交通服务系统。</p>
+      </div>
+      <div class="about-card">
+        <h3>本原型范围</h3>
+        <p>聚焦<strong>西南交通大学犀浦校区</strong>及"犀浦 → 成都各地"的校内—城市一体化路线规划：校内步行段用本地候选路网计算，
+        城市段以地铁接驳方案呈现。校园班车、施工提示等模块以信息卡形式接入。</p>
+      </div>
+      <div class="about-card">
+        <h3>技术栈</h3>
+        <ul class="tech-list">
+          <li><b>数据层</b> 校园公开数据包（OSM + 官方目录，2026-11-03）</li>
+          <li><b>算法层</b> A* 最短路 + 多方案（稳妥/最短）+ 校门方位选择</li>
+          <li><b>Agent 层</b> 意图解析 → 7 个工具编排 → 结果生成</li>
+          <li><b>渲染层</b> Canvas 轻量矢量地图（离线可用，无需 CDN）</li>
+        </ul>
+      </div>
+      <div class="about-card wide">
+        <h3>合规与免责</h3>
+        <p>OSM 数据遵循 <strong>ODbL 1.0</strong>，展示需保留 © OpenStreetMap contributors 署名。学校官网图件未找到明确开放数据许可，
+        本原型仅作校内教学与竞赛演示，不用于商业发布。城市段地铁/公交信息为人工整理的公开常识，未经本项目核验，
+        正式出行请以官方地图服务为准。校车时刻为 <strong>2022 年历史数据</strong>，默认禁止作为实时班次推荐。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 详情抽屉 ============ -->
+<div class="drawer-mask" id="drawerMask" hidden></div>
+<div class="drawer" id="drawer" hidden>
+  <div class="drawer-head">
+    <h3 id="drawerTitle">详情</h3>
+    <button class="map-btn" id="drawerClose" type="button">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+</div>
+
+<script src="data/campus.js"></script>
+<script src="data/city.js"></script>
+<script src="js/map.js"></script>
+<script src="js/routing.js"></script>
+<script src="js/agent.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

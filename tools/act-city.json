@@ -1,0 +1,5 @@
+[
+  { "type": "eval", "js": "document.querySelector('#nlInput').value='从天佑斋1号楼到成都东客站';document.querySelector('#destInput').value='';'ok'" },
+  { "type": "click", "sel": "#btnPlan" },
+  { "type": "wait", "ms": 2200 }
+]

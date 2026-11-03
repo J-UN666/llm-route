@@ -1,0 +1,101 @@
+[
+  {
+    "place_id": "osm_way_413859293",
+    "campus_id": "SWJTU_XIPU",
+    "name": "西南交大驾校",
+    "name_zh": null,
+    "category": "driving_school",
+    "longitude": 103.99087740690824,
+    "latitude": 30.76895346739371,
+    "coordinate_system": "WGS84",
+    "position_role": "footprint_centroid_not_entrance",
+    "source_id": "S04",
+    "osm_type": "way",
+    "osm_id": "413859293",
+    "osm_version": "5",
+    "source_updated_at": "2022-09-29T14:44:38Z",
+    "collected_on": "2026-11-03",
+    "scope": "outside_mapped_campus",
+    "availability": "unverified",
+    "routing_ready": false,
+    "tags": {
+      "amenity": "driving_school",
+      "name": "西南交大驾校"
+    }
+  },
+  {
+    "place_id": "osm_way_533720230",
+    "campus_id": "SWJTU_XIPU",
+    "name": "西南交通大学校医院",
+    "name_zh": null,
+    "category": "building",
+    "longitude": 103.974742205007,
+    "latitude": 30.771296158184605,
+    "coordinate_system": "WGS84",
+    "position_role": "footprint_centroid_not_entrance",
+    "source_id": "S04",
+    "osm_type": "way",
+    "osm_id": "533720230",
+    "osm_version": "2",
+    "source_updated_at": "2025-08-19T05:17:54Z",
+    "collected_on": "2026-11-03",
+    "scope": "outside_mapped_campus",
+    "availability": "unverified",
+    "routing_ready": false,
+    "tags": {
+      "building": "hospital",
+      "name": "西南交通大学校医院"
+    }
+  },
+  {
+    "place_id": "osm_way_902972072",
+    "campus_id": "SWJTU_XIPU",
+    "name": "西南交大校医院",
+    "name_zh": "西南交大校医院",
+    "category": "hospital",
+    "longitude": 103.97486370605841,
+    "latitude": 30.77133467650541,
+    "coordinate_system": "WGS84",
+    "position_role": "footprint_centroid_not_entrance",
+    "source_id": "S04",
+    "osm_type": "way",
+    "osm_id": "902972072",
+    "osm_version": "1",
+    "source_updated_at": "2021-02-02T09:31:53Z",
+    "collected_on": "2026-11-03",
+    "scope": "outside_mapped_campus",
+    "availability": "unverified",
+    "routing_ready": false,
+    "tags": {
+      "amenity": "hospital",
+      "healthcare": "hospital",
+      "name": "西南交大校医院",
+      "name:en": "Southwest Jiaotong University School Hospital",
+      "name:zh": "西南交大校医院"
+    }
+  },
+  {
+    "place_id": "osm_way_1125230317",
+    "campus_id": "SWJTU_XIPU",
+    "name": "西南交通大学实验小学",
+    "name_zh": null,
+    "category": "school",
+    "longitude": 103.97439395398332,
+    "latitude": 30.76844076285487,
+    "coordinate_system": "WGS84",
+    "position_role": "footprint_centroid_not_entrance",
+    "source_id": "S04",
+    "osm_type": "way",
+    "osm_id": "1125230317",
+    "osm_version": "2",
+    "source_updated_at": "2025-06-01T10:29:00Z",
+    "collected_on": "2026-11-03",
+    "scope": "outside_mapped_campus",
+    "availability": "unverified",
+    "routing_ready": false,
+    "tags": {
+      "amenity": "school",
+      "name": "西南交通大学实验小学"
+    }
+  }
+]

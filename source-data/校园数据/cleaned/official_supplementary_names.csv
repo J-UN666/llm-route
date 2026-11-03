@@ -1,0 +1,24 @@
+﻿label_id,campus_id,name,category,source_id,longitude,latitude,coordinate_system,availability,routing_ready,evidence_kind,note
+LABEL_001,SWJTU_XIPU,0号教学楼,teaching_building,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_002,SWJTU_XIPU,3号教学楼,teaching_building,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_003,SWJTU_XIPU,一食堂,canteen,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_004,SWJTU_XIPU,二食堂,canteen,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_005,SWJTU_XIPU,三食堂,canteen,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_006,SWJTU_XIPU,四食堂,canteen,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_007,SWJTU_XIPU,五食堂,canteen,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_008,SWJTU_XIPU,六食堂,canteen,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_009,SWJTU_XIPU,七食堂,canteen,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_010,SWJTU_XIPU,校医院,hospital,S02,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_011,SWJTU_XIPU,南区体育场,sports,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_012,SWJTU_XIPU,北区体育场,sports,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_013,SWJTU_XIPU,学生创新创业教育中心,service,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_014,SWJTU_XIPU,东门,campus_gate,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_015,SWJTU_XIPU,南门,campus_gate,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_016,SWJTU_XIPU,西门,campus_gate,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_017,SWJTU_XIPU,北门,campus_gate,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_018,SWJTU_XIPU,北湖,landmark,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_019,SWJTU_XIPU,犀湖,landmark,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_020,SWJTU_XIPU,浙亭,landmark,S01,,,,unverified,false,visual_map_label,Label/name evidence only; no geographic position or current access inferred.
+LABEL_021,SWJTU_XIPU,鸿哲斋2号公寓,dormitory,S09,,,,unverified,false,notice_name,Label/name evidence only; no geographic position or current access inferred.
+LABEL_022,SWJTU_XIPU,鸿哲斋3号公寓,dormitory,S09,,,,unverified,false,notice_name,Label/name evidence only; no geographic position or current access inferred.
+LABEL_023,SWJTU_XIPU,鸿哲斋1号公寓,dormitory,S09,,,,unverified,false,notice_name,Label/name evidence only; no geographic position or current access inferred.

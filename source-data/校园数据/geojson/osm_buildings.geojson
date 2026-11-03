@@ -1,0 +1,7606 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.981456,
+              30.7674741
+            ],
+            [
+              103.9813768,
+              30.7675375
+            ],
+            [
+              103.981305,
+              30.7675858
+            ],
+            [
+              103.981203,
+              30.7676153
+            ],
+            [
+              103.9811242,
+              30.7676225
+            ],
+            [
+              103.9810392,
+              30.7676227
+            ],
+            [
+              103.9809305,
+              30.7675958
+            ],
+            [
+              103.9807706,
+              30.7675092
+            ],
+            [
+              103.9807052,
+              30.7674441
+            ],
+            [
+              103.9806674,
+              30.7673926
+            ],
+            [
+              103.9806201,
+              30.7672771
+            ],
+            [
+              103.980588,
+              30.7671047
+            ],
+            [
+              103.9806195,
+              30.7669476
+            ],
+            [
+              103.9806917,
+              30.7668078
+            ],
+            [
+              103.9808044,
+              30.7666895
+            ],
+            [
+              103.9808354,
+              30.76666
+            ],
+            [
+              103.9809124,
+              30.7666256
+            ],
+            [
+              103.9810123,
+              30.7666031
+            ],
+            [
+              103.9810997,
+              30.7665963
+            ],
+            [
+              103.9811642,
+              30.766596
+            ],
+            [
+              103.9812647,
+              30.766617
+            ],
+            [
+              103.9813235,
+              30.7666473
+            ],
+            [
+              103.9814038,
+              30.7667076
+            ],
+            [
+              103.9814461,
+              30.7667394
+            ],
+            [
+              103.9814732,
+              30.7667597
+            ],
+            [
+              103.9815565,
+              30.7668928
+            ],
+            [
+              103.9815666,
+              30.7669396
+            ],
+            [
+              103.9815869,
+              30.7670334
+            ],
+            [
+              103.9815852,
+              30.7672026
+            ],
+            [
+              103.9815833,
+              30.7672132
+            ],
+            [
+              103.9815694,
+              30.7672889
+            ],
+            [
+              103.9815443,
+              30.7673475
+            ],
+            [
+              103.9814997,
+              30.7674278
+            ],
+            [
+              103.981456,
+              30.7674741
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_207570532",
+        "campus_id": "SWJTU_XIPU",
+        "name": "体育馆",
+        "name_zh": "体育馆",
+        "category": "sports_or_recreation",
+        "longitude": 103.98109578800879,
+        "latitude": 30.767110299394222,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "207570532",
+        "osm_version": "7",
+        "source_updated_at": "2022-09-29T13:27:34Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes",
+          "leisure": "stadium",
+          "name": "体育馆",
+          "name:en": "District Stadium",
+          "name:zh": "体育馆"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9803207,
+              30.7663998
+            ],
+            [
+              103.9808653,
+              30.7663978
+            ],
+            [
+              103.9808603,
+              30.7660381
+            ],
+            [
+              103.9808569,
+              30.7657884
+            ],
+            [
+              103.9802672,
+              30.7656992
+            ],
+            [
+              103.9803106,
+              30.7662421
+            ],
+            [
+              103.980316,
+              30.7663269
+            ],
+            [
+              103.9803207,
+              30.7663998
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_207596095",
+        "campus_id": "SWJTU_XIPU",
+        "name": "游泳馆",
+        "name_zh": "游泳馆",
+        "category": "sports_or_recreation",
+        "longitude": 103.98057147356798,
+        "latitude": 30.76606678667994,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "207596095",
+        "osm_version": "6",
+        "source_updated_at": "2022-09-29T13:27:34Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes",
+          "leisure": "swimming_pool",
+          "name": "游泳馆",
+          "name:en": "Swimming pool",
+          "name:zh": "游泳馆"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9815806,
+              30.7666674
+            ],
+            [
+              103.9817432,
+              30.7665743
+            ],
+            [
+              103.9818793,
+              30.7664963
+            ],
+            [
+              103.9819713,
+              30.7667632
+            ],
+            [
+              103.9816969,
+              30.7668546
+            ],
+            [
+              103.9815806,
+              30.7666674
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_207596096",
+        "campus_id": "SWJTU_XIPU",
+        "name": "健美操馆",
+        "name_zh": "健美操馆",
+        "category": "sports_or_recreation",
+        "longitude": 103.98178646511404,
+        "latitude": 30.766689332863017,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "207596096",
+        "osm_version": "5",
+        "source_updated_at": "2022-09-29T13:27:34Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes",
+          "leisure": "sports_centre",
+          "name": "健美操馆",
+          "name:en": "Aerobics Hall",
+          "name:zh": "健美操馆"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9810099,
+              30.7663917
+            ],
+            [
+              103.9813331,
+              30.766487
+            ],
+            [
+              103.9814676,
+              30.7662739
+            ],
+            [
+              103.9815507,
+              30.7661422
+            ],
+            [
+              103.9810951,
+              30.7658979
+            ],
+            [
+              103.9810187,
+              30.7663406
+            ],
+            [
+              103.9810099,
+              30.7663917
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_207596101",
+        "campus_id": "SWJTU_XIPU",
+        "name": "羽毛球馆",
+        "name_zh": "羽毛球馆",
+        "category": "sports_or_recreation",
+        "longitude": 103.98124630814767,
+        "latitude": 30.766212604831942,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "207596101",
+        "osm_version": "5",
+        "source_updated_at": "2022-09-29T13:27:34Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes",
+          "leisure": "pitch",
+          "name": "羽毛球馆",
+          "name:en": "Badminton court",
+          "name:zh": "羽毛球馆",
+          "sport": "badminton"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9813713,
+              30.7665022
+            ],
+            [
+              103.9815305,
+              30.7663118
+            ],
+            [
+              103.9816367,
+              30.7661847
+            ],
+            [
+              103.9818172,
+              30.7664004
+            ],
+            [
+              103.9818324,
+              30.7664186
+            ],
+            [
+              103.9816975,
+              30.7665232
+            ],
+            [
+              103.9815494,
+              30.7666382
+            ],
+            [
+              103.9813713,
+              30.7665022
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_207596103",
+        "campus_id": "SWJTU_XIPU",
+        "name": "乒乓球馆",
+        "name_zh": "乒乓球馆",
+        "category": "sports_or_recreation",
+        "longitude": 103.98160227858362,
+        "latitude": 30.766426617982667,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "207596103",
+        "osm_version": "6",
+        "source_updated_at": "2022-09-30T09:18:06Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes",
+          "leisure": "pitch",
+          "name": "乒乓球馆",
+          "name:en": "Pingpong Hall",
+          "name:zh": "乒乓球馆",
+          "sport": "table_tennis"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.977858,
+              30.7688174
+            ],
+            [
+              103.9775037,
+              30.7686077
+            ],
+            [
+              103.9773765,
+              30.7687664
+            ],
+            [
+              103.977748,
+              30.7689863
+            ],
+            [
+              103.9776377,
+              30.7691239
+            ],
+            [
+              103.9771994,
+              30.7688643
+            ],
+            [
+              103.977535,
+              30.7684458
+            ],
+            [
+              103.9779561,
+              30.7686951
+            ],
+            [
+              103.977858,
+              30.7688174
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_239380399",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋16号楼",
+        "name_zh": "天佑斋16号楼",
+        "category": "dormitory",
+        "longitude": 103.97756165779496,
+        "latitude": 30.76877936988511,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "239380399",
+        "osm_version": "5",
+        "source_updated_at": "2018-12-28T01:45:11Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋16号楼",
+          "name:zh": "天佑斋16号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9755353,
+              30.77014
+            ],
+            [
+              103.9758323,
+              30.7703164
+            ],
+            [
+              103.9755313,
+              30.7706906
+            ],
+            [
+              103.9752343,
+              30.7705142
+            ],
+            [
+              103.9755353,
+              30.77014
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_239380414",
+        "campus_id": "SWJTU_XIPU",
+        "name": "五食堂",
+        "name_zh": "五食堂",
+        "category": "building",
+        "longitude": 103.9755333,
+        "latitude": 30.7704153,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "239380414",
+        "osm_version": "8",
+        "source_updated_at": "2023-07-05T17:29:03Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes",
+          "name": "五食堂",
+          "name:en": "Security Office",
+          "name:zh": "五食堂"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.977018,
+              30.7684853
+            ],
+            [
+              103.9767329,
+              30.7683097
+            ],
+            [
+              103.976897,
+              30.7681129
+            ],
+            [
+              103.9771117,
+              30.7682452
+            ],
+            [
+              103.9770808,
+              30.7682822
+            ],
+            [
+              103.9771095,
+              30.7682999
+            ],
+            [
+              103.9770904,
+              30.7683228
+            ],
+            [
+              103.9771321,
+              30.7683485
+            ],
+            [
+              103.977018,
+              30.7684853
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_239380420",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.97694589021975,
+        "latitude": 30.76829933668097,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "239380420",
+        "osm_version": "7",
+        "source_updated_at": "2022-09-29T12:24:28Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9804813,
+              30.7736869
+            ],
+            [
+              103.9804742,
+              30.7734573
+            ],
+            [
+              103.9817451,
+              30.7734283
+            ],
+            [
+              103.9817522,
+              30.7736578
+            ],
+            [
+              103.9804813,
+              30.7736869
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_280172936",
+        "campus_id": "SWJTU_XIPU",
+        "name": "风洞实验室",
+        "name_zh": "风洞实验室",
+        "category": "building",
+        "longitude": 103.98111315389666,
+        "latitude": 30.773557576100377,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "280172936",
+        "osm_version": "5",
+        "source_updated_at": "2022-09-29T13:42:28Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes",
+          "name": "风洞实验室",
+          "name:en": "Wind tunnel laboratory",
+          "name:zh": "风洞实验室",
+          "office": "research"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9812528,
+              30.7731813
+            ],
+            [
+              103.9812461,
+              30.7729585
+            ],
+            [
+              103.9822836,
+              30.7729352
+            ],
+            [
+              103.9822904,
+              30.7731581
+            ],
+            [
+              103.9812528,
+              30.7731813
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_280172939",
+        "campus_id": "SWJTU_XIPU",
+        "name": "环境科学与工程实验教学中心",
+        "name_zh": "环境科学与工程实验教学中心",
+        "category": "building",
+        "longitude": 103.98176826469357,
+        "latitude": 30.773058275846186,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "280172939",
+        "osm_version": "5",
+        "source_updated_at": "2022-09-29T13:42:28Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes",
+          "name": "环境科学与工程实验教学中心",
+          "name:en": "Environmental Science and Engineering Experimental Teaching Center",
+          "name:zh": "环境科学与工程实验教学中心",
+          "office": "research"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9791768,
+              30.7696419
+            ],
+            [
+              103.9791301,
+              30.7696137
+            ],
+            [
+              103.9792165,
+              30.7695079
+            ],
+            [
+              103.9791977,
+              30.7694965
+            ],
+            [
+              103.9792634,
+              30.7694161
+            ],
+            [
+              103.9793289,
+              30.7694556
+            ],
+            [
+              103.9791768,
+              30.7696419
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_324950171",
+        "campus_id": "SWJTU_XIPU",
+        "name": "北区校车站",
+        "name_zh": "北区校车站",
+        "category": "transit",
+        "longitude": 103.97923104352465,
+        "latitude": 30.769523898223813,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "324950171",
+        "osm_version": "4",
+        "source_updated_at": "2026-01-20T02:33:53Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "amenity": "bus_station",
+          "building": "yes",
+          "bus": "yes",
+          "name": "北区校车站",
+          "name:zh": "北区校车站",
+          "public_transport": "station"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9815683,
+              30.7630591
+            ],
+            [
+              103.9814792,
+              30.7631754
+            ],
+            [
+              103.9820154,
+              30.7634787
+            ],
+            [
+              103.9821045,
+              30.7633623
+            ],
+            [
+              103.9815683,
+              30.7630591
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_413859253",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋7号楼",
+        "name_zh": "天佑斋7号楼",
+        "category": "dormitory",
+        "longitude": 103.98179187605811,
+        "latitude": 30.763268891122014,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "413859253",
+        "osm_version": "3",
+        "source_updated_at": "2018-12-28T01:45:39Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋7号楼",
+          "name:en": "Tianyouzhai Building 7",
+          "name:zh": "天佑斋7号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9820835,
+              30.7635254
+            ],
+            [
+              103.9821794,
+              30.7634036
+            ],
+            [
+              103.9827489,
+              30.7637347
+            ],
+            [
+              103.9826529,
+              30.7638566
+            ],
+            [
+              103.9820835,
+              30.7635254
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_413859254",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋6号楼",
+        "name_zh": "天佑斋6号楼",
+        "category": "dormitory",
+        "longitude": 103.98241621745132,
+        "latitude": 30.763630099307527,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "413859254",
+        "osm_version": "3",
+        "source_updated_at": "2018-12-28T01:45:40Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋6号楼",
+          "name:en": "Tianyouzhai Building 6",
+          "name:zh": "天佑斋6号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9828224,
+              30.7637892
+            ],
+            [
+              103.9829645,
+              30.7638706
+            ],
+            [
+              103.9825071,
+              30.7644601
+            ],
+            [
+              103.9823651,
+              30.7643787
+            ],
+            [
+              103.9828224,
+              30.7637892
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_413859256",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋5号楼",
+        "name_zh": "天佑斋5号楼",
+        "category": "dormitory",
+        "longitude": 103.98266479436968,
+        "latitude": 30.764124626516676,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "413859256",
+        "osm_version": "3",
+        "source_updated_at": "2018-12-28T01:45:40Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋5号楼",
+          "name:en": "Tianyouzhai Building 5",
+          "name:zh": "天佑斋5号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9821034,
+              30.7637469
+            ],
+            [
+              103.9822521,
+              30.7638329
+            ],
+            [
+              103.9820787,
+              30.7640545
+            ],
+            [
+              103.9823751,
+              30.7642258
+            ],
+            [
+              103.9822838,
+              30.7643425
+            ],
+            [
+              103.9818386,
+              30.7640852
+            ],
+            [
+              103.9821034,
+              30.7637469
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_413859258",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋9号楼",
+        "name_zh": "天佑斋9号楼",
+        "category": "dormitory",
+        "longitude": 103.98210071152224,
+        "latitude": 30.76405658765404,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "413859258",
+        "osm_version": "3",
+        "source_updated_at": "2018-12-28T01:45:40Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋9号楼",
+          "name:en": "Tianyouzhai Building 9",
+          "name:zh": "天佑斋9号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9814768,
+              30.7646191
+            ],
+            [
+              103.9816324,
+              30.7644215
+            ],
+            [
+              103.9820693,
+              30.7646755
+            ],
+            [
+              103.9819771,
+              30.7647926
+            ],
+            [
+              103.9816831,
+              30.7646216
+            ],
+            [
+              103.9815113,
+              30.7648397
+            ],
+            [
+              103.9813685,
+              30.7647566
+            ],
+            [
+              103.9814768,
+              30.7646191
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_413859263",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋11号楼",
+        "name_zh": "天佑斋11号楼",
+        "category": "dormitory",
+        "longitude": 103.98169916625397,
+        "latitude": 30.764638110000842,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "413859263",
+        "osm_version": "6",
+        "source_updated_at": "2024-08-10T16:59:04Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory;yes",
+          "name": "天佑斋11号楼",
+          "name:en": "Tianyouzhai Building 11",
+          "name:zh": "天佑斋11号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.976922,
+              30.7692186
+            ],
+            [
+              103.977357,
+              30.769469
+            ],
+            [
+              103.9772553,
+              30.7695994
+            ],
+            [
+              103.9769019,
+              30.7693959
+            ],
+            [
+              103.9767785,
+              30.7695542
+            ],
+            [
+              103.9771362,
+              30.7697601
+            ],
+            [
+              103.9770218,
+              30.7699068
+            ],
+            [
+              103.9765826,
+              30.769654
+            ],
+            [
+              103.976922,
+              30.7692186
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_413859273",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋18号楼",
+        "name_zh": "天佑斋18号楼",
+        "category": "dormitory",
+        "longitude": 103.97695062666497,
+        "latitude": 30.769556359339894,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "413859273",
+        "osm_version": "3",
+        "source_updated_at": "2020-09-16T10:00:37Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋18号楼",
+          "name:zh": "天佑斋18号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9774882,
+              30.7695569
+            ],
+            [
+              103.9784378,
+              30.7701181
+            ],
+            [
+              103.9780286,
+              30.7706292
+            ],
+            [
+              103.9775889,
+              30.7703693
+            ],
+            [
+              103.977608,
+              30.7703454
+            ],
+            [
+              103.9775557,
+              30.7703145
+            ],
+            [
+              103.9775352,
+              30.7703401
+            ],
+            [
+              103.977271,
+              30.770184
+            ],
+            [
+              103.9775126,
+              30.7698822
+            ],
+            [
+              103.9776042,
+              30.7699363
+            ],
+            [
+              103.9774317,
+              30.7701518
+            ],
+            [
+              103.9774657,
+              30.7701719
+            ],
+            [
+              103.9774947,
+              30.7701357
+            ],
+            [
+              103.9776254,
+              30.7702129
+            ],
+            [
+              103.9776063,
+              30.7702368
+            ],
+            [
+              103.9776832,
+              30.7702823
+            ],
+            [
+              103.9777037,
+              30.7702567
+            ],
+            [
+              103.9780318,
+              30.7704506
+            ],
+            [
+              103.9782367,
+              30.7701946
+            ],
+            [
+              103.9778863,
+              30.7699875
+            ],
+            [
+              103.9779032,
+              30.7699664
+            ],
+            [
+              103.9778451,
+              30.769932
+            ],
+            [
+              103.9778249,
+              30.7699572
+            ],
+            [
+              103.9773788,
+              30.7696935
+            ],
+            [
+              103.9774882,
+              30.7695569
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_413859275",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋17号楼",
+        "name_zh": "天佑斋17号楼",
+        "category": "dormitory",
+        "longitude": 103.97783588510978,
+        "latitude": 30.770105713644572,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "413859275",
+        "osm_version": "2",
+        "source_updated_at": "2018-12-28T01:45:41Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋17号楼",
+          "name:zh": "天佑斋17号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9769019,
+              30.7703368
+            ],
+            [
+              103.977851,
+              30.7709043
+            ],
+            [
+              103.9774459,
+              30.7714044
+            ],
+            [
+              103.9770271,
+              30.771154
+            ],
+            [
+              103.9770458,
+              30.7711309
+            ],
+            [
+              103.9769708,
+              30.771086
+            ],
+            [
+              103.9769492,
+              30.7711127
+            ],
+            [
+              103.9766898,
+              30.7709575
+            ],
+            [
+              103.9769246,
+              30.7706677
+            ],
+            [
+              103.9770133,
+              30.7707207
+            ],
+            [
+              103.9768364,
+              30.7709391
+            ],
+            [
+              103.9768798,
+              30.7709651
+            ],
+            [
+              103.9769229,
+              30.7709118
+            ],
+            [
+              103.9770478,
+              30.7709865
+            ],
+            [
+              103.9770303,
+              30.7710081
+            ],
+            [
+              103.9770985,
+              30.7710489
+            ],
+            [
+              103.9771171,
+              30.771026
+            ],
+            [
+              103.9774522,
+              30.7712264
+            ],
+            [
+              103.9776523,
+              30.7709794
+            ],
+            [
+              103.9773047,
+              30.7707716
+            ],
+            [
+              103.9773187,
+              30.7707543
+            ],
+            [
+              103.9772767,
+              30.7707292
+            ],
+            [
+              103.9772639,
+              30.7707451
+            ],
+            [
+              103.9767972,
+              30.7704661
+            ],
+            [
+              103.9769019,
+              30.7703368
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_413859279",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋19号楼",
+        "name_zh": "天佑斋19号楼",
+        "category": "dormitory",
+        "longitude": 103.97725533268849,
+        "latitude": 30.77088722241975,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "413859279",
+        "osm_version": "2",
+        "source_updated_at": "2018-12-28T01:45:41Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋19号楼",
+          "name:zh": "天佑斋19号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9767662,
+              30.7702333
+            ],
+            [
+              103.9763323,
+              30.7699825
+            ],
+            [
+              103.9759847,
+              30.7704264
+            ],
+            [
+              103.9764191,
+              30.7706775
+            ],
+            [
+              103.9765496,
+              30.7705108
+            ],
+            [
+              103.9761914,
+              30.7703037
+            ],
+            [
+              103.9762957,
+              30.7701706
+            ],
+            [
+              103.9766534,
+              30.7703774
+            ],
+            [
+              103.9767662,
+              30.7702333
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_413859283",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋20号楼",
+        "name_zh": "天佑斋20号楼",
+        "category": "dormitory",
+        "longitude": 103.9763601015719,
+        "latitude": 30.7703264890856,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "413859283",
+        "osm_version": "3",
+        "source_updated_at": "2020-09-16T10:00:37Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋20号楼",
+          "name:zh": "天佑斋20号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9762698,
+              30.7711867
+            ],
+            [
+              103.9763685,
+              30.7710647
+            ],
+            [
+              103.9768069,
+              30.7713267
+            ],
+            [
+              103.9767906,
+              30.7713469
+            ],
+            [
+              103.9768422,
+              30.7713777
+            ],
+            [
+              103.9768661,
+              30.7713481
+            ],
+            [
+              103.9773064,
+              30.7716113
+            ],
+            [
+              103.9772013,
+              30.7717411
+            ],
+            [
+              103.976765,
+              30.7714804
+            ],
+            [
+              103.9767838,
+              30.7714572
+            ],
+            [
+              103.9767273,
+              30.7714234
+            ],
+            [
+              103.9767072,
+              30.7714481
+            ],
+            [
+              103.9762698,
+              30.7711867
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_413859286",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋21号楼",
+        "name_zh": "天佑斋21号楼",
+        "category": "dormitory",
+        "longitude": 103.97679401131008,
+        "latitude": 30.77140525060114,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "413859286",
+        "osm_version": "3",
+        "source_updated_at": "2020-09-16T10:00:37Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "building:levels": "6",
+          "name": "天佑斋21号楼",
+          "name:zh": "天佑斋21号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9756301,
+              30.7708866
+            ],
+            [
+              103.9756853,
+              30.7708158
+            ],
+            [
+              103.975728,
+              30.7707609
+            ],
+            [
+              103.9760436,
+              30.7709424
+            ],
+            [
+              103.9760201,
+              30.7709726
+            ],
+            [
+              103.9760646,
+              30.7709982
+            ],
+            [
+              103.9760851,
+              30.7709718
+            ],
+            [
+              103.9761579,
+              30.7710136
+            ],
+            [
+              103.9760628,
+              30.7711356
+            ],
+            [
+              103.9756301,
+              30.7708866
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_413859290",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋22号楼",
+        "name_zh": "天佑斋22号楼",
+        "category": "dormitory",
+        "longitude": 103.97589025225321,
+        "latitude": 30.770947470472713,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "413859290",
+        "osm_version": "4",
+        "source_updated_at": "2022-07-17T13:37:21Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋22号楼",
+          "name:zh": "天佑斋22号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.976298,
+              30.7688778
+            ],
+            [
+              103.9766856,
+              30.7683894
+            ],
+            [
+              103.9771062,
+              30.7686357
+            ],
+            [
+              103.9767187,
+              30.7691242
+            ],
+            [
+              103.976298,
+              30.7688778
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_413859292",
+        "campus_id": "SWJTU_XIPU",
+        "name": "四食堂(馨园)",
+        "name_zh": "四食堂(馨园)",
+        "category": "restaurant",
+        "longitude": 103.97670211762934,
+        "latitude": 30.768756788037535,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "413859292",
+        "osm_version": "4",
+        "source_updated_at": "2022-09-29T12:24:28Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "amenity": "restaurant",
+          "building": "yes",
+          "name": "四食堂（馨园）",
+          "name:en": "Canteen No. 4",
+          "name:zh": "四食堂（馨园）"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9817221,
+              30.7727567
+            ],
+            [
+              103.9817073,
+              30.7722978
+            ],
+            [
+              103.9823932,
+              30.7722814
+            ],
+            [
+              103.982408,
+              30.7727402
+            ],
+            [
+              103.9817221,
+              30.7727567
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_413859294",
+        "campus_id": "SWJTU_XIPU",
+        "name": "土木工程实验教学中心",
+        "name_zh": "土木工程实验教学中心",
+        "category": "building",
+        "longitude": 103.98205763755855,
+        "latitude": 30.772519025478196,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "413859294",
+        "osm_version": "4",
+        "source_updated_at": "2022-09-29T13:42:28Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes",
+          "name": "土木工程实验教学中心",
+          "name:en": "Civil Engineering Experimental Teaching Center",
+          "name:zh": "土木工程实验教学中心",
+          "office": "research"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9857391,
+              30.7723704
+            ],
+            [
+              103.9868304,
+              30.7727551
+            ],
+            [
+              103.9869737,
+              30.7724552
+            ],
+            [
+              103.9858823,
+              30.7720704
+            ],
+            [
+              103.9857391,
+              30.7723704
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_532472143",
+        "campus_id": "SWJTU_XIPU",
+        "name": "陆地交通地质灾害防治技术国家工程实验室",
+        "name_zh": null,
+        "category": "teaching_or_lab",
+        "longitude": 103.98635635958121,
+        "latitude": 30.772412766179993,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "532472143",
+        "osm_version": "3",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "university",
+          "name": "陆地交通地质灾害防治技术国家工程实验室"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9869165,
+              30.772865
+            ],
+            [
+              103.9870565,
+              30.7725753
+            ],
+            [
+              103.9878107,
+              30.7728444
+            ],
+            [
+              103.9876707,
+              30.7731341
+            ],
+            [
+              103.9869165,
+              30.772865
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_532472144",
+        "campus_id": "SWJTU_XIPU",
+        "name": "机械学院馆外实验室",
+        "name_zh": null,
+        "category": "teaching_or_lab",
+        "longitude": 103.9873636,
+        "latitude": 30.7728547,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "532472144",
+        "osm_version": "3",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "university",
+          "name": "机械学院馆外实验室"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9874007,
+              30.7724618
+            ],
+            [
+              103.9877246,
+              30.7717747
+            ],
+            [
+              103.9882396,
+              30.7719539
+            ],
+            [
+              103.9879156,
+              30.772641
+            ],
+            [
+              103.9874007,
+              30.7724618
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_532472145",
+        "campus_id": "SWJTU_XIPU",
+        "name": "工程训练中心 B座",
+        "name_zh": null,
+        "category": "teaching_or_lab",
+        "longitude": 103.98782013137058,
+        "latitude": 30.772207841097728,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "532472145",
+        "osm_version": "5",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "university",
+          "name": "工程训练中心 B座",
+          "name:en": "Engineering Training Center Block B"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9869287,
+              30.7722929
+            ],
+            [
+              103.9872967,
+              30.77242
+            ],
+            [
+              103.9876177,
+              30.7717343
+            ],
+            [
+              103.9872497,
+              30.7716071
+            ],
+            [
+              103.9869287,
+              30.7722929
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_532472146",
+        "campus_id": "SWJTU_XIPU",
+        "name": "磁浮试验中心",
+        "name_zh": null,
+        "category": "teaching_or_lab",
+        "longitude": 103.98727319907952,
+        "latitude": 30.772013567412937,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "532472146",
+        "osm_version": "3",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "university",
+          "name": "磁浮试验中心"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9865781,
+              30.7721469
+            ],
+            [
+              103.9867815,
+              30.7722209
+            ],
+            [
+              103.9870841,
+              30.7716068
+            ],
+            [
+              103.9865359,
+              30.7714073
+            ],
+            [
+              103.9864481,
+              30.7715853
+            ],
+            [
+              103.986793,
+              30.7717108
+            ],
+            [
+              103.9865781,
+              30.7721469
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_532472147",
+        "campus_id": "SWJTU_XIPU",
+        "name": "电气馆",
+        "name_zh": null,
+        "category": "teaching_or_lab",
+        "longitude": 103.98677617566184,
+        "latitude": 30.771772119753614,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "532472147",
+        "osm_version": "5",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "university",
+          "name": "电气馆"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9868138,
+              30.7712426
+            ],
+            [
+              103.9874498,
+              30.7714627
+            ],
+            [
+              103.9876036,
+              30.7711346
+            ],
+            [
+              103.9869676,
+              30.7709146
+            ],
+            [
+              103.9868138,
+              30.7712426
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_532472148",
+        "campus_id": "SWJTU_XIPU",
+        "name": "交通运输与磁悬浮实验室",
+        "name_zh": null,
+        "category": "teaching_or_lab",
+        "longitude": 103.98720871308822,
+        "latitude": 30.771188631543605,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "532472148",
+        "osm_version": "4",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "university",
+          "name": "交通运输与磁悬浮实验室",
+          "name:en": "Transportation and Magnetic Suspension Laboratory"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9876486,
+              30.7714835
+            ],
+            [
+              103.988408,
+              30.7717587
+            ],
+            [
+              103.9885446,
+              30.7714803
+            ],
+            [
+              103.9882952,
+              30.7713899
+            ],
+            [
+              103.9882686,
+              30.771444
+            ],
+            [
+              103.9877587,
+              30.7712592
+            ],
+            [
+              103.9876486,
+              30.7714835
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_532472149",
+        "campus_id": "SWJTU_XIPU",
+        "name": "工程训练中心 A座",
+        "name_zh": null,
+        "category": "teaching_or_lab",
+        "longitude": 103.98810706752182,
+        "latitude": 30.771505514455818,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "532472149",
+        "osm_version": "5",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "university",
+          "name": "工程训练中心 A座",
+          "name:en": "Engineering Training Center Block A"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9825024,
+              30.7659554
+            ],
+            [
+              103.9826557,
+              30.7659308
+            ],
+            [
+              103.9826229,
+              30.7657799
+            ],
+            [
+              103.9827641,
+              30.7657572
+            ],
+            [
+              103.9827374,
+              30.765634
+            ],
+            [
+              103.9825772,
+              30.7656597
+            ],
+            [
+              103.9825479,
+              30.7655246
+            ],
+            [
+              103.9824046,
+              30.7655476
+            ],
+            [
+              103.9824342,
+              30.7656839
+            ],
+            [
+              103.9822752,
+              30.7657094
+            ],
+            [
+              103.9823021,
+              30.7658328
+            ],
+            [
+              103.98247,
+              30.7658059
+            ],
+            [
+              103.9825024,
+              30.7659554
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_535892698",
+        "campus_id": "SWJTU_XIPU",
+        "name": "鸿哲斋7号楼",
+        "name_zh": "鸿哲斋7号楼",
+        "category": "dormitory",
+        "longitude": 103.9825240048726,
+        "latitude": 30.765739240314684,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "535892698",
+        "osm_version": "3",
+        "source_updated_at": "2018-12-28T01:46:04Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "鸿哲斋7号楼",
+          "name:en": "Hongzhe Zhai Building 7",
+          "name:zh": "鸿哲斋7号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9828523,
+              30.7655143
+            ],
+            [
+              103.9830055,
+              30.7654897
+            ],
+            [
+              103.9829727,
+              30.7653388
+            ],
+            [
+              103.983114,
+              30.7653162
+            ],
+            [
+              103.9830872,
+              30.765193
+            ],
+            [
+              103.9829271,
+              30.7652187
+            ],
+            [
+              103.9828977,
+              30.7650836
+            ],
+            [
+              103.9827544,
+              30.7651066
+            ],
+            [
+              103.982784,
+              30.7652428
+            ],
+            [
+              103.982625,
+              30.7652683
+            ],
+            [
+              103.9826519,
+              30.7653918
+            ],
+            [
+              103.9828198,
+              30.7653649
+            ],
+            [
+              103.9828523,
+              30.7655143
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_535892699",
+        "campus_id": "SWJTU_XIPU",
+        "name": "鸿哲斋6号楼",
+        "name_zh": null,
+        "category": "dormitory",
+        "longitude": 103.98287378944815,
+        "latitude": 30.76529818575089,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "535892699",
+        "osm_version": "2",
+        "source_updated_at": "2018-11-13T15:36:33Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "鸿哲斋6号楼",
+          "name:en": "Hongzhe Zhai Building 6"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9831741,
+              30.7650488
+            ],
+            [
+              103.9833274,
+              30.7650242
+            ],
+            [
+              103.9832946,
+              30.7648733
+            ],
+            [
+              103.9834358,
+              30.7648506
+            ],
+            [
+              103.9834091,
+              30.7647274
+            ],
+            [
+              103.9832489,
+              30.7647531
+            ],
+            [
+              103.9832196,
+              30.764618
+            ],
+            [
+              103.9830763,
+              30.764641
+            ],
+            [
+              103.9831059,
+              30.7647773
+            ],
+            [
+              103.9829469,
+              30.7648028
+            ],
+            [
+              103.9829737,
+              30.7649262
+            ],
+            [
+              103.9831416,
+              30.7648993
+            ],
+            [
+              103.9831741,
+              30.7650488
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_535892700",
+        "campus_id": "SWJTU_XIPU",
+        "name": "鸿哲斋5号楼",
+        "name_zh": null,
+        "category": "dormitory",
+        "longitude": 103.98319569150497,
+        "latitude": 30.764832649818665,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "535892700",
+        "osm_version": "2",
+        "source_updated_at": "2018-11-13T15:36:33Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "鸿哲斋5号楼",
+          "name:en": "Hongzhe Zhai Building 5"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9834906,
+              30.7646178
+            ],
+            [
+              103.9836439,
+              30.7645932
+            ],
+            [
+              103.9836111,
+              30.7644423
+            ],
+            [
+              103.9837523,
+              30.7644196
+            ],
+            [
+              103.9837256,
+              30.7642964
+            ],
+            [
+              103.9835654,
+              30.7643221
+            ],
+            [
+              103.9835361,
+              30.764187
+            ],
+            [
+              103.9833928,
+              30.76421
+            ],
+            [
+              103.9834224,
+              30.7643463
+            ],
+            [
+              103.9832634,
+              30.7643718
+            ],
+            [
+              103.9832902,
+              30.7644953
+            ],
+            [
+              103.9834581,
+              30.7644683
+            ],
+            [
+              103.9834906,
+              30.7646178
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_535892701",
+        "campus_id": "SWJTU_XIPU",
+        "name": "鸿哲斋4号楼",
+        "name_zh": null,
+        "category": "dormitory",
+        "longitude": 103.98351217496793,
+        "latitude": 30.76440165739815,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "535892701",
+        "osm_version": "2",
+        "source_updated_at": "2018-11-13T15:36:33Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "鸿哲斋4号楼",
+          "name:en": "Hongzhe Zhai Building 4"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9773528,
+              30.7720431
+            ],
+            [
+              103.9775986,
+              30.7722005
+            ],
+            [
+              103.9777766,
+              30.7719954
+            ],
+            [
+              103.9775308,
+              30.7718379
+            ],
+            [
+              103.9773528,
+              30.7720431
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_584261708",
+        "campus_id": "SWJTU_XIPU",
+        "name": "鸿哲斋11号楼",
+        "name_zh": "鸿哲斋11号楼",
+        "category": "dormitory",
+        "longitude": 103.97756469694785,
+        "latitude": 30.772019217010197,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "584261708",
+        "osm_version": "2",
+        "source_updated_at": "2018-12-28T01:46:23Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "鸿哲斋11号楼",
+          "name:zh": "鸿哲斋11号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9779022,
+              30.771704
+            ],
+            [
+              103.978042,
+              30.7715228
+            ],
+            [
+              103.9777996,
+              30.7713848
+            ],
+            [
+              103.9776598,
+              30.7715659
+            ],
+            [
+              103.9779022,
+              30.771704
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_584261710",
+        "campus_id": "SWJTU_XIPU",
+        "name": "鸿哲斋10号楼",
+        "name_zh": "鸿哲斋10号楼",
+        "category": "dormitory",
+        "longitude": 103.97785090516976,
+        "latitude": 30.77154438275035,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "584261710",
+        "osm_version": "2",
+        "source_updated_at": "2018-12-28T01:46:23Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "鸿哲斋10号楼",
+          "name:zh": "鸿哲斋10号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9782369,
+              30.7712616
+            ],
+            [
+              103.9780035,
+              30.7711234
+            ],
+            [
+              103.9781402,
+              30.7709531
+            ],
+            [
+              103.9783736,
+              30.7710913
+            ],
+            [
+              103.9782369,
+              30.7712616
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_584261711",
+        "campus_id": "SWJTU_XIPU",
+        "name": "鸿哲斋9号楼",
+        "name_zh": "鸿哲斋9号楼",
+        "category": "dormitory",
+        "longitude": 103.97818855,
+        "latitude": 30.77110735,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "584261711",
+        "osm_version": "2",
+        "source_updated_at": "2018-12-28T01:46:23Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "鸿哲斋9号楼",
+          "name:zh": "鸿哲斋9号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.978727,
+              30.7708982
+            ],
+            [
+              103.9784758,
+              30.7707682
+            ],
+            [
+              103.9786049,
+              30.7705842
+            ],
+            [
+              103.978856,
+              30.7707141
+            ],
+            [
+              103.978727,
+              30.7708982
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_584261713",
+        "campus_id": "SWJTU_XIPU",
+        "name": "鸿哲斋8号楼",
+        "name_zh": "鸿哲斋8号楼",
+        "category": "dormitory",
+        "longitude": 103.9786659236816,
+        "latitude": 30.77074118470671,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "584261713",
+        "osm_version": "2",
+        "source_updated_at": "2018-12-28T01:46:23Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "鸿哲斋8号楼",
+          "name:zh": "鸿哲斋8号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9813685,
+              30.7647566
+            ],
+            [
+              103.9813419,
+              30.7647401
+            ],
+            [
+              103.9814498,
+              30.7646033
+            ],
+            [
+              103.9814768,
+              30.7646191
+            ],
+            [
+              103.9813685,
+              30.7647566
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1079229862",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98140922581106,
+        "latitude": 30.764679825131168,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1079229862",
+        "osm_version": "3",
+        "source_updated_at": "2024-08-10T16:59:04Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9771111,
+              30.7682423
+            ],
+            [
+              103.9771617,
+              30.7681792
+            ],
+            [
+              103.9770096,
+              30.7680893
+            ],
+            [
+              103.976959,
+              30.7681524
+            ],
+            [
+              103.9771111,
+              30.7682423
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098603279",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.97706035,
+        "latitude": 30.7681658,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098603279",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-28T16:10:25Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "roof",
+          "layer": "1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9762341,
+              30.7689644
+            ],
+            [
+              103.976188,
+              30.7689399
+            ],
+            [
+              103.9760364,
+              30.7691252
+            ],
+            [
+              103.9760821,
+              30.7691528
+            ],
+            [
+              103.9762341,
+              30.7689644
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098603285",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.9761347970091,
+        "latitude": 30.76904609332796,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098603285",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-28T16:10:25Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "roof",
+          "layer": "1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9758114,
+              30.7694138
+            ],
+            [
+              103.976,
+              30.7691824
+            ],
+            [
+              103.9760392,
+              30.769206
+            ],
+            [
+              103.9758518,
+              30.7694381
+            ],
+            [
+              103.9758114,
+              30.7694138
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098603286",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.97592513216996,
+        "latitude": 30.769310651309983,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098603286",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-28T16:10:25Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "roof",
+          "layer": "1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9758285,
+              30.7694999
+            ],
+            [
+              103.9757798,
+              30.7694709
+            ],
+            [
+              103.9753787,
+              30.7699696
+            ],
+            [
+              103.9754266,
+              30.7699981
+            ],
+            [
+              103.9754349,
+              30.7699908
+            ],
+            [
+              103.9758285,
+              30.7694999
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098603287",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.97560328928797,
+        "latitude": 30.769735512289458,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098603287",
+        "osm_version": "2",
+        "source_updated_at": "2022-09-30T13:00:24Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "roof",
+          "layer": "1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9878242,
+              30.7692916
+            ],
+            [
+              103.9892688,
+              30.7698387
+            ],
+            [
+              103.9898259,
+              30.7687528
+            ],
+            [
+              103.9891902,
+              30.768512
+            ],
+            [
+              103.9888487,
+              30.7691775
+            ],
+            [
+              103.9880398,
+              30.7688712
+            ],
+            [
+              103.9878242,
+              30.7692916
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098603316",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98893477018247,
+        "latitude": 30.76919489393454,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098603316",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-28T16:10:25Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9888329,
+              30.7688728
+            ],
+            [
+              103.9891903,
+              30.7681839
+            ],
+            [
+              103.9884662,
+              30.7679067
+            ],
+            [
+              103.988109,
+              30.7685957
+            ],
+            [
+              103.9888329,
+              30.7688728
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098603317",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98864960692961,
+        "latitude": 30.76838975768031,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098603317",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-28T16:10:25Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9892686,
+              30.7680573
+            ],
+            [
+              103.9894309,
+              30.7677463
+            ],
+            [
+              103.9886991,
+              30.7674642
+            ],
+            [
+              103.9885367,
+              30.7677753
+            ],
+            [
+              103.9892686,
+              30.7680573
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098603318",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98898380164984,
+        "latitude": 30.767760767694202,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098603318",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-28T16:10:25Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9893463,
+              30.764403
+            ],
+            [
+              103.9895868,
+              30.7641363
+            ],
+            [
+              103.9894375,
+              30.7640369
+            ],
+            [
+              103.989197,
+              30.7643036
+            ],
+            [
+              103.9893463,
+              30.764403
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098603319",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.9893919,
+        "latitude": 30.76421995,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098603319",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-28T16:10:25Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes",
+          "tourism": "museum"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9896131,
+              30.7644593
+            ],
+            [
+              103.9897293,
+              30.7644596
+            ],
+            [
+              103.9897298,
+              30.7643069
+            ],
+            [
+              103.9896136,
+              30.7643067
+            ],
+            [
+              103.9896131,
+              30.7644593
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098603320",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98967145634333,
+        "latitude": 30.764383125049502,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098603320",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-28T16:10:25Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9823722,
+              30.7691443
+            ],
+            [
+              103.9824916,
+              30.7691325
+            ],
+            [
+              103.9826004,
+              30.7691109
+            ],
+            [
+              103.9827208,
+              30.7690622
+            ],
+            [
+              103.9828314,
+              30.7689968
+            ],
+            [
+              103.9829287,
+              30.7689109
+            ],
+            [
+              103.9829382,
+              30.768899
+            ],
+            [
+              103.9827557,
+              30.7687892
+            ],
+            [
+              103.9828908,
+              30.7686281
+            ],
+            [
+              103.9830189,
+              30.7686481
+            ],
+            [
+              103.9830464,
+              30.7686524
+            ],
+            [
+              103.9830508,
+              30.7685939
+            ],
+            [
+              103.9830464,
+              30.768511
+            ],
+            [
+              103.9830322,
+              30.7684456
+            ],
+            [
+              103.9830092,
+              30.7683803
+            ],
+            [
+              103.9829729,
+              30.7683126
+            ],
+            [
+              103.982934,
+              30.7682586
+            ],
+            [
+              103.9828836,
+              30.7682062
+            ],
+            [
+              103.9829093,
+              30.7681884
+            ],
+            [
+              103.9830738,
+              30.7680647
+            ],
+            [
+              103.9830225,
+              30.768026
+            ],
+            [
+              103.9831048,
+              30.7679522
+            ],
+            [
+              103.9831641,
+              30.7679834
+            ],
+            [
+              103.9833684,
+              30.7678306
+            ],
+            [
+              103.9834967,
+              30.7679591
+            ],
+            [
+              103.9835657,
+              30.7680579
+            ],
+            [
+              103.9836507,
+              30.7681932
+            ],
+            [
+              103.9834029,
+              30.768267
+            ],
+            [
+              103.9834392,
+              30.7683491
+            ],
+            [
+              103.9834667,
+              30.7684244
+            ],
+            [
+              103.9834861,
+              30.7685125
+            ],
+            [
+              103.9834888,
+              30.7685984
+            ],
+            [
+              103.9836241,
+              30.7686053
+            ],
+            [
+              103.9836852,
+              30.7685285
+            ],
+            [
+              103.9837073,
+              30.7685422
+            ],
+            [
+              103.9835422,
+              30.7688085
+            ],
+            [
+              103.9838796,
+              30.7688864
+            ],
+            [
+              103.9837506,
+              30.769161
+            ],
+            [
+              103.9834251,
+              30.7690237
+            ],
+            [
+              103.9833298,
+              30.7693622
+            ],
+            [
+              103.9832968,
+              30.7693572
+            ],
+            [
+              103.9833136,
+              30.7692736
+            ],
+            [
+              103.9832375,
+              30.7692097
+            ],
+            [
+              103.9831366,
+              30.7693009
+            ],
+            [
+              103.9830464,
+              30.769361
+            ],
+            [
+              103.9829325,
+              30.7694173
+            ],
+            [
+              103.9828019,
+              30.7694754
+            ],
+            [
+              103.9826794,
+              30.7695103
+            ],
+            [
+              103.9825461,
+              30.7695295
+            ],
+            [
+              103.9824236,
+              30.7695385
+            ],
+            [
+              103.9822496,
+              30.769538
+            ],
+            [
+              103.982253,
+              30.7695181
+            ],
+            [
+              103.9822683,
+              30.7694297
+            ],
+            [
+              103.9823033,
+              30.7694297
+            ],
+            [
+              103.9823033,
+              30.769373
+            ],
+            [
+              103.9823687,
+              30.7693725
+            ],
+            [
+              103.9823722,
+              30.7691443
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098786977",
+        "campus_id": "SWJTU_XIPU",
+        "name": "西南交通大学犀浦校区图书馆",
+        "name_zh": "图书馆",
+        "category": "library",
+        "longitude": 103.98312557033327,
+        "latitude": 30.768801726087904,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098786977",
+        "osm_version": "4",
+        "source_updated_at": "2025-08-19T05:33:02Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "amenity": "library",
+          "building": "yes",
+          "layer": "1",
+          "name": "西南交通大学犀浦校区图书馆",
+          "name:zh": "图书馆"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9808853,
+              30.7711883
+            ],
+            [
+              103.9809444,
+              30.7711314
+            ],
+            [
+              103.9809618,
+              30.7711448
+            ],
+            [
+              103.9812153,
+              30.7709003
+            ],
+            [
+              103.9810311,
+              30.7707593
+            ],
+            [
+              103.9809018,
+              30.7708839
+            ],
+            [
+              103.9809959,
+              30.7709559
+            ],
+            [
+              103.9809425,
+              30.7710073
+            ],
+            [
+              103.9805095,
+              30.7706757
+            ],
+            [
+              103.980651,
+              30.7705393
+            ],
+            [
+              103.9810743,
+              30.7707
+            ],
+            [
+              103.9811243,
+              30.7706028
+            ],
+            [
+              103.981199,
+              30.7706311
+            ],
+            [
+              103.981151,
+              30.7707244
+            ],
+            [
+              103.981592,
+              30.7708918
+            ],
+            [
+              103.9816617,
+              30.7707562
+            ],
+            [
+              103.9816193,
+              30.7707401
+            ],
+            [
+              103.9816258,
+              30.7707274
+            ],
+            [
+              103.9817235,
+              30.7707645
+            ],
+            [
+              103.9818829,
+              30.7706147
+            ],
+            [
+              103.9820199,
+              30.7704859
+            ],
+            [
+              103.9819695,
+              30.7704463
+            ],
+            [
+              103.9820115,
+              30.7704069
+            ],
+            [
+              103.9819556,
+              30.770363
+            ],
+            [
+              103.9819164,
+              30.7703322
+            ],
+            [
+              103.9814969,
+              30.7700027
+            ],
+            [
+              103.981405,
+              30.7700891
+            ],
+            [
+              103.9814667,
+              30.7701375
+            ],
+            [
+              103.9814934,
+              30.7701586
+            ],
+            [
+              103.98146,
+              30.7701906
+            ],
+            [
+              103.9818532,
+              30.7704999
+            ],
+            [
+              103.9816879,
+              30.7706553
+            ],
+            [
+              103.9813354,
+              30.7705258
+            ],
+            [
+              103.9814061,
+              30.7703836
+            ],
+            [
+              103.9813449,
+              30.7703611
+            ],
+            [
+              103.9813936,
+              30.7702632
+            ],
+            [
+              103.9813604,
+              30.770251
+            ],
+            [
+              103.9812924,
+              30.770226
+            ],
+            [
+              103.9811809,
+              30.7701851
+            ],
+            [
+              103.9811705,
+              30.7701813
+            ],
+            [
+              103.9811348,
+              30.7702529
+            ],
+            [
+              103.9811188,
+              30.7702851
+            ],
+            [
+              103.9810375,
+              30.7702553
+            ],
+            [
+              103.9809818,
+              30.7703671
+            ],
+            [
+              103.9807648,
+              30.7702873
+            ],
+            [
+              103.9806842,
+              30.7704493
+            ],
+            [
+              103.980629,
+              30.770429
+            ],
+            [
+              103.9804994,
+              30.7705541
+            ],
+            [
+              103.9803458,
+              30.7707022
+            ],
+            [
+              103.9803996,
+              30.7707433
+            ],
+            [
+              103.9803573,
+              30.7707841
+            ],
+            [
+              103.9806735,
+              30.7710262
+            ],
+            [
+              103.9808132,
+              30.7711331
+            ],
+            [
+              103.9808853,
+              30.7711883
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098786979",
+        "campus_id": "SWJTU_XIPU",
+        "name": "西南交大犀浦8号教学楼",
+        "name_zh": "西南交大犀浦8号教学楼",
+        "category": "teaching_or_lab",
+        "longitude": 103.98116800559677,
+        "latitude": 30.77059437050433,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098786979",
+        "osm_version": "4",
+        "source_updated_at": "2026-01-27T05:51:20Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "university",
+          "name": "西南交大犀浦8号教学楼",
+          "name:en": "Teaching Building 8",
+          "name:zh": "西南交大犀浦8号教学楼",
+          "short_name": "八教"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9813936,
+              30.7702632
+            ],
+            [
+              103.98146,
+              30.7701906
+            ],
+            [
+              103.9814934,
+              30.7701586
+            ],
+            [
+              103.9814667,
+              30.7701375
+            ],
+            [
+              103.9813604,
+              30.770251
+            ],
+            [
+              103.9813936,
+              30.7702632
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098786980",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98142806593809,
+        "latitude": 30.770202027193605,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098786980",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9842076,
+              30.7608628
+            ],
+            [
+              103.9843264,
+              30.7607383
+            ],
+            [
+              103.9842002,
+              30.7606495
+            ],
+            [
+              103.9840815,
+              30.760774
+            ],
+            [
+              103.9842076,
+              30.7608628
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098786996",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98420393324947,
+        "latitude": 30.76075614758266,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098786996",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9837834,
+              30.7603914
+            ],
+            [
+              103.9837839,
+              30.7599468
+            ],
+            [
+              103.9837842,
+              30.7597266
+            ],
+            [
+              103.983785,
+              30.7590368
+            ],
+            [
+              103.9836986,
+              30.7590368
+            ],
+            [
+              103.9836983,
+              30.7594385
+            ],
+            [
+              103.9836975,
+              30.7602296
+            ],
+            [
+              103.9836974,
+              30.7603913
+            ],
+            [
+              103.9837834,
+              30.7603914
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098786998",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98374110511008,
+        "latitude": 30.759713616544925,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098786998",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "grandstand"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9836535,
+              30.7599463
+            ],
+            [
+              103.9837839,
+              30.7599468
+            ],
+            [
+              103.9837842,
+              30.7597266
+            ],
+            [
+              103.9836545,
+              30.7597262
+            ],
+            [
+              103.9836535,
+              30.7599463
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098786999",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98371902951182,
+        "latitude": 30.759836573804538,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098786999",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "roof",
+          "layer": "1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9828388,
+              30.7598766
+            ],
+            [
+              103.9829361,
+              30.7597664
+            ],
+            [
+              103.9828498,
+              30.7597101
+            ],
+            [
+              103.9827524,
+              30.7598202
+            ],
+            [
+              103.9828388,
+              30.7598766
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098787006",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.982844265215,
+        "latitude": 30.75979333863963,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098787006",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9837495,
+              30.759028
+            ],
+            [
+              103.9839021,
+              30.7590288
+            ],
+            [
+              103.9839038,
+              30.7588056
+            ],
+            [
+              103.9837963,
+              30.7587353
+            ],
+            [
+              103.9837044,
+              30.758839
+            ],
+            [
+              103.9837033,
+              30.7589888
+            ],
+            [
+              103.9837498,
+              30.7589891
+            ],
+            [
+              103.9837495,
+              30.759028
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098787016",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98380826518228,
+        "latitude": 30.758897753629505,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098787016",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9839802,
+              30.7584819
+            ],
+            [
+              103.9840839,
+              30.7585469
+            ],
+            [
+              103.9841361,
+              30.7584854
+            ],
+            [
+              103.9840324,
+              30.7584204
+            ],
+            [
+              103.9839802,
+              30.7584819
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098787018",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98405815,
+        "latitude": 30.75848365,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098787018",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9840725,
+              30.7584413
+            ],
+            [
+              103.9841903,
+              30.7583126
+            ],
+            [
+              103.9841312,
+              30.7582726
+            ],
+            [
+              103.9840134,
+              30.7584014
+            ],
+            [
+              103.9840725,
+              30.7584413
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098787019",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98410185702654,
+        "latitude": 30.75835696313949,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098787019",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9842132,
+              30.7584434
+            ],
+            [
+              103.9843022,
+              30.7583672
+            ],
+            [
+              103.9843529,
+              30.758411
+            ],
+            [
+              103.9842638,
+              30.7584871
+            ],
+            [
+              103.9842132,
+              30.7584434
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098787020",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98428304043671,
+        "latitude": 30.758427161153786,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098787020",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T11:06:00Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9785692,
+              30.7681005
+            ],
+            [
+              103.978563,
+              30.7679555
+            ],
+            [
+              103.9785555,
+              30.7677741
+            ],
+            [
+              103.9785719,
+              30.7674454
+            ],
+            [
+              103.9786257,
+              30.7671851
+            ],
+            [
+              103.978674,
+              30.767026
+            ],
+            [
+              103.9787155,
+              30.7668798
+            ],
+            [
+              103.9787741,
+              30.7667318
+            ],
+            [
+              103.9788346,
+              30.7665791
+            ],
+            [
+              103.9789163,
+              30.766413
+            ],
+            [
+              103.9790069,
+              30.7662545
+            ],
+            [
+              103.979079,
+              30.766144
+            ],
+            [
+              103.9791607,
+              30.7660223
+            ],
+            [
+              103.9792662,
+              30.7658351
+            ],
+            [
+              103.9790818,
+              30.7659106
+            ],
+            [
+              103.978947,
+              30.7659708
+            ],
+            [
+              103.9788163,
+              30.7660486
+            ],
+            [
+              103.978644,
+              30.7661919
+            ],
+            [
+              103.9784875,
+              30.7663545
+            ],
+            [
+              103.9783663,
+              30.7665294
+            ],
+            [
+              103.9782696,
+              30.7667184
+            ],
+            [
+              103.9781954,
+              30.7669248
+            ],
+            [
+              103.9781784,
+              30.7671208
+            ],
+            [
+              103.9781764,
+              30.767336
+            ],
+            [
+              103.9782111,
+              30.7675361
+            ],
+            [
+              103.9782887,
+              30.7677373
+            ],
+            [
+              103.9783534,
+              30.7678683
+            ],
+            [
+              103.9784221,
+              30.7679806
+            ],
+            [
+              103.9785692,
+              30.7681005
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098797665",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.97855848650238,
+        "latitude": 30.766892519403722,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098797665",
+        "osm_version": "2",
+        "source_updated_at": "2022-09-30T09:18:06Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "roof",
+          "layer": "1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9812834,
+              30.7629394
+            ],
+            [
+              103.9813065,
+              30.7629119
+            ],
+            [
+              103.9813735,
+              30.7629414
+            ],
+            [
+              103.9814233,
+              30.7629496
+            ],
+            [
+              103.9814713,
+              30.7629521
+            ],
+            [
+              103.9815234,
+              30.762945
+            ],
+            [
+              103.9815756,
+              30.7629256
+            ],
+            [
+              103.9816289,
+              30.7629002
+            ],
+            [
+              103.9816603,
+              30.7628752
+            ],
+            [
+              103.9816834,
+              30.7628411
+            ],
+            [
+              103.9816935,
+              30.7628044
+            ],
+            [
+              103.9816947,
+              30.7627652
+            ],
+            [
+              103.981684,
+              30.762724
+            ],
+            [
+              103.981652,
+              30.7626878
+            ],
+            [
+              103.9816141,
+              30.7626608
+            ],
+            [
+              103.9815868,
+              30.7626461
+            ],
+            [
+              103.9816271,
+              30.7626048
+            ],
+            [
+              103.9816461,
+              30.762614
+            ],
+            [
+              103.9816526,
+              30.7626079
+            ],
+            [
+              103.9813379,
+              30.7624261
+            ],
+            [
+              103.981032,
+              30.7628
+            ],
+            [
+              103.9811191,
+              30.7628483
+            ],
+            [
+              103.9812834,
+              30.7629394
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098797672",
+        "campus_id": "SWJTU_XIPU",
+        "name": "二食堂(梁园)",
+        "name_zh": null,
+        "category": "restaurant",
+        "longitude": 103.98139064392682,
+        "latitude": 30.762727208415672,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098797672",
+        "osm_version": "2",
+        "source_updated_at": "2022-09-29T11:59:19Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "amenity": "restaurant",
+          "building": "yes",
+          "name": "二食堂（梁园）",
+          "name:en": "Canteen No.2"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9804707,
+              30.7639499
+            ],
+            [
+              103.9804535,
+              30.7639402
+            ],
+            [
+              103.9802764,
+              30.7638326
+            ],
+            [
+              103.9802486,
+              30.7638168
+            ],
+            [
+              103.9799039,
+              30.7642413
+            ],
+            [
+              103.9800452,
+              30.764326
+            ],
+            [
+              103.9800132,
+              30.7643586
+            ],
+            [
+              103.9800567,
+              30.7643934
+            ],
+            [
+              103.9800941,
+              30.7643488
+            ],
+            [
+              103.9801644,
+              30.7643895
+            ],
+            [
+              103.9804965,
+              30.7639797
+            ],
+            [
+              103.9804629,
+              30.7639595
+            ],
+            [
+              103.9804707,
+              30.7639499
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098797674",
+        "campus_id": "SWJTU_XIPU",
+        "name": "3号学生生活服务区",
+        "name_zh": "3号学生生活服务区",
+        "category": "building",
+        "longitude": 103.98020111403869,
+        "latitude": 30.764109428307744,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098797674",
+        "osm_version": "2",
+        "source_updated_at": "2022-09-29T11:59:19Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "retail",
+          "name": "3号学生生活服务区",
+          "name:en": "Student Living Service Area No.3",
+          "name:zh": "3号学生生活服务区",
+          "short_name": "三服"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9809562,
+              30.7634937
+            ],
+            [
+              103.9806919,
+              30.7633333
+            ],
+            [
+              103.9806469,
+              30.763306
+            ],
+            [
+              103.9802859,
+              30.7637451
+            ],
+            [
+              103.9803277,
+              30.7637703
+            ],
+            [
+              103.9805048,
+              30.7638779
+            ],
+            [
+              103.9805394,
+              30.763899
+            ],
+            [
+              103.9805667,
+              30.7638658
+            ],
+            [
+              103.9806469,
+              30.7639145
+            ],
+            [
+              103.9805924,
+              30.7639204
+            ],
+            [
+              103.9805931,
+              30.7639248
+            ],
+            [
+              103.9806552,
+              30.7639181
+            ],
+            [
+              103.9807534,
+              30.7638767
+            ],
+            [
+              103.980773,
+              30.7638637
+            ],
+            [
+              103.9808166,
+              30.7638287
+            ],
+            [
+              103.9808658,
+              30.7637737
+            ],
+            [
+              103.9809031,
+              30.7637141
+            ],
+            [
+              103.9809283,
+              30.7636516
+            ],
+            [
+              103.9809378,
+              30.7636128
+            ],
+            [
+              103.9809514,
+              30.7635576
+            ],
+            [
+              103.9809562,
+              30.7634937
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098797675",
+        "campus_id": "SWJTU_XIPU",
+        "name": "三食堂(粟园)",
+        "name_zh": null,
+        "category": "restaurant",
+        "longitude": 103.98065315130117,
+        "latitude": 30.76363652564921,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098797675",
+        "osm_version": "2",
+        "source_updated_at": "2022-09-29T11:59:19Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "amenity": "restaurant",
+          "building": "yes",
+          "name": "三食堂（粟园）",
+          "name:en": "Cafeteria No.3"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9804535,
+              30.7639402
+            ],
+            [
+              103.9805048,
+              30.7638779
+            ],
+            [
+              103.9803277,
+              30.7637703
+            ],
+            [
+              103.9802764,
+              30.7638326
+            ],
+            [
+              103.9804535,
+              30.7639402
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098797677",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98039059999999,
+        "latitude": 30.76385525,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098797677",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T11:49:55Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "roof",
+          "layer": "1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9809235,
+              30.7634727
+            ],
+            [
+              103.9806919,
+              30.7633333
+            ],
+            [
+              103.9810338,
+              30.7628881
+            ],
+            [
+              103.9810691,
+              30.7629098
+            ],
+            [
+              103.9812382,
+              30.7630132
+            ],
+            [
+              103.9812858,
+              30.7630422
+            ],
+            [
+              103.9809391,
+              30.7634017
+            ],
+            [
+              103.9809704,
+              30.7634288
+            ],
+            [
+              103.9809235,
+              30.7634727
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098797678",
+        "campus_id": "SWJTU_XIPU",
+        "name": "2号学生生活服务区",
+        "name_zh": "2号学生生活服务区",
+        "category": "building",
+        "longitude": 103.98098188818201,
+        "latitude": 30.763175104004887,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098797678",
+        "osm_version": "2",
+        "source_updated_at": "2022-09-29T11:59:19Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "retail",
+          "name": "2号学生生活服务区",
+          "name:en": "Student Living Service Area No.2",
+          "name:zh": "2号学生生活服务区",
+          "short_name": "二服"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9812382,
+              30.7630132
+            ],
+            [
+              103.9812834,
+              30.7629394
+            ],
+            [
+              103.9811191,
+              30.7628483
+            ],
+            [
+              103.9810691,
+              30.7629098
+            ],
+            [
+              103.9812382,
+              30.7630132
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098797679",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98117860604877,
+        "latitude": 30.762928804428576,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098797679",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T11:49:55Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "roof",
+          "layer": "1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9817789,
+              30.7618971
+            ],
+            [
+              103.9820211,
+              30.7620415
+            ],
+            [
+              103.9819671,
+              30.7621085
+            ],
+            [
+              103.9819459,
+              30.7620958
+            ],
+            [
+              103.9817597,
+              30.7623265
+            ],
+            [
+              103.9817956,
+              30.7623479
+            ],
+            [
+              103.9817234,
+              30.7624373
+            ],
+            [
+              103.9814664,
+              30.762284
+            ],
+            [
+              103.9817789,
+              30.7618971
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098800630",
+        "campus_id": "SWJTU_XIPU",
+        "name": "1号学生生活服务区",
+        "name_zh": "1号学生生活服务区",
+        "category": "building",
+        "longitude": 103.98173741184613,
+        "latitude": 30.7621631294914,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098800630",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T11:59:19Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "retail",
+          "name": "1号学生生活服务区",
+          "name:en": "Student Living Service Area No.1",
+          "name:zh": "1号学生生活服务区",
+          "short_name": "一服"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9818501,
+              30.7618592
+            ],
+            [
+              103.9821256,
+              30.7620192
+            ],
+            [
+              103.9821905,
+              30.7619366
+            ],
+            [
+              103.9822204,
+              30.761954
+            ],
+            [
+              103.982247,
+              30.7619547
+            ],
+            [
+              103.9822638,
+              30.7619448
+            ],
+            [
+              103.9822673,
+              30.7619289
+            ],
+            [
+              103.9822585,
+              30.7618977
+            ],
+            [
+              103.9823195,
+              30.7618407
+            ],
+            [
+              103.9824637,
+              30.7617867
+            ],
+            [
+              103.9825397,
+              30.7616944
+            ],
+            [
+              103.9824463,
+              30.7616377
+            ],
+            [
+              103.982457,
+              30.7616247
+            ],
+            [
+              103.9824735,
+              30.7616346
+            ],
+            [
+              103.9824929,
+              30.7616362
+            ],
+            [
+              103.982508,
+              30.7616301
+            ],
+            [
+              103.9825239,
+              30.7616126
+            ],
+            [
+              103.9825159,
+              30.7615898
+            ],
+            [
+              103.9824652,
+              30.7615603
+            ],
+            [
+              103.9825078,
+              30.7615061
+            ],
+            [
+              103.9823834,
+              30.7614348
+            ],
+            [
+              103.982296,
+              30.7613819
+            ],
+            [
+              103.9822465,
+              30.7613544
+            ],
+            [
+              103.9821951,
+              30.7614198
+            ],
+            [
+              103.9821583,
+              30.7613984
+            ],
+            [
+              103.9818586,
+              30.7617796
+            ],
+            [
+              103.9818957,
+              30.7618012
+            ],
+            [
+              103.9818501,
+              30.7618592
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098800631",
+        "campus_id": "SWJTU_XIPU",
+        "name": "一食堂(黍园)",
+        "name_zh": null,
+        "category": "restaurant",
+        "longitude": 103.98219986367101,
+        "latitude": 30.761689654341957,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098800631",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T11:59:19Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "amenity": "restaurant",
+          "building": "yes",
+          "name": "一食堂（黍园）",
+          "name:en": "Canteen No.1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9824872,
+              30.7614083
+            ],
+            [
+              103.982556,
+              30.7613227
+            ],
+            [
+              103.98258,
+              30.7613369
+            ],
+            [
+              103.9826053,
+              30.7613055
+            ],
+            [
+              103.982622,
+              30.7613154
+            ],
+            [
+              103.9826912,
+              30.7612292
+            ],
+            [
+              103.9826595,
+              30.7612104
+            ],
+            [
+              103.9828503,
+              30.7609729
+            ],
+            [
+              103.982609,
+              30.7608298
+            ],
+            [
+              103.9822549,
+              30.7612706
+            ],
+            [
+              103.9823439,
+              30.7613233
+            ],
+            [
+              103.9824319,
+              30.7613755
+            ],
+            [
+              103.9824872,
+              30.7614083
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098800632",
+        "campus_id": "SWJTU_XIPU",
+        "name": "后勤保卫处",
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98255515595508,
+        "latitude": 30.76112437056986,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098800632",
+        "osm_version": "2",
+        "source_updated_at": "2022-09-29T12:24:28Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes",
+          "name": "后勤保卫处"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9823834,
+              30.7614348
+            ],
+            [
+              103.9824319,
+              30.7613755
+            ],
+            [
+              103.9823439,
+              30.7613233
+            ],
+            [
+              103.982296,
+              30.7613819
+            ],
+            [
+              103.9823834,
+              30.7614348
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098800633",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98236388901118,
+        "latitude": 30.76137892678682,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098800633",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T11:59:19Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "roof",
+          "layer": "1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9868654,
+              30.7628275
+            ],
+            [
+              103.9868728,
+              30.7624484
+            ],
+            [
+              103.9873523,
+              30.7624553
+            ],
+            [
+              103.9873449,
+              30.7628344
+            ],
+            [
+              103.9868654,
+              30.7628275
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098808298",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98710885,
+        "latitude": 30.7626414,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098808298",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T12:29:19Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "roof",
+          "layer": "1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9873937,
+              30.7632622
+            ],
+            [
+              103.9878701,
+              30.7632611
+            ],
+            [
+              103.9878688,
+              30.7628342
+            ],
+            [
+              103.9873923,
+              30.7628353
+            ],
+            [
+              103.9873937,
+              30.7632622
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098808300",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98763122495491,
+        "latitude": 30.76304819253342,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098808300",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T12:29:19Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "roof",
+          "layer": "1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9808603,
+              30.7660381
+            ],
+            [
+              103.9809674,
+              30.7660398
+            ],
+            [
+              103.9809471,
+              30.766335
+            ],
+            [
+              103.9809927,
+              30.7663386
+            ],
+            [
+              103.9810187,
+              30.7663406
+            ],
+            [
+              103.9810099,
+              30.7663917
+            ],
+            [
+              103.9813331,
+              30.766487
+            ],
+            [
+              103.9814676,
+              30.7662739
+            ],
+            [
+              103.9815088,
+              30.7662987
+            ],
+            [
+              103.9815305,
+              30.7663118
+            ],
+            [
+              103.9813713,
+              30.7665022
+            ],
+            [
+              103.9815494,
+              30.7666382
+            ],
+            [
+              103.9816975,
+              30.7665232
+            ],
+            [
+              103.9817165,
+              30.7665444
+            ],
+            [
+              103.9817432,
+              30.7665743
+            ],
+            [
+              103.9815806,
+              30.7666674
+            ],
+            [
+              103.9816969,
+              30.7668546
+            ],
+            [
+              103.9816591,
+              30.7668685
+            ],
+            [
+              103.9815925,
+              30.7668931
+            ],
+            [
+              103.9815406,
+              30.7668005
+            ],
+            [
+              103.9814725,
+              30.7667184
+            ],
+            [
+              103.9814461,
+              30.7667394
+            ],
+            [
+              103.9814038,
+              30.7667076
+            ],
+            [
+              103.981438,
+              30.7666808
+            ],
+            [
+              103.9813963,
+              30.7666407
+            ],
+            [
+              103.9812875,
+              30.7665629
+            ],
+            [
+              103.9811879,
+              30.7665228
+            ],
+            [
+              103.9811642,
+              30.766596
+            ],
+            [
+              103.9810997,
+              30.7665963
+            ],
+            [
+              103.98113,
+              30.7665009
+            ],
+            [
+              103.9810213,
+              30.7664721
+            ],
+            [
+              103.9810247,
+              30.766437
+            ],
+            [
+              103.9810274,
+              30.7664092
+            ],
+            [
+              103.9809904,
+              30.7664057
+            ],
+            [
+              103.980945,
+              30.7664014
+            ],
+            [
+              103.9809447,
+              30.7664313
+            ],
+            [
+              103.980944,
+              30.7665027
+            ],
+            [
+              103.980818,
+              30.7665105
+            ],
+            [
+              103.9808354,
+              30.76666
+            ],
+            [
+              103.9808044,
+              30.7666895
+            ],
+            [
+              103.9807773,
+              30.7665123
+            ],
+            [
+              103.9807397,
+              30.7665114
+            ],
+            [
+              103.9807377,
+              30.7664459
+            ],
+            [
+              103.9802763,
+              30.7664503
+            ],
+            [
+              103.9802712,
+              30.7663271
+            ],
+            [
+              103.980316,
+              30.7663269
+            ],
+            [
+              103.9803207,
+              30.7663998
+            ],
+            [
+              103.9808653,
+              30.7663978
+            ],
+            [
+              103.9808603,
+              30.7660381
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098823472",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98111226467597,
+        "latitude": 30.766480284093838,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098823472",
+        "osm_version": "2",
+        "source_updated_at": "2026-01-20T02:33:53Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9823732,
+              30.7628512
+            ],
+            [
+              103.9824372,
+              30.7628188
+            ],
+            [
+              103.9825799,
+              30.7629049
+            ],
+            [
+              103.9826593,
+              30.7628739
+            ],
+            [
+              103.9832011,
+              30.7631885
+            ],
+            [
+              103.9831606,
+              30.76324
+            ],
+            [
+              103.9832802,
+              30.7633094
+            ],
+            [
+              103.9832913,
+              30.7632953
+            ],
+            [
+              103.9832561,
+              30.7632749
+            ],
+            [
+              103.9836113,
+              30.7628213
+            ],
+            [
+              103.9836444,
+              30.7628405
+            ],
+            [
+              103.9836536,
+              30.7628287
+            ],
+            [
+              103.9835362,
+              30.762761
+            ],
+            [
+              103.9834953,
+              30.7628135
+            ],
+            [
+              103.9832256,
+              30.7626582
+            ],
+            [
+              103.9829285,
+              30.7627761
+            ],
+            [
+              103.9828138,
+              30.7627094
+            ],
+            [
+              103.9829203,
+              30.7626646
+            ],
+            [
+              103.9829335,
+              30.7626878
+            ],
+            [
+              103.9831812,
+              30.7625836
+            ],
+            [
+              103.9831733,
+              30.7625697
+            ],
+            [
+              103.9832915,
+              30.76252
+            ],
+            [
+              103.983827,
+              30.7628362
+            ],
+            [
+              103.983335,
+              30.7634515
+            ],
+            [
+              103.9824209,
+              30.7629119
+            ],
+            [
+              103.9824507,
+              30.7628972
+            ],
+            [
+              103.9823732,
+              30.7628512
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098823504",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋3号楼",
+        "name_zh": "天佑斋3号楼",
+        "category": "dormitory",
+        "longitude": 103.98321515915515,
+        "latitude": 30.762979039826146,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098823504",
+        "osm_version": "2",
+        "source_updated_at": "2022-11-11T08:08:44Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "layer": "1",
+          "name": "天佑斋3号楼",
+          "name:en": "Tianyouzhai Building 3",
+          "name:zh": "天佑斋3号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9823402,
+              30.7628679
+            ],
+            [
+              103.9823732,
+              30.7628512
+            ],
+            [
+              103.9824372,
+              30.7628188
+            ],
+            [
+              103.9820574,
+              30.7625987
+            ],
+            [
+              103.982308,
+              30.7622794
+            ],
+            [
+              103.9823654,
+              30.7623127
+            ],
+            [
+              103.9823455,
+              30.7623381
+            ],
+            [
+              103.9827672,
+              30.7625826
+            ],
+            [
+              103.9831368,
+              30.7624357
+            ],
+            [
+              103.9830374,
+              30.7623798
+            ],
+            [
+              103.9828523,
+              30.7624558
+            ],
+            [
+              103.9822436,
+              30.762101
+            ],
+            [
+              103.9818594,
+              30.7625877
+            ],
+            [
+              103.9823402,
+              30.7628679
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098823505",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋4号楼",
+        "name_zh": "天佑斋4号楼",
+        "category": "dormitory",
+        "longitude": 103.98237526724989,
+        "latitude": 30.762447902875056,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098823505",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T13:27:34Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋4号楼",
+          "name:en": "Tianyouzhai Building 4",
+          "name:zh": "天佑斋4号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9780252,
+              30.7693726
+            ],
+            [
+              103.9781974,
+              30.7691559
+            ],
+            [
+              103.978093,
+              30.7690947
+            ],
+            [
+              103.9778611,
+              30.7693864
+            ],
+            [
+              103.978141,
+              30.7695506
+            ],
+            [
+              103.9781601,
+              30.7695267
+            ],
+            [
+              103.9782065,
+              30.769554
+            ],
+            [
+              103.9781882,
+              30.769577
+            ],
+            [
+              103.9786306,
+              30.7698365
+            ],
+            [
+              103.978729,
+              30.7697126
+            ],
+            [
+              103.9787193,
+              30.769707
+            ],
+            [
+              103.9788818,
+              30.7695026
+            ],
+            [
+              103.9788514,
+              30.7694848
+            ],
+            [
+              103.978882,
+              30.7694464
+            ],
+            [
+              103.9789208,
+              30.7694692
+            ],
+            [
+              103.9790207,
+              30.7693435
+            ],
+            [
+              103.9785773,
+              30.7690833
+            ],
+            [
+              103.9785621,
+              30.7691025
+            ],
+            [
+              103.9785049,
+              30.769069
+            ],
+            [
+              103.9785163,
+              30.7690547
+            ],
+            [
+              103.9781655,
+              30.7688488
+            ],
+            [
+              103.9781573,
+              30.7688591
+            ],
+            [
+              103.9781393,
+              30.7688485
+            ],
+            [
+              103.9781465,
+              30.7688394
+            ],
+            [
+              103.9780807,
+              30.7688008
+            ],
+            [
+              103.9779912,
+              30.7689134
+            ],
+            [
+              103.9784173,
+              30.7691635
+            ],
+            [
+              103.9784328,
+              30.7691439
+            ],
+            [
+              103.9785005,
+              30.7691836
+            ],
+            [
+              103.9784835,
+              30.7692051
+            ],
+            [
+              103.9788784,
+              30.7694368
+            ],
+            [
+              103.9788404,
+              30.7694847
+            ],
+            [
+              103.9788017,
+              30.769462
+            ],
+            [
+              103.9786996,
+              30.7695906
+            ],
+            [
+              103.9787582,
+              30.7696249
+            ],
+            [
+              103.9786968,
+              30.7697022
+            ],
+            [
+              103.9782815,
+              30.7694586
+            ],
+            [
+              103.9782691,
+              30.7694742
+            ],
+            [
+              103.9782054,
+              30.7694369
+            ],
+            [
+              103.9782177,
+              30.7694214
+            ],
+            [
+              103.9780917,
+              30.7693474
+            ],
+            [
+              103.9780569,
+              30.7693912
+            ],
+            [
+              103.9780252,
+              30.7693726
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098823506",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋15号楼",
+        "name_zh": "天佑斋15号楼",
+        "category": "dormitory",
+        "longitude": 103.9784086648031,
+        "latitude": 30.76932776125223,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098823506",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T13:27:34Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋15号楼",
+          "name:zh": "天佑斋15号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9810094,
+              30.7649225
+            ],
+            [
+              103.9816079,
+              30.7652691
+            ],
+            [
+              103.9817078,
+              30.7651417
+            ],
+            [
+              103.9814424,
+              30.7649879
+            ],
+            [
+              103.9814307,
+              30.7650029
+            ],
+            [
+              103.9813747,
+              30.7649704
+            ],
+            [
+              103.9813859,
+              30.7649561
+            ],
+            [
+              103.9811089,
+              30.7647956
+            ],
+            [
+              103.9810094,
+              30.7649225
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098823507",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋14号楼",
+        "name_zh": "天佑斋14号楼",
+        "category": "dormitory",
+        "longitude": 103.98135827975375,
+        "latitude": 30.76503298950827,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098823507",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T13:27:34Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋14号楼",
+          "name:en": "Tianyouzhai Building 14",
+          "name:zh": "天佑斋14号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9813878,
+              30.7645287
+            ],
+            [
+              103.9814833,
+              30.7644071
+            ],
+            [
+              103.9808417,
+              30.7640351
+            ],
+            [
+              103.9806512,
+              30.7642776
+            ],
+            [
+              103.9807975,
+              30.7643625
+            ],
+            [
+              103.9809179,
+              30.7642092
+            ],
+            [
+              103.9809414,
+              30.7642229
+            ],
+            [
+              103.9809161,
+              30.7642552
+            ],
+            [
+              103.9813878,
+              30.7645287
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098823508",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋12号楼",
+        "name_zh": "天佑斋12号楼",
+        "category": "dormitory",
+        "longitude": 103.98105242107692,
+        "latitude": 30.76427813622325,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098823508",
+        "osm_version": "2",
+        "source_updated_at": "2022-09-30T09:18:06Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋12号楼",
+          "name:en": "Tianyouzhai Building 12",
+          "name:zh": "天佑斋12号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9818227,
+              30.7654092
+            ],
+            [
+              103.9822907,
+              30.7648129
+            ],
+            [
+              103.9821496,
+              30.7647311
+            ],
+            [
+              103.9816815,
+              30.7653273
+            ],
+            [
+              103.9818227,
+              30.7654092
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098823509",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋10号楼",
+        "name_zh": "天佑斋10号楼",
+        "category": "dormitory",
+        "longitude": 103.98198609167393,
+        "latitude": 30.765070168509947,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098823509",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T13:27:34Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋10号楼",
+          "name:en": "Tianyouzhai Building 10",
+          "name:zh": "天佑斋10号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9913392,
+              30.771697
+            ],
+            [
+              103.9914893,
+              30.7713686
+            ],
+            [
+              103.9913966,
+              30.7713373
+            ],
+            [
+              103.9912465,
+              30.7716657
+            ],
+            [
+              103.9913392,
+              30.771697
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098842238",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.9913679,
+        "latitude": 30.77151715,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098842238",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T14:44:38Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9910763,
+              30.772229
+            ],
+            [
+              103.9912254,
+              30.7719174
+            ],
+            [
+              103.9911297,
+              30.7718836
+            ],
+            [
+              103.9909807,
+              30.7721952
+            ],
+            [
+              103.9910763,
+              30.772229
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1098842239",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.99110303688134,
+        "latitude": 30.77205627705094,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1098842239",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-29T14:44:38Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9809302,
+              30.7648822
+            ],
+            [
+              103.9810276,
+              30.7647594
+            ],
+            [
+              103.9806796,
+              30.7645557
+            ],
+            [
+              103.9806583,
+              30.7645825
+            ],
+            [
+              103.9806315,
+              30.7645669
+            ],
+            [
+              103.98073,
+              30.7644427
+            ],
+            [
+              103.9805847,
+              30.7643576
+            ],
+            [
+              103.9804102,
+              30.7645776
+            ],
+            [
+              103.9809302,
+              30.7648822
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1099258263",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋13号楼",
+        "name_zh": "天佑斋13号楼",
+        "category": "dormitory",
+        "longitude": 103.98070117080698,
+        "latitude": 30.76462933104521,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1099258263",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-30T09:18:06Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋13号楼",
+          "name:en": "Tianyouzhai Building 13",
+          "name:zh": "天佑斋13号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9810868,
+              30.7646862
+            ],
+            [
+              103.9812185,
+              30.7645197
+            ],
+            [
+              103.9810403,
+              30.7644157
+            ],
+            [
+              103.9810372,
+              30.7646572
+            ],
+            [
+              103.9810868,
+              30.7646862
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1099322927",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "bicycle_parking",
+        "longitude": 103.9811020436487,
+        "latitude": 30.764550511261096,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1099322927",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-30T11:53:20Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "amenity": "bicycle_parking",
+          "bicycle_parking": "shed",
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.981813,
+              30.7639833
+            ],
+            [
+              103.9819101,
+              30.763864
+            ],
+            [
+              103.9814435,
+              30.7635835
+            ],
+            [
+              103.9814151,
+              30.7636184
+            ],
+            [
+              103.9813711,
+              30.7635919
+            ],
+            [
+              103.9815466,
+              30.7633765
+            ],
+            [
+              103.9814266,
+              30.7633043
+            ],
+            [
+              103.9811824,
+              30.7636041
+            ],
+            [
+              103.981813,
+              30.7639833
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1099340039",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋8号楼",
+        "name_zh": "天佑斋8号楼",
+        "category": "dormitory",
+        "longitude": 103.9815182265758,
+        "latitude": 30.763667471837973,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1099340039",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-30T13:00:24Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋8号楼",
+          "name:en": "Tianyouzhai Building 8",
+          "name:zh": "天佑斋8号楼"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9833448,
+              30.7621535
+            ],
+            [
+              103.9833535,
+              30.7618765
+            ],
+            [
+              103.9833341,
+              30.7618652
+            ],
+            [
+              103.9833711,
+              30.7618184
+            ],
+            [
+              103.9829547,
+              30.7615752
+            ],
+            [
+              103.9829146,
+              30.7616259
+            ],
+            [
+              103.9828799,
+              30.7616056
+            ],
+            [
+              103.9829016,
+              30.7615782
+            ],
+            [
+              103.9828671,
+              30.7615581
+            ],
+            [
+              103.9831249,
+              30.7612322
+            ],
+            [
+              103.9836508,
+              30.7615394
+            ],
+            [
+              103.9836477,
+              30.7616202
+            ],
+            [
+              103.983705,
+              30.7616506
+            ],
+            [
+              103.9837627,
+              30.7615705
+            ],
+            [
+              103.9837997,
+              30.7615192
+            ],
+            [
+              103.983593,
+              30.7614093
+            ],
+            [
+              103.9835876,
+              30.7614477
+            ],
+            [
+              103.9835059,
+              30.7613961
+            ],
+            [
+              103.9835082,
+              30.761363
+            ],
+            [
+              103.9832961,
+              30.7612366
+            ],
+            [
+              103.9833027,
+              30.7612283
+            ],
+            [
+              103.983231,
+              30.7611856
+            ],
+            [
+              103.9832163,
+              30.7611962
+            ],
+            [
+              103.9830418,
+              30.7610967
+            ],
+            [
+              103.9826784,
+              30.7615675
+            ],
+            [
+              103.9827801,
+              30.7616255
+            ],
+            [
+              103.9828013,
+              30.761598
+            ],
+            [
+              103.9828328,
+              30.761616
+            ],
+            [
+              103.9827925,
+              30.7616683
+            ],
+            [
+              103.9828281,
+              30.7616885
+            ],
+            [
+              103.9828647,
+              30.761641
+            ],
+            [
+              103.9828891,
+              30.7616548
+            ],
+            [
+              103.9828635,
+              30.761688
+            ],
+            [
+              103.9832633,
+              30.7619157
+            ],
+            [
+              103.9832548,
+              30.7620997
+            ],
+            [
+              103.9833448,
+              30.7621535
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1099340056",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋2号楼",
+        "name_zh": null,
+        "category": "dormitory",
+        "longitude": 103.98315391465034,
+        "latitude": 30.761543175187953,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1099340056",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-30T13:00:24Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋2号楼",
+          "name:en": "Tianyouzhai Building 2"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.983526,
+              30.7618921
+            ],
+            [
+              103.9835323,
+              30.7617457
+            ],
+            [
+              103.9836583,
+              30.76182
+            ],
+            [
+              103.9836309,
+              30.7621484
+            ],
+            [
+              103.983894,
+              30.762299
+            ],
+            [
+              103.98385,
+              30.7623557
+            ],
+            [
+              103.9839656,
+              30.7624218
+            ],
+            [
+              103.983981,
+              30.7624019
+            ],
+            [
+              103.9839518,
+              30.7623852
+            ],
+            [
+              103.9842981,
+              30.7619387
+            ],
+            [
+              103.9843411,
+              30.7619634
+            ],
+            [
+              103.9843579,
+              30.7619418
+            ],
+            [
+              103.9842245,
+              30.7618653
+            ],
+            [
+              103.9841821,
+              30.76192
+            ],
+            [
+              103.983705,
+              30.7616506
+            ],
+            [
+              103.9837627,
+              30.7615705
+            ],
+            [
+              103.983777,
+              30.7615787
+            ],
+            [
+              103.9838159,
+              30.7615288
+            ],
+            [
+              103.9838403,
+              30.7615429
+            ],
+            [
+              103.9838164,
+              30.7615737
+            ],
+            [
+              103.9838533,
+              30.7615949
+            ],
+            [
+              103.9838725,
+              30.7615702
+            ],
+            [
+              103.984503,
+              30.7619331
+            ],
+            [
+              103.9844555,
+              30.7619941
+            ],
+            [
+              103.9844079,
+              30.7619666
+            ],
+            [
+              103.9843875,
+              30.7619926
+            ],
+            [
+              103.984446,
+              30.7620264
+            ],
+            [
+              103.9844254,
+              30.7620527
+            ],
+            [
+              103.9843646,
+              30.7620174
+            ],
+            [
+              103.984348,
+              30.7620385
+            ],
+            [
+              103.9844063,
+              30.7620725
+            ],
+            [
+              103.984137,
+              30.7624134
+            ],
+            [
+              103.9840733,
+              30.7623762
+            ],
+            [
+              103.9840587,
+              30.7623947
+            ],
+            [
+              103.9841378,
+              30.762441
+            ],
+            [
+              103.984103,
+              30.7624849
+            ],
+            [
+              103.9840309,
+              30.7624426
+            ],
+            [
+              103.9840257,
+              30.7624492
+            ],
+            [
+              103.9840902,
+              30.7624872
+            ],
+            [
+              103.9840286,
+              30.7625644
+            ],
+            [
+              103.9834917,
+              30.7622477
+            ],
+            [
+              103.9834962,
+              30.7621424
+            ],
+            [
+              103.9835391,
+              30.7621438
+            ],
+            [
+              103.9835498,
+              30.7618929
+            ],
+            [
+              103.983526,
+              30.7618921
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1099340057",
+        "campus_id": "SWJTU_XIPU",
+        "name": "天佑斋1号楼",
+        "name_zh": null,
+        "category": "dormitory",
+        "longitude": 103.98396663814233,
+        "latitude": 30.762065556314408,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1099340057",
+        "osm_version": "1",
+        "source_updated_at": "2022-09-30T13:00:24Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "dormitory",
+          "name": "天佑斋1号楼",
+          "name:en": "Tianyouzhai Building 1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9810819,
+              30.7622761
+            ],
+            [
+              103.9811375,
+              30.7622061
+            ],
+            [
+              103.9811211,
+              30.7621965
+            ],
+            [
+              103.9810655,
+              30.7622665
+            ],
+            [
+              103.9810819,
+              30.7622761
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1220208143",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "shelter",
+        "longitude": 103.9811015,
+        "latitude": 30.7622363,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1220208143",
+        "osm_version": "1",
+        "source_updated_at": "2023-11-02T08:04:13Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "amenity": "shelter",
+          "building": "yes",
+          "shelter_type": "public_transport"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9839663,
+              30.7589367
+            ],
+            [
+              103.9844745,
+              30.7589326
+            ],
+            [
+              103.9844733,
+              30.7588192
+            ],
+            [
+              103.983965,
+              30.7588232
+            ],
+            [
+              103.9839663,
+              30.7589367
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1220208144",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98421973735266,
+        "latitude": 30.758877923460346,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1220208144",
+        "osm_version": "1",
+        "source_updated_at": "2023-11-02T08:04:13Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9791007,
+              30.7646342
+            ],
+            [
+              103.9791749,
+              30.7645419
+            ],
+            [
+              103.9791198,
+              30.7645092
+            ],
+            [
+              103.9790456,
+              30.7646015
+            ],
+            [
+              103.9791007,
+              30.7646342
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1255210385",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.97911025,
+        "latitude": 30.7645717,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1255210385",
+        "osm_version": "1",
+        "source_updated_at": "2024-02-27T10:15:37Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "roof",
+          "layer": "1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9793029,
+              30.7645224
+            ],
+            [
+              103.9793654,
+              30.7644446
+            ],
+            [
+              103.9792067,
+              30.7643504
+            ],
+            [
+              103.9791442,
+              30.7644282
+            ],
+            [
+              103.9793029,
+              30.7645224
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1255210386",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.97925479999999,
+        "latitude": 30.7644364,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1255210386",
+        "osm_version": "1",
+        "source_updated_at": "2024-02-27T10:15:37Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9793277,
+              30.7643484
+            ],
+            [
+              103.9794146,
+              30.7642404
+            ],
+            [
+              103.9793571,
+              30.7642063
+            ],
+            [
+              103.9792702,
+              30.7643143
+            ],
+            [
+              103.9793277,
+              30.7643484
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1255210387",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.9793424,
+        "latitude": 30.76427735,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1255210387",
+        "osm_version": "1",
+        "source_updated_at": "2024-02-27T10:15:37Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "roof",
+          "layer": "1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9795516,
+              30.7649106
+            ],
+            [
+              103.979587,
+              30.7649308
+            ],
+            [
+              103.9798827,
+              30.764549
+            ],
+            [
+              103.9798473,
+              30.7645288
+            ],
+            [
+              103.9795516,
+              30.7649106
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1255210395",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.97971715,
+        "latitude": 30.764729799999998,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1255210395",
+        "osm_version": "1",
+        "source_updated_at": "2024-02-27T10:15:37Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "roof",
+          "layer": "1"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9819592,
+              30.7636139
+            ],
+            [
+              103.9818871,
+              30.7637013
+            ],
+            [
+              103.9817791,
+              30.7636355
+            ],
+            [
+              103.9818151,
+              30.7635918
+            ],
+            [
+              103.9818604,
+              30.7636194
+            ],
+            [
+              103.9818964,
+              30.7635757
+            ],
+            [
+              103.9819592,
+              30.7636139
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1315022199",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "bicycle_parking",
+        "longitude": 103.98187267828219,
+        "latitude": 30.763635564515596,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1315022199",
+        "osm_version": "1",
+        "source_updated_at": "2024-09-12T08:00:19Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "amenity": "bicycle_parking",
+          "bicycle_parking": "shed",
+          "building": "yes",
+          "covered": "yes",
+          "fee": "no"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.984144,
+              30.7614155
+            ],
+            [
+              103.9841239,
+              30.7614039
+            ],
+            [
+              103.9840213,
+              30.7615341
+            ],
+            [
+              103.9840414,
+              30.7615458
+            ],
+            [
+              103.984144,
+              30.7614155
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1528475818",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.9840826278785,
+        "latitude": 30.761474854715647,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1528475818",
+        "osm_version": "1",
+        "source_updated_at": "2026-06-11T12:14:15Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9841326,
+              30.7614645
+            ],
+            [
+              103.9843927,
+              30.7616149
+            ],
+            [
+              103.9844244,
+              30.7615745
+            ],
+            [
+              103.9841642,
+              30.7614241
+            ],
+            [
+              103.9841326,
+              30.7614645
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1528475819",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98427849705011,
+        "latitude": 30.761519511453667,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1528475819",
+        "osm_version": "1",
+        "source_updated_at": "2026-06-11T12:14:15Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.9840903,
+              30.7615221
+            ],
+            [
+              103.9843518,
+              30.7616691
+            ],
+            [
+              103.9843764,
+              30.7616368
+            ],
+            [
+              103.9841149,
+              30.7614899
+            ],
+            [
+              103.9840903,
+              30.7615221
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "place_id": "osm_way_1528475820",
+        "campus_id": "SWJTU_XIPU",
+        "name": null,
+        "name_zh": null,
+        "category": "building",
+        "longitude": 103.98423339687857,
+        "latitude": 30.76157950212736,
+        "coordinate_system": "WGS84",
+        "position_role": "footprint_centroid_not_entrance",
+        "source_id": "S04",
+        "osm_type": "way",
+        "osm_id": "1528475820",
+        "osm_version": "1",
+        "source_updated_at": "2026-06-11T12:14:15Z",
+        "collected_on": "2026-11-03",
+        "scope": "inside_mapped_campus",
+        "availability": "unverified",
+        "routing_ready": false,
+        "tags": {
+          "building": "yes"
+        }
+      }
+    }
+  ]
+}

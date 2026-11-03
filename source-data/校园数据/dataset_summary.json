@@ -1,0 +1,136 @@
+{
+  "campus": {
+    "campus_id": "SWJTU_XIPU",
+    "name": "西南交通大学犀浦校区",
+    "address": "四川省成都市郫都区犀安路999号",
+    "source_id": "S10"
+  },
+  "collected_on": "2026-11-03",
+  "datasets": [
+    {
+      "name": "official_places",
+      "records": 199,
+      "csv": "cleaned/official_places.csv",
+      "json": "cleaned/official_places.json"
+    },
+    {
+      "name": "official_transit_references",
+      "records": 16,
+      "csv": "cleaned/official_transit_references.csv",
+      "json": "cleaned/official_transit_references.json"
+    },
+    {
+      "name": "place_aliases",
+      "records": 227,
+      "csv": "cleaned/place_aliases.csv",
+      "json": "cleaned/place_aliases.json"
+    },
+    {
+      "name": "official_supplementary_names",
+      "records": 23,
+      "csv": "cleaned/official_supplementary_names.csv",
+      "json": "cleaned/official_supplementary_names.json"
+    },
+    {
+      "name": "osm_campus_places",
+      "records": 274,
+      "csv": "cleaned/osm_campus_places.csv",
+      "json": "cleaned/osm_campus_places.json"
+    },
+    {
+      "name": "osm_buildings",
+      "records": 97,
+      "csv": "cleaned/osm_buildings.csv",
+      "json": "cleaned/osm_buildings.json"
+    },
+    {
+      "name": "nearby_transit_osm",
+      "records": 24,
+      "csv": "cleaned/nearby_transit_osm.csv",
+      "json": "cleaned/nearby_transit_osm.json"
+    },
+    {
+      "name": "nearby_campus_named_osm",
+      "records": 4,
+      "csv": "cleaned/nearby_campus_named_osm.csv",
+      "json": "cleaned/nearby_campus_named_osm.json"
+    },
+    {
+      "name": "graph_nodes_candidates",
+      "records": 1294,
+      "csv": "cleaned/graph_nodes_candidates.csv",
+      "json": "cleaned/graph_nodes_candidates.json"
+    },
+    {
+      "name": "graph_edges_candidates",
+      "records": 1517,
+      "csv": "cleaned/graph_edges_candidates.csv",
+      "json": "cleaned/graph_edges_candidates.json"
+    },
+    {
+      "name": "osm_barrier_points",
+      "records": 31,
+      "csv": "cleaned/osm_barrier_points.csv",
+      "json": "cleaned/osm_barrier_points.json"
+    },
+    {
+      "name": "campus_gate_candidates",
+      "records": 6,
+      "csv": "cleaned/campus_gate_candidates.csv",
+      "json": "cleaned/campus_gate_candidates.json"
+    },
+    {
+      "name": "mvp_seed_candidates",
+      "records": 10,
+      "csv": "cleaned/mvp_seed_candidates.csv",
+      "json": "cleaned/mvp_seed_candidates.json"
+    },
+    {
+      "name": "place_crosswalk_candidates",
+      "records": 23,
+      "csv": "cleaned/place_crosswalk_candidates.csv",
+      "json": "cleaned/place_crosswalk_candidates.json"
+    },
+    {
+      "name": "connector_evidence",
+      "records": 3,
+      "csv": "cleaned/connector_evidence.csv",
+      "json": "cleaned/connector_evidence.json"
+    },
+    {
+      "name": "historical_shuttle_departures_2022",
+      "records": 36,
+      "csv": "cleaned/historical_shuttle_departures_2022.csv",
+      "json": "cleaned/historical_shuttle_departures_2022.json"
+    },
+    {
+      "name": "shuttle_changes_2025",
+      "records": 4,
+      "csv": "cleaned/shuttle_changes_2025.csv",
+      "json": "cleaned/shuttle_changes_2025.json"
+    },
+    {
+      "name": "construction_notices",
+      "records": 1,
+      "csv": "cleaned/construction_notices.csv",
+      "json": "cleaned/construction_notices.json"
+    }
+  ],
+  "coordinate_systems": {
+    "official_places": "UNDECLARED; do not mix with geographic routing",
+    "OSM": "WGS84; building centroids are not entrances"
+  },
+  "source_ids": [
+    "S01",
+    "S02",
+    "S03",
+    "S04",
+    "S05",
+    "S06",
+    "S07",
+    "S08",
+    "S09",
+    "S10",
+    "S11"
+  ]
+}

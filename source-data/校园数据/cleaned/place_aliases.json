@@ -1,0 +1,1591 @@
+[
+  {
+    "place_id": "swjtu_org_100",
+    "alias": "材料学院实验教学中心",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_101",
+    "alias": "风洞实验室",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_102",
+    "alias": "工程训练中心",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_103",
+    "alias": "机械学院馆外实验室",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_104",
+    "alias": "建筑与设计学院艺术实验教学中心",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_105",
+    "alias": "交大磁浮实验中心",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_106",
+    "alias": "陆地交通地质灾害防治技术国家工程实验",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_107",
+    "alias": "土木工程实验教学中心",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_108",
+    "alias": "环境与材料实验室",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_109",
+    "alias": "鸿哲斋—南区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_110",
+    "alias": "天佑斋-南区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_111",
+    "alias": "鸿哲斋—北区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_112",
+    "alias": "天佑斋-北区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_342",
+    "alias": "图书馆",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_342",
+    "alias": "交大图书馆",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_342",
+    "alias": "犀浦校区图书馆",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_343",
+    "alias": "游泳馆",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_345",
+    "alias": "体育馆",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_345",
+    "alias": "犀浦体育馆",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_88",
+    "alias": "1号教学楼",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_88",
+    "alias": "一教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_88",
+    "alias": "1教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_89",
+    "alias": "2号教学楼",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_89",
+    "alias": "二教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_89",
+    "alias": "2教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_90",
+    "alias": "4号教学楼",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_90",
+    "alias": "四教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_90",
+    "alias": "4教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_91",
+    "alias": "5号教学楼",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_91",
+    "alias": "五教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_91",
+    "alias": "5教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_92",
+    "alias": "6号教学楼",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_92",
+    "alias": "六教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_92",
+    "alias": "6教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_93",
+    "alias": "7号教学楼",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_93",
+    "alias": "七教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_93",
+    "alias": "7教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_94",
+    "alias": "8号教学楼(建筑学院)",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_94",
+    "alias": "八教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_94",
+    "alias": "8教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_94",
+    "alias": "8号教学楼",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_95",
+    "alias": "9号教学楼",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_95",
+    "alias": "九教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_95",
+    "alias": "9教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_96",
+    "alias": "10号教学楼(电气馆)",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_96",
+    "alias": "十教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_96",
+    "alias": "10教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_96",
+    "alias": "电气馆",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_97",
+    "alias": "11教学楼(交通运输与物流学院)",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_97",
+    "alias": "十一教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_97",
+    "alias": "11教",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_97",
+    "alias": "11号教学楼",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_97",
+    "alias": "交运大楼",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_99",
+    "alias": "综合楼",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_org_99",
+    "alias": "犀浦综合楼",
+    "alias_kind": "project_search_alias",
+    "source_id": null,
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_10",
+    "alias": "8教停车区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1006",
+    "alias": "桃李春风黉门立雪",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1009",
+    "alias": "再创辉煌",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1010",
+    "alias": "桑梓赋",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1011",
+    "alias": "五校一家",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1012",
+    "alias": "景点",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1013",
+    "alias": "共青林",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1014",
+    "alias": "110年校诞",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1015",
+    "alias": "竢实扬华",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1016",
+    "alias": "力",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1017",
+    "alias": "堂吉诃德",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1018",
+    "alias": "交大兴业北街地铁站",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1019",
+    "alias": "犀方路",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_102",
+    "alias": "千益眼镜",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1020",
+    "alias": "校园路犀方路口",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1021",
+    "alias": "交大犀浦校区(有轨电车站)",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1022",
+    "alias": "交大犀浦校区(有轨电车站)",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1023",
+    "alias": "交大犀浦校区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1024",
+    "alias": "地铁兴业北街站",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1025",
+    "alias": "地铁兴业北街站",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1026",
+    "alias": "犀安路校园路口",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1027",
+    "alias": "犀安路校园路口",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1028",
+    "alias": "西南交大犀浦校区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_103",
+    "alias": "千益眼镜",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1030",
+    "alias": "西南交大犀浦校区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1031",
+    "alias": "林湾公交站",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1032",
+    "alias": "林湾公交站",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1033",
+    "alias": "招呼站",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1034",
+    "alias": "招呼站",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_104",
+    "alias": "千益眼镜",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_105",
+    "alias": "沁元/大鹏综合店",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1056",
+    "alias": "红旗连锁",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_106",
+    "alias": "中国电信",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_1061",
+    "alias": "刘恢先先生纪念碑",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_107",
+    "alias": "祛痘疤/中青旅/先锋电器",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_108",
+    "alias": "中国工商银行",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_11",
+    "alias": "九教地下停车场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_110",
+    "alias": "山东杂粮煎饼",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_111",
+    "alias": "视力平价眼镜",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_112",
+    "alias": "蜀安驾校",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_113",
+    "alias": "远景文印",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_114",
+    "alias": "番鲜超市/泰克电脑",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_115",
+    "alias": "蜀香干锅王/三味纸包鱼",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_116",
+    "alias": "顺吉驾校",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_117",
+    "alias": "四食堂停车区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_118",
+    "alias": "全家",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_119",
+    "alias": "中国工商银行ATM",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_12",
+    "alias": "九教停车区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_120",
+    "alias": "孙中山先生",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_123",
+    "alias": "体育馆停车区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_124",
+    "alias": "天猫校园店/菜鸟/百世快递",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_125",
+    "alias": "奉师缝纫",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_126",
+    "alias": "天佑文印",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_127",
+    "alias": "乒乓球场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_128",
+    "alias": "乒乓球场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_129",
+    "alias": "乒乓球场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_130",
+    "alias": "土木校友林",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_131",
+    "alias": "体育馆网球场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_133",
+    "alias": "五环体育",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_135",
+    "alias": "舞东风",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_136",
+    "alias": "奇迹电脑",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_137",
+    "alias": "慕慕超市",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_138",
+    "alias": "军军豌豆面",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_139",
+    "alias": "西北门停车区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_14",
+    "alias": "百草林西点",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_140",
+    "alias": "西北特色兰州拉面",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_141",
+    "alias": "新奥尔良烤翅/巷里茶厅",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_142",
+    "alias": "新概念美食城",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_143",
+    "alias": "严凯先生",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_145",
+    "alias": "中国银行ATM",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_146",
+    "alias": "羽毛球场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_147",
+    "alias": "缘",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_148",
+    "alias": "韵达/菜鸟",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_15",
+    "alias": "百果园",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_150",
+    "alias": "詹天佑像",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_151",
+    "alias": "张维先生",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_153",
+    "alias": "中国建设银行ATM",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_154",
+    "alias": "中国建设银行",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_155",
+    "alias": "中国联通",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_156",
+    "alias": "中国银行ATM",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_157",
+    "alias": "中国邮政",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_158",
+    "alias": "国联研究中心停车场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_159",
+    "alias": "钟",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_16",
+    "alias": "杯言茶语",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_17",
+    "alias": "中国移动",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_18",
+    "alias": "贝肯汉堡",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_19",
+    "alias": "兵之王",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_2",
+    "alias": "四教地下停车场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_20",
+    "alias": "益禾堂",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_21",
+    "alias": "菜鸟驿站",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_22",
+    "alias": "东北美食",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_23",
+    "alias": "大通冰室",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_235",
+    "alias": "南区羽毛球场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_236",
+    "alias": "南区网球场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_237",
+    "alias": "南区篮球场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_238",
+    "alias": "南区足球场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_239",
+    "alias": "天佑斋3幢乒乓球场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_24",
+    "alias": "曹建猷先生纪念碑",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_241",
+    "alias": "天佑斋5幢乒乓球场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_242",
+    "alias": "佑斋10幢乒乓场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_243",
+    "alias": "体育场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_25",
+    "alias": "茶百道",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_26",
+    "alias": "茶百道",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_28",
+    "alias": "避风塘",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_29",
+    "alias": "晨光文具",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_3",
+    "alias": "四教停车区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_30",
+    "alias": "晨光文具同源屋文具",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_31",
+    "alias": "零距离烫染(2F)",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_32",
+    "alias": "星视眼镜(2F)",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_33",
+    "alias": "全家",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_34",
+    "alias": "大鹏超市",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_35",
+    "alias": "巧克西姆",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_36",
+    "alias": "大鹏综合店",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_37",
+    "alias": "中国电信",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_38",
+    "alias": "中国移动",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_39",
+    "alias": "大学生创新创业教育中心",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_4",
+    "alias": "四教停车区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_40",
+    "alias": "稻香苑",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_41",
+    "alias": "伊香园冒菜",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_42",
+    "alias": "杨国富麻辣烫/东北美食",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_43",
+    "alias": "峰子美食霖",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_45",
+    "alias": "古茗/悦美水果",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_46",
+    "alias": "国宏超市",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_47",
+    "alias": "国通快递/中通快递",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_48",
+    "alias": "海鲜煎包/蜜雪冰城",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_49",
+    "alias": "果之园",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_5",
+    "alias": "五教停车区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_51",
+    "alias": "过桥米线/浓情一抹奶茶",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_52",
+    "alias": "豪大大大鸡排/书亦烧仙草",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_53",
+    "alias": "好美佳超市",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_54",
+    "alias": "好象有货",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_55",
+    "alias": "京东派",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_56",
+    "alias": "黑路白霜",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_58",
+    "alias": "天佑斋停车场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_59",
+    "alias": "花溪牛肉粉",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_6",
+    "alias": "六教停车区",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_60",
+    "alias": "华德士",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_62",
+    "alias": "华亿超市",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_63",
+    "alias": "黄万里",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_64",
+    "alias": "鸡公煲",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_65",
+    "alias": "江湖烧烤",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_66",
+    "alias": "交大驾校",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_67",
+    "alias": "交大美发",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_68",
+    "alias": "交大协力印刷厂",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_69",
+    "alias": "交大修车行",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_7",
+    "alias": "停车场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_70",
+    "alias": "交运大楼停车场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_71",
+    "alias": "教材服务中心",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_72",
+    "alias": "晋辽美食",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_74",
+    "alias": "开水房",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_75",
+    "alias": "体育馆篮球场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_77",
+    "alias": "老地方修车",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_79",
+    "alias": "三食堂停车场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_8",
+    "alias": "Milk Tea",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_81",
+    "alias": "中国银行ATM",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_83",
+    "alias": "龙城小炒",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_84",
+    "alias": "龙虾烧烤",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_85",
+    "alias": "龙翔超市",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_86",
+    "alias": "卤肉饭混沌王",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_87",
+    "alias": "罗忠忱先生纪念碑",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_88",
+    "alias": "螺蛳粉",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_89",
+    "alias": "冒水饺",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_9",
+    "alias": "7天超市",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_90",
+    "alias": "焖哥的诱惑/贵阳花溪牛肉粉",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_91",
+    "alias": "蜜雪冰城",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_92",
+    "alias": "木桶鱼",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_93",
+    "alias": "农夫水果/素岛泰茶/欧贝拉蛋糕",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_94",
+    "alias": "路正驾校",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_95",
+    "alias": "茶瑞斯",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_96",
+    "alias": "欧贝拉蛋糕/蜜雪冰城",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_97",
+    "alias": "新湘印务",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  },
+  {
+    "place_id": "swjtu_point_98",
+    "alias": "7教停车场",
+    "alias_kind": "source_normalized",
+    "source_id": "S03",
+    "campus_context_required": true
+  }
+]

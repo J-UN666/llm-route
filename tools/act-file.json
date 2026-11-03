@@ -1,0 +1,5 @@
+[
+  { "type": "click", "sel": "#exampleChips .chip" },
+  { "type": "wait", "ms": 2200 },
+  { "type": "eval", "js": "(function(){return JSON.stringify({url:location.protocol,trace:document.querySelectorAll('.trace-item').length,cards:document.querySelectorAll('.res-card').length,canvas:document.querySelector('.map-canvas')?document.querySelector('.map-canvas').width:0})})()" }
+]

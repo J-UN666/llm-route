@@ -1,0 +1,2 @@
+﻿notice_id,name,source_id,source_published_at,planned_start,planned_end,daily_hours,location_text,notice_effect,geometry,automatic_road_closure,current_verified,note
+WORK_20260916,犀浦校区快递中心（南区）改扩建项目,S08,2026-09-14,2026-09-16,2026-12-30,08:00-12:00;14:00-18:00,犀浦校区快递中心（南区）；见原始施工打围示意图,施工机具、车辆及临时围挡可能影响局部通行,,false,false,计划日期与发布通知，不等于已核实的现场状态；没有地理配准的围挡边界，不自动关闭任何道路。

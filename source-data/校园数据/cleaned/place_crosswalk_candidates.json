@@ -1,0 +1,209 @@
+[
+  {
+    "official_place_id": "swjtu_org_101",
+    "osm_place_id": "osm_way_280172936",
+    "official_name": "风洞实验室",
+    "osm_name": "风洞实验室",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_org_102",
+    "osm_place_id": "osm_way_532472149",
+    "official_name": "工程训练中心",
+    "osm_name": "工程训练中心 A座",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_org_103",
+    "osm_place_id": "osm_way_532472144",
+    "official_name": "机械学院馆外实验室",
+    "osm_name": "机械学院馆外实验室",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_org_106",
+    "osm_place_id": "osm_way_532472143",
+    "official_name": "陆地交通地质灾害防治技术国家工程实验",
+    "osm_name": "陆地交通地质灾害防治技术国家工程实验室",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_org_107",
+    "osm_place_id": "osm_way_413859294",
+    "official_name": "土木工程实验教学中心",
+    "osm_name": "土木工程实验教学中心",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_org_342",
+    "osm_place_id": "osm_way_1098786977",
+    "official_name": "图书馆",
+    "osm_name": "西南交通大学犀浦校区图书馆",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_org_343",
+    "osm_place_id": "osm_way_207596095",
+    "official_name": "游泳馆",
+    "osm_name": "游泳馆",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_org_345",
+    "osm_place_id": "osm_way_207570532",
+    "official_name": "体育馆",
+    "osm_name": "体育馆",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_org_94",
+    "osm_place_id": "osm_way_1098786979",
+    "official_name": "8号教学楼(建筑学院)",
+    "osm_name": "西南交大犀浦8号教学楼",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_org_96",
+    "osm_place_id": "osm_way_532472147",
+    "official_name": "10号教学楼(电气馆)",
+    "osm_name": "电气馆",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_point_1017",
+    "osm_place_id": "osm_node_10059030856",
+    "official_name": "堂吉诃德",
+    "osm_name": "堂吉诃德",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_point_1056",
+    "osm_place_id": "osm_node_10060753399",
+    "official_name": "红旗连锁",
+    "osm_name": "红旗连锁",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_point_118",
+    "osm_place_id": "osm_node_7912594068",
+    "official_name": "全家",
+    "osm_name": "全家",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_point_135",
+    "osm_place_id": "osm_node_9893305422",
+    "official_name": "舞东风",
+    "osm_name": "舞东风",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_point_157",
+    "osm_place_id": "osm_node_9893305423",
+    "official_name": "中国邮政",
+    "osm_name": "中国邮政",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_point_159",
+    "osm_place_id": "osm_node_4150911410",
+    "official_name": "钟",
+    "osm_name": "钟",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_point_235",
+    "osm_place_id": "osm_way_1098808301",
+    "official_name": "南区羽毛球场",
+    "osm_name": "南区羽毛球场",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_point_236",
+    "osm_place_id": "osm_way_1098808299",
+    "official_name": "南区网球场",
+    "osm_name": "南区网球场",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_point_33",
+    "osm_place_id": "osm_node_7912594068",
+    "official_name": "全家",
+    "osm_name": "全家",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_point_39",
+    "osm_place_id": "osm_way_207596107",
+    "official_name": "大学生创新创业教育中心",
+    "osm_name": "大学生创新创业教育中心",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_point_53",
+    "osm_place_id": "osm_node_4150911398",
+    "official_name": "好美佳超市",
+    "osm_name": "好美佳超市",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_point_87",
+    "osm_place_id": "osm_node_9387589810",
+    "official_name": "罗忠忱先生纪念碑",
+    "osm_name": "罗忠忱先生纪念碑",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  },
+  {
+    "official_place_id": "swjtu_point_91",
+    "osm_place_id": "osm_node_10060818531",
+    "official_name": "蜜雪冰城",
+    "osm_name": "蜜雪冰城",
+    "match_method": "normalized_name_only",
+    "match_status": "candidate_requires_review",
+    "coordinate_merge_allowed": false
+  }
+]
