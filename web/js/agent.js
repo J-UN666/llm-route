@@ -34,6 +34,90 @@
       .replace(/^犀浦校区/, '') || n;
   }
 
+  /* ---------- 地点名称规范化与精确索引 ----------
+   * 仅把正式名、稳定别名、去校区前缀/去末尾括号后的完整名称作为
+   * 可命中词条；不做“输入与地名的最长公共子串”式猜测。
+   */
+  var GENERIC_ALIAS = { '停车场': 1, '停车区': 1, '景点': 1 };
+
+  function normName(s) {
+    return String(s == null ? '' : s)
+      .replace(/[\s()（）·\-—_／/，。！？、,.!?;:：；"'“”‘’]/g, '')
+      .toLowerCase();
+  }
+
+  function normalizeForMatch(s) {
+    return normName(s);
+  }
+
+  /* 完整实体边界：地名前后只能是路径词、问句词或本校限定词。
+   * 这样“四川省图书馆”“成都大学图书馆”里的“图书馆”不会被当成
+   * 校内图书馆；而“从图书馆出发”“犀浦校区图书馆”仍然可命中。 */
+  var CAMPUS_QUALIFIERS = [
+    '西南交通大学犀浦校区', '西南交大犀浦校区', '西南交通大学犀浦',
+    '西南交通大学', '西南交大', '西南交大犀浦', '犀浦校区', '犀浦', '交大'
+  ];
+  var PREFIX_BOUNDARY = [
+    '从', '由', '自', '在', '到', '去', '往', '至', '回',
+    '请问', '请', '问一下', '想问', '我想', '我要', '想',
+    '帮我', '帮忙', '带我', '查一下', '查下', '查询', '导航',
+    '前往', '起点', '终点', '出发', '和', '与', '及'
+  ];
+  var SUFFIX_BOUNDARY = [
+    '到', '去', '往', '至', '回', '从', '在',
+    '前往', '去往', '赶往', '步行', '骑车', '打车', '开车', '坐车', '乘车',
+    '想去', '想', '要', '准备', '打算', '然后', '再',
+    '怎么', '如何', '多远', '多久', '出发', '起点', '终点',
+    '吗', '呢', '呀', '啊', '附近', '周边', '门口', '前面', '旁边',
+    '和', '与', '及'
+  ];
+  var LEAD_IN = /^(?:我们|我|请问|请|问一下|想问|我想|我要|想|帮我|帮忙|带我|查一下|查下|查询|导航|前往|从|由|自|在|到|去|往|至|回|和|与|及)+/;
+
+  function endsWithAny(s, words) {
+    for (var i = 0; i < words.length; i++) {
+      if (s.slice(-words[i].length) === words[i]) return true;
+    }
+    return false;
+  }
+
+  function startsWithAny(s, words) {
+    for (var i = 0; i < words.length; i++) {
+      if (s.indexOf(words[i]) === 0) return true;
+    }
+    return false;
+  }
+
+  function mentionBoundaryOk(s, start, end) {
+    var before = s.slice(0, start);
+    var after = s.slice(end);
+    if (before && !endsWithAny(before, PREFIX_BOUNDARY)) {
+      var core = before.replace(LEAD_IN, '');
+      if (CAMPUS_QUALIFIERS.indexOf(core) < 0) return false;
+    }
+    if (!after) return true;
+    return startsWithAny(after, SUFFIX_BOUNDARY);
+  }
+
+  function stripTrailingParen(n) {
+    var s = String(n == null ? '' : n).trim();
+    var out = s.replace(/[（(][^（）()]*[）)]\s*$/, '').trim();
+    return out || s;
+  }
+
+  function entityRank(e) {
+    if (e.kind === 'place') return 30;
+    if (e.kind === 'gate') return 20;
+    return 10;
+  }
+
+  function noCoordReason(e, role) {
+    var label = role === 'destination' ? '目的地' : '起点';
+    var why = e.coordStatus === 'UNDECLARED'
+      ? '官方地点坐标未声明，仅作名称线索'
+      : '官方地点没有可用坐标';
+    return label + '「' + e.name + '」没有可用于算路的可靠坐标（' + why + '），无法计算路线。';
+  }
+
   Agent.prototype.register = function (name, desc, schema, fn) {
     this.tools[name] = { name: name, desc: desc, schema: schema, fn: fn };
   };
@@ -109,61 +193,211 @@
     });
   };
 
-  /* ---------- 地点检索 ---------- */
-  Agent.prototype.searchPlace = function (q) {
-    q = (q || '').trim();
-    if (!q) return { query: q, hits: [] };
+  /* ---------- 地点索引 ---------- */
+  Agent.prototype._buildPlaceIndex = function () {
     var D = this.ctx.data;
-    var norm = function (s) {
-      return (s || '').replace(/[\s()（）·\-—_／/]/g, '').toLowerCase();
-    };
-    var nq = norm(q);
-    var hits = [];
-    var seen = {};
+    var entries = [];
+    var forms = [];
 
-    /* 别名精确命中 */
-    Object.keys(D.aliases || {}).forEach(function (alias) {
-      var na = norm(alias);
-      if (na === nq || na.indexOf(nq) >= 0) {
-        (D.aliases[alias] || []).forEach(function (pid) {
-          if (seen[pid]) return;
-          seen[pid] = 1;
-          var off = (D.official || []).filter(function (o) { return o.id === pid; })[0];
-          if (off) hits.push({ id: pid, name: off.n, kind: 'official', hasXY: off.has_xy, cat: off.cat });
-        });
-      }
-    });
+    function addForm(map, name) {
+      var nf = normName(name);
+      if (nf.length >= 2) map[nf] = name;
+    }
+    function pushEntry(e) {
+      entries.push(e);
+      Object.keys(e.forms).forEach(function (nf) {
+        forms.push({ entry: e, norm: nf, text: e.forms[nf] });
+      });
+    }
 
-    /* 校内 OSM 地点 */
+    /* 校内 OSM 地点：有 WGS84 坐标，可直接参与算路 */
     (D.places || []).forEach(function (p) {
-      var np = norm(p.n);
-      if (!np) return;
-      var score = 0;
-      if (np === nq) score = 100;
-      else if (np.indexOf(nq) >= 0) score = 80;
-      else if (nq.length >= 2 && nq.indexOf(np) >= 0) score = 50;
-      if (score > 0 && !seen[p.id]) {
-        seen[p.id] = 1;
-        hits.push({ id: p.id, name: p.n, kind: 'campus', lng: p.x, lat: p.y, cat: p.c, score: score });
-      }
+      if (!p || !p.n) return;
+      var f = {};
+      addForm(f, p.n);
+      addForm(f, shortName(p.n));
+      addForm(f, stripTrailingParen(p.n));
+      addForm(f, stripTrailingParen(shortName(p.n)));
+      pushEntry({
+        kind: 'place', id: p.id, name: p.n, fullName: p.n,
+        lng: p.x, lat: p.y, category: p.c, forms: f
+      });
     });
 
     /* 校门 */
     (D.gates || []).forEach(function (g) {
-      if (norm(g.n).indexOf(nq) >= 0 && !seen[g.id]) {
-        seen[g.id] = 1;
-        hits.push({ id: g.id, name: g.n, kind: 'gate', lng: g.x, lat: g.y, score: 95 });
+      if (!g || !g.n) return;
+      var f = {};
+      addForm(f, g.n);
+      pushEntry({
+        kind: 'gate', id: g.id, name: g.n, fullName: g.n,
+        lng: g.x, lat: g.y, category: 'gate', forms: f
+      });
+    });
+
+    /* 官方地点：只有名称/别名线索；坐标未声明，不能用于算路 */
+    var aliasesByOfficial = {};
+    Object.keys(D.aliases || {}).forEach(function (alias) {
+      (D.aliases[alias] || []).forEach(function (pid) {
+        (aliasesByOfficial[pid] = aliasesByOfficial[pid] || []).push(alias);
+      });
+    });
+    (D.official || []).forEach(function (o) {
+      if (!o || !o.n) return;
+      var f = {};
+      addForm(f, o.n);
+      addForm(f, stripTrailingParen(o.n));
+      (aliasesByOfficial[o.id] || []).forEach(function (alias) {
+        if (GENERIC_ALIAS[alias]) return;
+        addForm(f, alias);
+        addForm(f, stripTrailingParen(alias));
+      });
+      pushEntry({
+        kind: 'official', id: o.id, name: o.n, fullName: o.n,
+        category: o.cat, hasXY: !!o.has_xy,
+        coordStatus: o.has_xy ? 'UNDECLARED' : 'MISSING',
+        forms: f
+      });
+    });
+
+    this._placeIndex = { entries: entries, forms: forms };
+    return this._placeIndex;
+  };
+
+  Agent.prototype.findMentions = function (text, kinds) {
+    var index = this._placeIndex || this._buildPlaceIndex();
+    var ntext = normalizeForMatch(text);
+    if (!ntext) return [];
+    var allow = {};
+    (kinds || ['place', 'gate', 'official']).forEach(function (k) { allow[k] = 1; });
+
+    var candidates = [];
+    index.forms.forEach(function (f) {
+      if (!allow[f.entry.kind]) return;
+      var from = 0, pos;
+      while ((pos = ntext.indexOf(f.norm, from)) >= 0) {
+        if (mentionBoundaryOk(ntext, pos, pos + f.norm.length)) {
+          candidates.push({ entry: f.entry, start: pos, end: pos + f.norm.length });
+        }
+        from = pos + 1;
       }
     });
 
-    /* 城市目的地 */
+    /* 同一段文字命中多个实体时，按 地点 > 校门 > 官方地点 取主实体；
+     * 同一实体的不同写法去重。 */
+    var grouped = {};
+    candidates.forEach(function (c) {
+      var key = c.start + ':' + c.end;
+      (grouped[key] = grouped[key] || []).push(c);
+    });
+    var spans = [];
+    Object.keys(grouped).forEach(function (key) {
+      var list = grouped[key];
+      var seen = {}, uniq = [];
+      list.forEach(function (c) {
+        var id = c.entry.kind + ':' + c.entry.id;
+        if (seen[id]) return;
+        seen[id] = 1;
+        uniq.push(c);
+      });
+      uniq.sort(function (a, b) {
+        return entityRank(b.entry) - entityRank(a.entry) ||
+          (b.entry.name.length - a.entry.name.length);
+      });
+      spans.push({
+        start: list[0].start,
+        end: list[0].end,
+        primary: uniq[0].entry,
+        alternates: uniq.slice(1).map(function (c) { return c.entry; }),
+        all: uniq.map(function (c) { return c.entry; })
+      });
+    });
+
+    /* 最长、最靠前的完整片段优先，短片段若被更长片段覆盖则丢弃
+     * （例如“西南门”里的“南门”）。 */
+    spans.sort(function (a, b) {
+      return a.start - b.start || (b.end - b.start) - (a.end - a.start);
+    });
+    var out = [], lastEnd = -1;
+    spans.forEach(function (s) {
+      if (s.start < lastEnd) return;
+      out.push(s);
+      lastEnd = s.end;
+    });
+
+    /* 官方别名可能比带坐标的地点简称更长（如“犀浦校区图书馆”“交大图书馆”），
+     * 覆盖后会让可算路的地点丢失。若官方片段以某个带坐标的地点名结尾，
+     * 把该地点提为主实体；官方地点仍保留在候选里，不合并身份。 */
+    out.forEach(function (s) {
+      if (s.primary.kind === 'place') return;
+      var spanText = ntext.slice(s.start, s.end);
+      var best = null;
+      candidates.forEach(function (c) {
+        if (c.entry.kind !== 'place' || c.end !== s.end || c.start < s.start) return;
+        var formText = ntext.slice(c.start, c.end);
+        if (!formText || spanText.slice(-formText.length) !== formText) return;
+        if (!best || formText.length > best.formText.length) {
+          best = { entry: c.entry, formText: formText };
+        }
+      });
+      if (!best) return;
+      s.all = [best.entry].concat(s.all.filter(function (e) {
+        return !(e.kind === best.entry.kind && e.id === best.entry.id);
+      }));
+      s.primary = best.entry;
+      s.alternates = s.all.slice(1);
+    });
+
+    return out;
+  };
+
+  /* ---------- 地点检索 ---------- */
+  Agent.prototype.searchPlace = function (q) {
+    q = (q || '').trim();
+    if (!q) return { query: q, hits: [] };
+    var nq = normName(q);
+    var hits = [];
+    var seen = {};
+
+    function push(h) {
+      var key = h.kind + ':' + h.id;
+      if (seen[key]) return;
+      seen[key] = 1;
+      hits.push(h);
+    }
+
+    this.findMentions(q, ['place', 'gate', 'official']).forEach(function (m) {
+      m.all.forEach(function (e) {
+        if (e.kind === 'place') {
+          push({
+            id: e.id, name: e.name, fullName: e.fullName, kind: 'campus',
+            lng: e.lng, lat: e.lat, cat: e.category, score: 100
+          });
+        } else if (e.kind === 'gate') {
+          push({
+            id: e.id, name: e.name, fullName: e.fullName, kind: 'gate',
+            lng: e.lng, lat: e.lat, score: 95
+          });
+        } else {
+          push({
+            id: e.id, name: e.name, fullName: e.fullName, kind: 'official',
+            lng: null, lat: null, hasXY: false, sourceHasXY: e.hasXY,
+            coordStatus: e.coordStatus, cat: e.category, score: 60
+          });
+        }
+      });
+    });
+
+    /* 城市目的地仍保留包含式检索，用于“春熙路”“天府”等短查询 */
     (this.ctx.city.destinations || []).forEach(function (d) {
-      if (norm(d.name).indexOf(nq) >= 0) {
-        hits.push({ id: d.id, name: d.name, kind: 'city', lng: d.lng, lat: d.lat, score: 90, cat: d.cat });
+      if (normName(d.name).indexOf(nq) >= 0) {
+        push({ id: d.id, name: d.name, kind: 'city', lng: d.lng, lat: d.lat, score: 90, cat: d.cat });
       }
     });
 
-    hits.sort(function (a, b) { return (b.score || 0) - (a.score || 0); });
+    hits.sort(function (a, b) {
+      return (b.score || 0) - (a.score || 0) || String(a.name).length - String(b.name).length;
+    });
     return { query: q, hits: hits.slice(0, 8), ambiguous: hits.length > 1 };
   };
 
@@ -176,10 +410,25 @@
     var r = this.searchPlace(text);
     if (!r.hits.length) return { type: 'unresolved', text: text, name: text };
     var best = r.hits[0];
+    if (best.kind === 'official') {
+      return {
+        type: 'official_only',
+        id: best.id,
+        name: best.name,
+        fullName: best.fullName || best.name,
+        lng: null,
+        lat: null,
+        hasXY: false,
+        coordStatus: best.coordStatus,
+        reason: noCoordReason(best, 'origin'),
+        candidates: r.hits
+      };
+    }
     return {
-      type: best.kind === 'city' ? 'city' : 'place',
+      type: best.kind === 'city' ? 'city' : (best.kind === 'gate' ? 'gate' : 'place'),
       id: best.id,
       name: best.name,
+      fullName: best.fullName || best.name,
       lng: best.lng,
       lat: best.lat,
       hasXY: best.lng != null,
@@ -227,7 +476,7 @@
   Agent.prototype.routeCampus = function (origin, gate, opts) {
     var router = this.ctx.router;
     if (!origin || origin.lng == null) {
-      return { ok: false, reason: '起点缺少可用坐标（官方地点坐标系未声明）' };
+      return { ok: false, reason: (origin && origin.reason) || '起点缺少可用坐标，无法计算路线' };
     }
     if (!gate) return { ok: false, reason: '未选定校门' };
     var plan = router.planToGate(origin.lng, origin.lat, gate, opts);
@@ -321,7 +570,8 @@
         ' 米，乘 ' + o.lineName + ' 至「' + o.station + '」。');
     }
     if (!lines.length) {
-      lines.push('暂无法生成可行路线：' + (r.reason || '起点或目的地信息不足。'));
+      var rr = r.reason || '起点或目的地信息不足。';
+      lines.push(/无法|不能/.test(rr) ? rr : ('暂无法生成可行路线：' + rr));
     }
     return lines.join('');
   };
@@ -363,93 +613,45 @@
     }
 
     /* ---------- 校内地点命中 ----------
-     * 策略：求"输入文本"与"地点名"的最长公共子串（≥2 字），
-     * 兼顾「输入含全名」与「全名含简称」（如"图书馆"⊂"西南交通大学犀浦校区图书馆"）。
-     * 同一位置命中多个地点时，取子串最长、且更靠近句首的。
+     * 只认正式名、稳定别名、校区前缀简称和括号简称的完整命中。
+     * 不再做跨实体的最长公共子串猜测，避免把“材料学院实验教学中心”
+     * 配到“大学生创新创业教育中心”。官方地点没有可用坐标时只作为
+     * 名称线索保留，由 plan() 明确返回“无法计算路线”。
      */
-    function lcsLen(a, b) {
-      if (!a || !b) return 0;
-      var best = 0, bestEnd = 0;
-      var prev = new Array(b.length + 1).fill(0);
-      for (var i = 1; i <= a.length; i++) {
-        var cur = new Array(b.length + 1).fill(0);
-        for (var j = 1; j <= b.length; j++) {
-          if (a[i - 1] === b[j - 1]) {
-            cur[j] = prev[j - 1] + 1;
-            if (cur[j] > best) { best = cur[j]; bestEnd = i; }
-          }
-        }
-        prev = cur;
+    var mentions = this.findMentions(t, ['place', 'official']);
+    var hits = mentions.map(function (m) {
+      var e = m.primary;
+      var p;
+      if (e.kind === 'official') {
+        p = { id: e.id, n: e.name, c: e.category, isOfficial: true, official: e };
+      } else if (e.kind === 'gate') {
+        p = { id: e.id, n: e.name, x: e.lng, y: e.lat, c: 'gate', isGate: true };
+      } else {
+        p = { id: e.id, n: e.name, x: e.lng, y: e.lat, c: e.category };
       }
-      return { len: best, end: bestEnd };
-    }
-
-    /* 匹配前先去掉校区前缀，否则"图书馆"无法与"…犀浦校区图书馆"后缀对齐 */
-    function stripCampus(s) {
-      return String(s || '')
-        .replace(/西南交通大学犀浦校区|西南交大犀浦校区|西南交通大学|西南交大|犀浦校区|犀浦/g, '');
-    }
-    var tNorm = stripCampus(t);
-
-    var hits = [];
-    /* 只认"整名命中 / 前缀命中 / 后缀命中"三种情况。
-     * 中文地点名的辨识信息通常在词尾（"…图书馆"、"…教学楼"），
-     * 用户也常用简称，所以后缀命中要保留；而"学院""食堂"这类
-     * 只出现在词中间的子串不算命中，避免"四食堂"误配"五食堂"。 */
-    var GENERIC = { '学院': 1, '大学': 1, '中心': 1, '实验': 1, '教学': 1, '办公': 1, '楼': 1, '馆': 1, '场': 1, '站': 1, '斋': 1, '园': 1, '门': 1, '区': 1 };
-    (D.places || []).forEach(function (p) {
-      if (!p.n || p.n.length < 2) return;
-      if (GENERIC[p.n]) return;
-      var pn = stripCampus(p.n);
-      if (pn.length < 2) pn = p.n;
-      var m = lcsLen(tNorm, pn);
-      if (m.len < 2) return;
-      var start = m.end - m.len;          /* 在 pn 中的起点 */
-      var isFull = m.len === pn.length;
-      var isPrefix = start === 0;
-      var isSuffix = m.end === pn.length;
-      if (!isFull && !isPrefix && !isSuffix) return;
-      hits.push({
-        p: p,
-        idx: m.end - m.len,               /* 在输入文本中的位置 */
-        len: m.len,
-        full: isFull,
-        anchored: isPrefix || isSuffix,
-        score: (isFull ? 1000 : 0) + m.len * 10 + ((isPrefix || isSuffix) ? 5 : 0)
-      });
-    });
-    /* 校门名也参与（"东门""南门"等短名需要单独保证） */
-    (D.gates || []).forEach(function (g) {
-      var i = tNorm.indexOf(g.n);
-      if (i >= 0) {
-        hits.push({
-          p: { id: g.id, n: g.n, x: g.x, y: g.y, c: 'gate', isGate: true },
-          idx: i, len: g.n.length, full: true, anchored: true, score: 1000 + g.n.length * 10 + 5,
-          gate: g
-        });
-      }
+      return { p: p, idx: m.start, len: m.end - m.start, full: true, anchored: true, score: 1000 };
     });
 
-    /* 官方地点（无坐标）仅作提示 */
-    var officialHit = null;
-    if (!hits.length) {
-      var aliasKeys = Object.keys(D.aliases || {}).sort(function (a, b) { return b.length - a.length; });
-      for (var j = 0; j < aliasKeys.length; j++) {
-        var ak = aliasKeys[j];
-        if (ak.length >= 2 && t.indexOf(ak) >= 0) {
-          var pid = D.aliases[ak][0];
-          var off = (D.official || []).filter(function (o) { return o.id === pid; })[0];
-          if (off) { officialHit = off; break; }
-        }
+    /* 起点线索词位置（"从X"/"在X"/"X出发"），用来区分起终点。
+     * 与 findMentions 使用同一套规范化文本，保证位置可比。 */
+    var ntext = normalizeForMatch(t);
+    var fromMarker = ntext.search(/从|由|自|起点|出发|在/);
+
+    function toPoint(p, role) {
+      if (p.isOfficial) {
+        return {
+          name: p.n,
+          fullName: p.n,
+          type: 'official_only',
+          lng: null, lat: null, id: p.id,
+          category: p.c,
+          hasXY: false,
+          coordStatus: p.official.coordStatus,
+          reason: noCoordReason(p.official, role)
+        };
       }
-    }
-
-    /* 起点线索词位置（"从X"/"在X"/"X出发"），用来区分起终点 */
-    var fromMarker = t.search(/从|由|自|起点|出发|在/);
-
-    function toPoint(p) {
       return {
-        name: shortName(p.n),
+        name: p.isGate ? p.n : shortName(p.n),
         fullName: p.n,
         type: p.isGate ? 'gate' : 'place',
         lng: p.x, lat: p.y, id: p.id,
@@ -478,35 +680,43 @@
 
       if (result.to && result.to.type === 'city') {
         /* 已有城市目的地 → 校内命中作为起点 */
-        result.from = toPoint(uniq[0].p);
+        result.from = toPoint(uniq[0].p, 'origin');
       } else if (uniq.length >= 2) {
         var first = uniq[0], second = uniq[1];
         if (fromMarker >= 0 && Math.abs(second.idx - fromMarker) < Math.abs(first.idx - fromMarker)) {
-          result.from = toPoint(second.p);
-          result.to = toPoint(first.p);
+          result.from = toPoint(second.p, 'origin');
+          result.to = toPoint(first.p, 'destination');
         } else {
-          result.from = toPoint(first.p);
-          result.to = toPoint(second.p);
+          result.from = toPoint(first.p, 'origin');
+          result.to = toPoint(second.p, 'destination');
         }
       } else {
         var only = uniq[0];
         var isOriginish = fromMarker >= 0 && only.idx >= fromMarker - 1 && only.idx - fromMarker <= 8;
         if (isOriginish) {
-          result.from = toPoint(only.p);
+          result.from = toPoint(only.p, 'origin');
         } else if (/去|到|前往|回|至|终点/.test(t)) {
-          result.to = toPoint(only.p);
+          result.to = toPoint(only.p, 'destination');
         } else {
-          result.from = toPoint(only.p);
+          result.from = toPoint(only.p, 'origin');
         }
       }
-    } else if (officialHit) {
-      result.from = { name: officialHit.n, type: 'official_only', id: officialHit.id };
     }
 
-    /* 校门：若目的地是校门，则视为终点 */
+    /* 校门：若目的地是校门，则视为终点。
+     * 沿用旧逻辑按 D.gates 顺序覆盖，保证“东门”两个同名门里仍选
+     * osm_node_13469658219，并让“西南门”优先于其中的“南门”。 */
     var gateHit = null;
     (D.gates || []).forEach(function (g) {
-      if (t.indexOf(g.n) >= 0) gateHit = g;
+      var ng = normName(g.n);
+      if (!ng) return;
+      var gp = -1;
+      while ((gp = ntext.indexOf(ng, gp + 1)) >= 0) {
+        if (mentionBoundaryOk(ntext, gp, gp + ng.length)) {
+          gateHit = g;
+          break;
+        }
+      }
     });
     if (gateHit) {
       result.gate = gateHit;
@@ -552,7 +762,9 @@
       tool: 'resolve_origin',
       desc: '解析起点',
       args: { text: utterance },
-      result: origin ? { name: origin.name, type: origin.type } : { name: null },
+      result: origin
+        ? { name: origin.name, type: origin.type, hasXY: origin.lng != null }
+        : { name: null },
       ms: 3
     });
 
@@ -566,11 +778,36 @@
       ms: 4
     });
 
+    /* 起点/目的地缺少可靠坐标时，先给出明确原因，后续工具不再硬算。 */
+    var failureReason = null;
+    if (!origin && !dest) {
+      failureReason = '未识别到起点或目的地，无法计算路线。';
+    } else if (!origin) {
+      failureReason = '未识别到起点，无法计算路线。';
+    } else if (origin.lng == null) {
+      failureReason = origin.reason ||
+        ('起点「' + origin.name + '」没有可用于算路的可靠坐标，无法计算路线。');
+    } else if (!dest) {
+      failureReason = '未识别到目的地，无法计算路线。';
+    } else if (dest.type !== 'city' && dest.lng == null) {
+      failureReason = dest.reason ||
+        ('目的地「' + dest.name + '」没有可用于算路的可靠坐标，无法计算路线。');
+    }
+
     /* --- 工具 3: 校门 --- */
     var gateInfo = null;
     var destIsCampus = dest && dest.type === 'place';
     var destIsGate = dest && dest.type === 'gate';
-    if (origin && origin.lng != null) {
+    var gateSkipReason = null;
+    if (!origin || origin.lng == null) {
+      gateSkipReason = (origin && origin.reason) || '起点缺少可用坐标，无法选门';
+    } else if (!dest) {
+      gateSkipReason = '未识别目的地，无法选门';
+    } else if (dest.type !== 'city' && dest.lng == null) {
+      gateSkipReason = dest.reason || '目的地缺少可用坐标，无法选门';
+    }
+
+    if (origin && origin.lng != null && dest && (dest.type === 'city' || dest.lng != null)) {
       if (destIsCampus) {
         gateInfo = null;   /* 校内到校内，无需出校 */
       } else if (destIsGate) {
@@ -597,7 +834,10 @@
         tool: 'pick_gate',
         desc: '选择校门',
         args: {},
-        result: { skipped: true, reason: '起点坐标不可用' },
+        result: {
+          skipped: true,
+          reason: gateSkipReason || '无法选择校门'
+        },
         ms: 1
       });
     }
@@ -648,14 +888,25 @@
         });
       }
     } else {
+      var campusSkipReason;
+      if (origin && origin.lng == null) {
+        campusSkipReason = origin.reason || '起点缺少可用坐标，无法计算路线';
+      } else if (!dest) {
+        campusSkipReason = '未识别目的地，无法计算路线';
+      } else if (dest.type !== 'city' && dest.lng == null) {
+        campusSkipReason = dest.reason || '目的地缺少可用坐标，无法计算路线';
+      } else {
+        campusSkipReason = '缺少起点或终点';
+      }
+      /* 以失败态返回，前端现有的“校内段未能生成”提示即可显示原因，
+       * 不需要为缺少坐标另加一套静默分支。 */
+      var campusReason = failureReason || campusSkipReason;
+      campus = { ok: false, reason: campusReason };
       steps.push({
         tool: 'route_campus',
         desc: '校内步行路径（A*）',
         args: {},
-        result: {
-          skipped: true,
-          reason: origin && origin.lng == null ? '起点缺少 WGS84 坐标（官方地点坐标系未声明）' : '缺少起点或终点'
-        },
+        result: { skipped: true, reason: campusReason },
         ms: 1
       });
     }
@@ -672,11 +923,21 @@
         ms: 8
       });
     } else {
+      var citySkipReason;
+      if (!dest) {
+        citySkipReason = '未识别目的地';
+      } else if (dest.type !== 'city') {
+        citySkipReason = '目的地为校内或非城市地点';
+      } else if (!origin || origin.lng == null) {
+        citySkipReason = (origin && origin.reason) || '起点缺少可用坐标，无法选门';
+      } else {
+        citySkipReason = '缺少校门';
+      }
       steps.push({
         tool: 'route_city',
         desc: '城市段接驳',
         args: {},
-        result: { skipped: true, reason: dest && dest.type === 'city' ? '缺少校门' : '目的地为校内' },
+        result: { skipped: true, reason: citySkipReason },
         ms: 1
       });
     }
@@ -698,12 +959,13 @@
     });
 
     /* --- 工具 7: 生成描述 --- */
+    var reason = failureReason || (campus && !campus.ok ? campus.reason : null);
     var desc = this.describe({
       campus: campus,
       city: cityRes,
       originName: origin ? origin.name : null,
       destName: dest ? dest.name : null,
-      reason: campus && !campus.ok ? campus.reason : null
+      reason: reason
     });
     steps.push({
       tool: 'describe_route',
@@ -723,6 +985,7 @@
       campus: campus,
       city: cityRes,
       quality: quality,
+      reason: reason,
       text: desc,
       steps: steps
     };
