@@ -7,11 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 
-const CHROME = process.env.CHROME || (process.platform === 'win32'
-  ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
-  : process.platform === 'darwin'
-    ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-    : '/usr/bin/google-chrome');
+const CHROME = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 const url = process.argv[2] || 'http://127.0.0.1:5178/';
 const out = process.argv[3] || path.join(__dirname, '..', 'shots', 'shot.png');
 const W = parseInt(process.argv[4] || '1440', 10);
