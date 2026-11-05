@@ -622,9 +622,15 @@
       var hits = [];
       q = (q || '').trim();
 
-      /* 校门 */
+      /* 校门：稳定校门 ID + 可搜索别名（如 东门/东大门） */
       DATA.gates.forEach(function (g) {
-        hits.push({ label: g.n, meta: '校门 · 待核实', lng: g.x, lat: g.y, kind: 'gate', id: g.id });
+        var al = (g.aliases || []).filter(function (a) { return a && a !== g.n; });
+        hits.push({
+          label: g.n,
+          aliases: al,
+          meta: '校门 · 待核实' + (al.length ? ' · 别名 ' + al.join(' / ') : ''),
+          lng: g.x, lat: g.y, kind: 'gate', id: g.id
+        });
       });
       /* 校园地点 */
       DATA.places.forEach(function (p) {
@@ -640,21 +646,27 @@
 
       if (q) {
         var nq = q.toLowerCase();
-        hits = hits.filter(function (h) {
-          return (h.label || '').toLowerCase().indexOf(nq) >= 0;
-        });
+        var matchIdx = function (h) {
+          var best = -1;
+          [h.label].concat(h.aliases || []).forEach(function (f) {
+            var i = (f || '').toLowerCase().indexOf(nq);
+            if (i >= 0 && (best < 0 || i < best)) best = i;
+          });
+          return best;
+        };
+        hits = hits.filter(function (h) { return matchIdx(h) >= 0; });
         hits.sort(function (a, b) {
-          var ai = a.label.toLowerCase().indexOf(nq);
-          var bi = b.label.toLowerCase().indexOf(nq);
+          var ai = matchIdx(a), bi = matchIdx(b);
           if (ai !== bi) return ai - bi;
           return a.label.length - b.label.length;
         });
       }
 
-      /* 去重 */
+      /* 去重按稳定 ID：同名但不同实体（例如两个同名地点）不能互相吞掉；
+       * 同一校门的两条车道已在上游合并为一个 gate 条目。 */
       var seen = {};
       hits = hits.filter(function (h) {
-        var k = h.label + '|' + h.kind;
+        var k = h.kind + ':' + h.id;
         if (seen[k]) return false;
         seen[k] = 1;
         return true;
@@ -756,7 +768,8 @@
       el.textContent = '城市目的地 · ' + (h.meta || '成都') + ' · 城市段数据为人工整理，仅供参考';
       el.classList.add('warn');
     } else if (h.kind === 'gate') {
-      el.textContent = '校门 · 开放状态待核实（数据包未提供通行规则）';
+      el.textContent = '校门 · 开放状态待核实（数据包未提供通行规则）' +
+        (h.aliases && h.aliases.length ? ' · 别名 ' + h.aliases.join(' / ') : '');
       el.classList.add('warn');
     } else if (h.kind === 'place') {
       el.textContent = '校内地点 · ' + (h.meta || CAT_NAMES[h.c] || '地点') + ' · 坐标来自 OSM，入口未核实';
@@ -768,10 +781,13 @@
     }
   }
 
-  /* 默认值 */
-  var libPlace = DATA.places.filter(function (p) { return p.n === '图书馆'; })[0];
-  if (libPlace) {
-    state.origin = { label: '图书馆', lng: libPlace.x, lat: libPlace.y, kind: 'place', id: libPlace.id };
+  /* 默认值：数据里是正式名“西南交通大学犀浦校区图书馆”，
+   * 与输入框预填的简称“图书馆”对齐，避免首屏表单缺少起点状态。 */
+  var libHit = agent.searchPlace('图书馆').hits.filter(function (h) {
+    return (h.kind === 'campus' || h.kind === 'place') && h.lng != null;
+  })[0];
+  if (libHit) {
+    state.origin = { label: '图书馆', lng: libHit.lng, lat: libHit.lat, kind: 'place', id: libHit.id };
     setHint(originHint, state.origin, true);
   }
 
@@ -830,12 +846,20 @@
         /* 回填输入框 */
         if (res.origin) {
           originInput.value = res.origin.name;
-          state.origin = { label: res.origin.name, lng: res.origin.lng, lat: res.origin.lat, kind: 'place' };
+          state.origin = {
+            label: res.origin.name, id: res.origin.id,
+            lng: res.origin.lng, lat: res.origin.lat,
+            kind: res.origin.type === 'gate' ? 'gate' : 'place'
+          };
           setHint(originHint, state.origin, true);
         }
         if (res.destination) {
           destInput.value = res.destination.name;
-          state.dest = { label: res.destination.name, lng: res.destination.lng, lat: res.destination.lat, kind: res.destination.type };
+          state.dest = {
+            label: res.destination.name, id: res.destination.id,
+            lng: res.destination.lng, lat: res.destination.lat,
+            kind: res.destination.type
+          };
           setHint(destHint, state.dest, false);
         }
       } else {
@@ -881,7 +905,8 @@
     var gateInfo = null;
     if (o && o.lng != null) {
       if (d && d.kind === 'gate') {
-        var g = DATA.gates.filter(function (x) { return x.n === d.label || x.id === d.id; })[0];
+        /* 表单与自然语言共用同一校门解析（稳定 ID 优先，别名回退） */
+        var g = agent.findGate(d);
         if (g) gateInfo = { gate: g, all: [g], basis: 'user_specified' };
       } else if (d && d.kind === 'place') {
         /* 校内两点：不需要城市校门 */
@@ -902,37 +927,57 @@
 
     /* 校内路径 */
     var campus = null;
+    /* 起点是校门时按进校车道节点接入，不能拿校门外侧的 x/y 直接算路。 */
+    var originGate = o && o.kind === 'gate' ? agent.findGate(o) : null;
     if (o && o.lng != null && d) {
       if (d.kind === 'place') {
-        /* 校内点到校内点 */
-        var r = router.planBetween(
-          { lng: o.lng, lat: o.lat },
-          { lng: d.lng, lat: d.lat }
-        );
-        if (r) {
-          campus = {
-            ok: true,
-            plans: [{
-              key: 'A', label: '最短步行',
-              meters: r.summary.meters,
-              coords: r.coords,
-              summary: r.summary,
-              accessDist: Math.round(r.startAccess)
-            }],
-            chosen: 'A',
-            gate: null,
-            accessDist: Math.round(r.startAccess)
-          };
+        if (originGate) {
+          campus = agent.routeFromGate(originGate,
+            { lng: d.lng, lat: d.lat, name: d.label }, { mode: state.mode });
+          steps.push({
+            tool: 'route_campus',
+            desc: '校内步行路径（A*）',
+            args: { gate: originGate.n, destination: d.label },
+            result: campus.ok
+              ? {
+                meters: campus.plans[0].meters,
+                segments: campus.plans[0].summary.segments.length,
+                gateNodeId: campus.gateNodeId, direction: campus.direction
+              }
+              : { ok: false, reason: campus.reason },
+            ms: 14
+          });
         } else {
-          campus = { ok: false, reason: '两点不在同一连通分量' };
+          /* 校内点到校内点 */
+          var r = router.planBetween(
+            { lng: o.lng, lat: o.lat },
+            { lng: d.lng, lat: d.lat }
+          );
+          if (r) {
+            campus = {
+              ok: true,
+              plans: [{
+                key: 'A', label: '最短步行',
+                meters: r.summary.meters,
+                coords: r.coords,
+                summary: r.summary,
+                accessDist: Math.round(r.startAccess)
+              }],
+              chosen: 'A',
+              gate: null,
+              accessDist: Math.round(r.startAccess)
+            };
+          } else {
+            campus = { ok: false, reason: '两点不在同一连通分量' };
+          }
+          steps.push({
+            tool: 'route_campus',
+            desc: '校内步行路径（A*）',
+            args: { origin: o.label, destination: d.label },
+            result: campus.ok ? { meters: campus.plans[0].meters, segments: campus.plans[0].summary.segments.length } : { ok: false, reason: campus.reason },
+            ms: 14
+          });
         }
-        steps.push({
-          tool: 'route_campus',
-          desc: '校内步行路径（A*）',
-          args: { origin: o.label, destination: d.label },
-          result: campus.ok ? { meters: campus.plans[0].meters, segments: campus.plans[0].summary.segments.length } : { ok: false, reason: campus.reason },
-          ms: 14
-        });
       } else if (gateInfo) {
         campus = agent.routeCampus({ lng: o.lng, lat: o.lat, name: o.label }, gateInfo.gate, { mode: state.mode });
         steps.push({
@@ -940,7 +985,11 @@
           desc: '校内步行路径（A*）',
           args: { origin: o.label, gate: gateInfo.gate.n },
           result: campus.ok
-            ? { meters: campus.plans[0].meters, plans: campus.plans.length, segments: campus.plans[0].summary.segments.length }
+            ? {
+              meters: campus.plans[0].meters, plans: campus.plans.length,
+              segments: campus.plans[0].summary.segments.length,
+              gateNodeId: campus.gateNodeId, direction: campus.direction
+            }
             : { ok: false, reason: campus.reason },
           ms: 14
         });
@@ -1051,14 +1100,29 @@
       h.push('<div class="res-card-head"><span class="dotmark"></span>本次查询</div>');
       h.push('<div class="res-card-body" style="padding:10px 12px">');
       h.push('<div style="font-size:12.5px;line-height:1.9">');
+      var originMeta = '';
+      if (res.campus && res.campus.gateRole === 'origin' && res.campus.gate) {
+        var originHasLane = res.campus.gate.laneNodes || res.campus.gate.routeNodes;
+        originMeta = ' <span style="color:#9aa8b8;font-size:11px">（' +
+          (originHasLane ? '进校车道 ' : '路网终点 ') + esc(res.campus.gateNodeId) + '）</span>';
+      }
       h.push('<div><span class="pill pill-info" style="margin-right:6px">起</span>' +
-        esc(res.origin ? res.origin.name || res.origin.label : '—') + '</div>');
+        esc(res.origin ? res.origin.name || res.origin.label : '—') + originMeta + '</div>');
       h.push('<div><span class="pill pill-danger" style="margin-right:6px">终</span>' +
         esc(res.destination ? res.destination.name || res.destination.label : '—') + '</div>');
       if (res.gate) {
+        var gateMeta = res.gateBasis === 'user_specified' ? '用户指定' : 'Agent 按方位推荐';
+        if (res.campus && res.campus.gateNodeId) {
+          /* 只有确实标注了进/出车道的校门才写“车道”，普通门只报路网终点。 */
+          var hasLane = res.gate.laneNodes || res.gate.routeNodes;
+          var nodeLabel = hasLane
+            ? (res.campus.direction === 'in' ? '进校车道 ' : '出校车道 ')
+            : '路网终点 ';
+          gateMeta += ' · ' + nodeLabel + res.campus.gateNodeId;
+        }
         h.push('<div><span class="pill pill-warn" style="margin-right:6px">门</span>' +
           esc(res.gate.n) + ' <span style="color:#9aa8b8;font-size:11px">（' +
-          (res.gateBasis === 'user_specified' ? '用户指定' : 'Agent 按方位推荐') + '）</span></div>');
+          esc(gateMeta) + '）</span></div>');
       }
       h.push('</div></div></div>');
     }
@@ -1291,7 +1355,17 @@
   }
 
   function openGateDrawer(g) {
-    var html = kv('名称', g.n) + kv('OSM 门节点', g.nodeIds ? g.nodeIds.join(' / ') : g.id) +
+    var aliasTxt = (g.aliases || []).join(' / ');
+    var laneTxt = (g.laneNodes || []).map(function (l) {
+      return (l.direction === 'in' ? '进校 ' : '出校 ') + l.nodeId +
+        (l.basis ? '（' + l.basis + '）' : '');
+    }).join(' / ');
+    var defaultNode = (g.routeNodes && g.routeNodes.default && g.routeNodes.default.out) ||
+      g.routeNodeId || '—';
+    var html = kv('名称', g.n) + (aliasTxt ? kv('别名', aliasTxt) : '') +
+      kv('关联路网节点', g.nodeIds ? g.nodeIds.join(' / ') : g.id) +
+      (laneTxt ? kv('进/出校车道', laneTxt) : '') +
+      kv('默认路由终点', defaultNode) +
       kv('坐标', g.x + ', ' + g.y) + kv('坐标系', 'WGS84') +
       kv('距边界', g.bd + ' m') + kv('通行状态', g.pass) +
       kv('routing_ready', 'false') +
@@ -1337,7 +1411,7 @@
       { label: '禁行边', value: q.networkStats.prohibited, note: '来源标注步行禁止' },
       { label: '条件通行边', value: q.networkStats.conditional, note: 'private/permit/customers 等' },
       { label: '跨校界边段', value: q.networkStats.crossBoundary, note: '未伪造校门连接' },
-      { label: '校门候选', value: DATA.gates.length, note: '含 2 个"东门"节点，需消歧' },
+      { label: '校门候选', value: DATA.gates.length, note: '东门进/出车道已合并，通行状态待核实' },
       { label: 'P0 待核实项', value: q.p0Count, note: '最高优先级数据风险' },
       { label: 'routing_ready', value: 'false', small: true, note: '全部数据尚未通过实地验收' }
     ];

@@ -30,9 +30,9 @@
     "issue_id": "Q04",
     "priority": "P1",
     "dataset": "campus_gate_candidates",
-    "issue": "存在两个名称均为“东门”的独立OSM节点",
-    "impact": "同名不等于重复，可能为同一门区不同位置或不同出入口",
-    "action": "保留两个来源ID；现场确认后再决定是否映射到同一校门实体。",
+    "issue": "东门两条单行车道节点已按方向关联到同一校门实体，现场通行规则仍未核实",
+    "impact": "应用层按同一校门处理；若现场并非同一门区，进/出方向与开放规则可能不符",
+    "action": "保留两个来源节点及连边；现场核对进/出车道、人行入口与开放时段，核实前 routing_ready 保持 false。",
     "blocks": "gate_entity_resolution"
   },
   {

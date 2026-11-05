@@ -2,7 +2,7 @@
 Q01,P0,official_places,官方矢量位置坐标系未声明,199条官方地点的位置不能直接当WGS84/GCJ-02/BD-09混入导航,先用于名称搜索；向地图维护方核对坐标系，或逐一在一致底图上核实入口。,official_coordinate_routing
 Q02,P0,official_places,rasterLngLatString是图示位置字段，不能等同实地地理坐标,错误使用可能造成明显位置偏移,平台图示位置字段未纳入本精简数据包；不要将其当作真实地理经纬度导入。,raster_coordinate_routing
 Q03,P0,campus_gate_candidates,地图名与OSM校门名尚未逐一对齐，开放时段和步行权限未现场核实,不能仅按“西门/西南门”等近似名称自动选择校门,优先人工核对两个MVP校门：坐标、官方名称、对应道路节点、步行出入规则。,gate_route_release
-Q04,P1,campus_gate_candidates,存在两个名称均为“东门”的独立OSM节点,同名不等于重复，可能为同一门区不同位置或不同出入口,保留两个来源ID；现场确认后再决定是否映射到同一校门实体。,gate_entity_resolution
+Q04,P1,campus_gate_candidates,东门两条单行车道节点已按方向关联到同一校门实体，现场通行规则仍未核实,应用层按同一校门处理；若现场并非同一门区，进/出方向与开放规则可能不符,保留两个来源节点及连边；现场核对进/出车道、人行入口与开放时段，核实前 routing_ready 保持 false。,gate_entity_resolution
 Q05,P1,graph_edges_candidates,几何图有3个连通分量，其中主分量1290节点，另两个各2节点,有两段孤立道路，不能保证任意起终点可达,核对孤立线段；不凭最近距离跨河、跨围墙或跨层补边。,complete_route_coverage
 Q06,P0,graph_edges_candidates,大量道路未明确标注步行权限，另有受限或禁止通行标记,候选图不能直接作为对外导航服务,保留prohibited/conditional/unspecified状态；逐段核验MVP路线，不能默认全开放。,unreviewed_graph_routing
 Q07,P0,mvp_seed_candidates,楼宇使用轮廓质心或地图标注点，尚无核实的入口和接路边,从楼中心直接连最近道路可能穿墙、穿水域或连接封闭道路,为10个候选地点补入口节点、允许步行的接路边，再验收起点到校门路线。,building_to_gate_routing

@@ -244,4 +244,137 @@ examples.forEach(ex => {
   }
 });
 
-console.log('验收断言通过：材料学院不误配且不硬算；外部图书馆不按“图书馆”子串硬配；图书馆、四食堂、天佑斋、体育馆主流程正常；未知地点不硬配。');
+/* 7. 东大门：进/出车道合并为一个校门实体，表单与自然语言同一终点 */
+const eastGates = DATA.gates.filter(g => g.n === '东门');
+assert.strictEqual(eastGates.length, 1, '东门应只有一个稳定校门实体');
+const eastGate = eastGates[0];
+assert.strictEqual(eastGate.id, 'campus_gate_east', '东门稳定 ID 应为 campus_gate_east');
+assert.strictEqual(JSON.stringify(eastGate.aliases), JSON.stringify(['东大门']), '东门别名应包含东大门');
+assert.strictEqual(JSON.stringify(eastGate.nodeIds),
+  JSON.stringify(['osm_node_4150911420', 'osm_node_13469658219']),
+  '东门应关联进校与出校两个原始节点');
+assert.strictEqual(eastGate.routeNodes.default.in, 'osm_node_4150911420',
+  '默认进校节点=4150911420');
+assert.strictEqual(eastGate.routeNodes.default.out, 'osm_node_13469658219',
+  '默认出校节点=13469658219');
+assert.strictEqual(eastGate.routeNodeId, 'osm_node_13469658219', '默认路由终点应为出校车道');
+assert.strictEqual(eastGate.campusOnly, undefined, '东门应保留城市接驳（非 campusOnly）');
+assert.strictEqual(DATA.gates.some(g => g.id === 'osm_node_4150911420' ||
+  g.id === 'osm_node_13469658219'), false, '两条车道节点不能继续作为独立门候选');
+
+/* 两个原始节点及连边仍保留 */
+['osm_node_4150911420', 'osm_node_13469658219'].forEach(nid => {
+  const idx = DATA.nodeIds.indexOf(nid);
+  assert.ok(idx >= 0, nid + ' 应保留在路网节点中');
+  const hasEdge = DATA.edges.some(e => e[0] === idx || e[1] === idx);
+  assert.ok(hasEdge, nid + ' 应保留至少一条连边');
+});
+
+/* 表单/自然语言检索与别名 */
+['东门', '东大门'].forEach(q => {
+  const s = agent.searchPlace(q);
+  const gates = s.hits.filter(h => h.kind === 'gate');
+  assert.strictEqual(gates.length, 1, '“' + q + '”应只命中一个校门');
+  assert.strictEqual(gates[0].id, 'campus_gate_east', '“' + q + '”应命中稳定校门 ID');
+  assert.strictEqual(s.hits.some(h => h.kind === 'campus' && h.name === '东门'), false,
+    '“' + q + '”不能再命中 barrier_or_gate 的独立地点条目');
+});
+assert.strictEqual(agent.findGate('东大门').id, 'campus_gate_east', 'findGate 应识别别名');
+assert.strictEqual(agent.findGate({ id: 'campus_gate_east' }).n, '东门', 'findGate 应优先按稳定 ID');
+
+/* 自然语言“到东门/到东大门”走同一出校节点 */
+const nlEast = agent.plan('从图书馆到东门', { mode: 'walk' });
+const nlEastAlias = agent.plan('从图书馆到东大门', { mode: 'walk' });
+[nlEast, nlEastAlias].forEach(r2 => {
+  assert.strictEqual(r2.gate.id, 'campus_gate_east', '自然语言应选用合并后的东门');
+  assert.strictEqual(r2.destination.id, 'campus_gate_east', '自然语言目的地应为合并后的东门');
+  assert.ok(r2.campus && r2.campus.ok, '自然语言到东门应有校内路线');
+  assert.strictEqual(r2.campus.gateNodeId, 'osm_node_13469658219', '校内→校外应走出校车道');
+  assert.strictEqual(r2.campus.direction, 'out', '默认方向应为出校');
+  assert.ok(r2.text.indexOf('出校车道') >= 0, '路线说明应标明出校车道');
+});
+assert.strictEqual(nlEast.campus.plans[0].meters, nlEastAlias.campus.plans[0].meters,
+  '“东门”和“东大门”的路线距离应一致');
+assert.strictEqual(JSON.stringify(nlEast.campus.plans[0].coords),
+  JSON.stringify(nlEastAlias.campus.plans[0].coords),
+  '“东门”和“东大门”的路径终点应一致');
+
+/* 表单路径：与自然语言同一起点、方式、方向 → 同一终点与距离 */
+const formGate = agent.findGate({ id: 'campus_gate_east', label: '东门', kind: 'gate' });
+const formEast = agent.routeCampus(
+  { lng: nlEast.origin.lng, lat: nlEast.origin.lat, name: '图书馆' }, formGate, { mode: 'walk' });
+assert.ok(formEast.ok, '表单选东门应能生成校内路线');
+assert.strictEqual(formEast.gateNodeId, nlEast.campus.gateNodeId, '表单与自然语言应使用同一路由终点');
+assert.strictEqual(formEast.direction, nlEast.campus.direction, '表单与自然语言方向应一致');
+assert.strictEqual(formEast.plans[0].meters, nlEast.campus.plans[0].meters,
+  '表单与自然语言校内距离应一致');
+assert.strictEqual(JSON.stringify(formEast.plans[0].coords),
+  JSON.stringify(nlEast.campus.plans[0].coords),
+  '表单与自然语言校内路径应完全一致');
+
+/* 路径终点坐标 = 出校节点坐标，且选门信息与实际终点一致 */
+const outIdx = DATA.nodeIds.indexOf('osm_node_13469658219');
+const lastCoord = nlEast.campus.plans[0].coords[nlEast.campus.plans[0].coords.length - 1];
+assert.strictEqual(JSON.stringify(lastCoord), JSON.stringify(DATA.nodes[outIdx]),
+  '自然语言路径终点应为出校节点坐标');
+assert.strictEqual(formEast.plans[0].coords.slice(-1)[0][0], DATA.nodes[outIdx][0],
+  '表单路径终点 X 应为出校节点坐标');
+assert.strictEqual(formEast.plans[0].coords.slice(-1)[0][1], DATA.nodes[outIdx][1],
+  '表单路径终点 Y 应为出校节点坐标');
+
+/* 按方向/通行方式解析门节点 */
+const inPlan = router.planToGate(nlEast.origin.lng, nlEast.origin.lat, eastGate,
+  { mode: 'walk', direction: 'in' });
+assert.strictEqual(inPlan.gateNodeId, 'osm_node_4150911420', 'direction=in 应选进校节点');
+assert.strictEqual(inPlan.gateIdx, DATA.nodeIds.indexOf('osm_node_4150911420'),
+  'direction=in 的路由终点索引应为进校节点');
+assert.ok(inPlan.plans.length > 0, '进校方向也应有可行路径');
+assert.strictEqual(router.gateRouteNodeId(eastGate, { mode: 'bike', direction: 'out' }),
+  'osm_node_13469658219', '未单独配置的方式应回退 default 的出校节点');
+
+/* 反向查询：校门作为起点时必须从进校车道节点起步，不能沿用门外坐标 */
+const inIdxRev = DATA.nodeIds.indexOf('osm_node_4150911420');
+const revNL = agent.plan('从东门到图书馆', { mode: 'walk' });
+assert.ok(revNL.campus && revNL.campus.ok, '从东门到图书馆应能生成校内路线');
+assert.strictEqual(revNL.campus.gateRole, 'origin', '校门起点应标记为 origin');
+assert.strictEqual(revNL.campus.gateNodeId, 'osm_node_4150911420',
+  '校门起点应从进校车道节点 4150911420 起步');
+assert.strictEqual(revNL.campus.direction, 'in', '校门起点方向应为进校');
+assert.ok(revNL.text.indexOf('进校车道') >= 0, '反向路线说明应标明进校车道');
+assert.strictEqual(revNL.campus.plans[0].coords[0][0], DATA.nodes[inIdxRev][0],
+  '反向路径首点 X 应为进校节点坐标');
+assert.strictEqual(revNL.campus.plans[0].coords[0][1], DATA.nodes[inIdxRev][1],
+  '反向路径首点 Y 应为进校节点坐标');
+
+/* 表单等价：同一个 routeFromGate 入口，与自然语言同终点、同轨迹 */
+const revForm = agent.routeFromGate(formGate, nlEast.origin, { mode: 'walk' });
+assert.ok(revForm.ok, '表单以东门为起点应能生成校内路线');
+assert.strictEqual(revForm.gateNodeId, revNL.campus.gateNodeId,
+  '表单与自然语言反向查询应使用同一进校节点');
+assert.strictEqual(revForm.direction, 'in', '表单反向查询方向应为进校');
+assert.strictEqual(revForm.plans[0].meters, revNL.campus.plans[0].meters,
+  '表单与自然语言反向距离应一致');
+assert.strictEqual(JSON.stringify(revForm.plans[0].coords),
+  JSON.stringify(revNL.campus.plans[0].coords),
+  '表单与自然语言反向轨迹应完全一致');
+const revAlias = agent.plan('从东大门到图书馆', { mode: 'walk' });
+assert.strictEqual(revAlias.campus.gateNodeId, 'osm_node_4150911420',
+  '别名“东大门”作为起点也应从进校节点起步');
+assert.strictEqual(revAlias.campus.plans[0].meters, revNL.campus.plans[0].meters,
+  '“东门”和“东大门”作为起点距离应一致');
+
+/* 城市接驳和其他校门不回退 */
+const eastCity = agent.routeCity(eastGate, '天府广场');
+assert.ok(eastCity.ok && eastCity.options.length === 2, '东门应保留两条城市接驳');
+['南门', '西北一门', '风洞门', '西南门', '西门'].forEach(name => {
+  const s = agent.searchPlace(name);
+  assert.ok(s.hits.some(h => h.kind === 'gate' && h.name === name), name + ' 仍应可检索');
+});
+const southPlan = agent.plan('四食堂到南门', {});
+assert.ok(southPlan.campus && southPlan.campus.ok, '其他校门仍应能生成校内路线');
+assert.strictEqual(southPlan.gate.n, '南门', '其他校门目的地不应被东门影响');
+const westPlan = agent.plan('四食堂到西门', {});
+assert.ok(westPlan.campus && westPlan.campus.ok, '西门仍应能生成校内路线');
+assert.strictEqual(westPlan.campus.gateNodeId, 'osm_node_11668769188', '西门应继续走既有 routeNodeId');
+
+console.log('验收断言通过：东门两条单行车道合并为一个校门实体（保留节点/连边），东门/东大门表单与自然语言同终点；校内→校外走出校车道，校门→校内走进校车道；其他校门与城市接驳正常。');

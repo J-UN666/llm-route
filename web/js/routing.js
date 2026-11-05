@@ -251,12 +251,52 @@
    * 方案 B：避开"条件通行"路段（更稳妥）
    * 方案 C：经指定校门（若起点/终点在校内且目标为城市）
    */
+  /* 校门可关联多个路网节点（如东门的进校/出校车道）。routeNodes 支持：
+   *   { default: {in, out}, walk: {...}, bike: {...} }   按通行方式覆盖 default
+   *   [{ direction:'in', nodeId:'...', modes:['walk'] }]  数组写法
+   * direction 缺省为 out（校内→校外）；没有 routeNodes 的旧数据回退
+   * routeNodeId / id，保持西门等既有校门可用。 */
+  CampusRouter.prototype.gateRouteNodeId = function (gate, opts) {
+    opts = opts || {};
+    var direction = opts.direction === 'in' ? 'in' : 'out';
+    var mode = opts.mode || 'walk';
+    if (!gate) return null;
+    var rn = gate.routeNodes;
+    if (Array.isArray(rn)) {
+      var sameDir = rn.filter(function (r) { return r && r.direction === direction; });
+      var hit = sameDir.filter(function (r) {
+        return !r.modes || r.modes.indexOf(mode) >= 0;
+      })[0] || sameDir[0];
+      return hit ? hit.nodeId : null;
+    }
+    if (rn && typeof rn === 'object') {
+      var byMode = rn[mode] || rn.default;
+      if (byMode && byMode[direction]) return byMode[direction];
+      if (rn[direction]) return rn[direction];
+    }
+    return gate.routeNodeId || gate.id || null;
+  };
+
+  CampusRouter.prototype.gateNodeIndex = function (gate, opts) {
+    var nodeId = this.gateRouteNodeId(gate, opts);
+    var index = nodeId != null ? this.nodeIndexById(nodeId) : -1;
+    if (index < 0 && gate && gate.x != null && gate.y != null) {
+      index = this.nearestNode(gate.x, gate.y, { connectedOnly: true }).index;
+      nodeId = null;
+    }
+    return { index: index, nodeId: nodeId };
+  };
+
   CampusRouter.prototype.planToGate = function (fromLng, fromLat, gate, opts) {
     opts = opts || {};
     var self = this;
     var startN = this.nearestNode(fromLng, fromLat, { connectedOnly: true });
-    var gateIdx = this.nodeIndexById(gate.routeNodeId || gate.id);
+    var gateRes = this.gateNodeIndex(gate, opts);
+    var gateIdx = gateRes.index;
     if (gateIdx < 0) return null;
+    var gateNodeId = gateRes.nodeId ||
+      (this.data.nodeIds && this.data.nodeIds[gateIdx]) || null;
+    var direction = opts.direction === 'in' ? 'in' : 'out';
 
     var plans = [];
 
@@ -282,6 +322,8 @@
     return {
       startNode: startN,
       gateIdx: gateIdx,
+      gateNodeId: gateNodeId,
+      direction: direction,
       plans: plans
     };
   };

@@ -106,6 +106,30 @@ mvp_list = [{
 } for p in mvp]
 
 # ---------- 校门 ----------
+barriers_by_id = {g['gate_id']: g for g in load('cleaned/osm_barrier_points.json')}
+
+# 东门在 OSM 中是同一门区的两条单行车道：4150911420 进校（东→西），
+# 13469658219 出校（西→东）。犀浦校区只有一座东大门，应用层用一个稳定
+# 校门 ID 关联两条车道；来源节点与路网连边都保留，路由按方向取终点。
+EAST_GATE_ID = 'campus_gate_east'
+EAST_IN_NODE_ID = 'osm_node_4150911420'
+EAST_OUT_NODE_ID = 'osm_node_13469658219'
+EAST_GATE_NODE_IDS = [EAST_IN_NODE_ID, EAST_OUT_NODE_ID]
+EAST_GATE_ALIASES = ['东大门']
+
+east_name = next((g['name'] for g in gates if g['gate_id'] == EAST_IN_NODE_ID), None)
+if east_name != '东门' or any(g['name'] != '东门' for g in gates
+                             if g['gate_id'] in EAST_GATE_NODE_IDS):
+    raise ValueError('东门两个车道节点的名称应均为“东门”')
+if not all(node_id in nidx and node_id in barriers_by_id for node_id in EAST_GATE_NODE_IDS):
+    raise ValueError('东门关联的 OSM 节点必须同时存在于门禁数据和路网中')
+east_in = barriers_by_id[EAST_IN_NODE_ID]
+east_out = barriers_by_id[EAST_OUT_NODE_ID]
+east_pass = (east_in['current_passability']
+             if east_in['current_passability'] == east_out['current_passability']
+             else 'unverified')
+
+# 合并后的东门不再作为两条独立门候选输出；两个原始节点仍在 nodeIds 中保留。
 gate_list = [{
     'id': g['gate_id'],
     'n': g['name'],
@@ -113,12 +137,32 @@ gate_list = [{
     'y': round(g['latitude'], 6),
     'bd': g['boundary_distance_m'],
     'pass': g['current_passability'],
-} for g in gates]
+} for g in gates if g['gate_id'] not in EAST_GATE_NODE_IDS]
+
+gate_list.append({
+    'id': EAST_GATE_ID,
+    'n': east_name,
+    'aliases': EAST_GATE_ALIASES,
+    # 标记与出校车道同点；进校车道在 nodeIds / routeNodes 中保留。
+    'x': round(east_out['longitude'], 6),
+    'y': round(east_out['latitude'], 6),
+    'bd': east_out['boundary_distance_m'],
+    'pass': east_pass,
+    'nodeIds': EAST_GATE_NODE_IDS,
+    'routeNodeId': EAST_OUT_NODE_ID,
+    # 默认（含校内→校外）走出校车道；来源未给出按交通方式的独立节点，
+    # default 供所有方式回退，现场核实后再补 walk/bike 覆盖。
+    'routeNodes': {'default': {'in': EAST_IN_NODE_ID, 'out': EAST_OUT_NODE_ID}},
+    'laneNodes': [
+        {'nodeId': EAST_IN_NODE_ID, 'direction': 'in', 'basis': 'way/532472151 单行，东→西'},
+        {'nodeId': EAST_OUT_NODE_ID, 'direction': 'out', 'basis': 'way/532472150 单行，西→东'},
+    ],
+    'sourceIds': sorted({east_in['source_id'], east_out['source_id']}),
+})
 
 # 官方图上的西门对应两条车道。应用层用一个校门 ID，演示路线接到出校侧。
 west_route_node_id = 'osm_node_11668769188'
 west_node_ids = [west_route_node_id, 'osm_node_11668769187']
-barriers_by_id = {g['gate_id']: g for g in load('cleaned/osm_barrier_points.json')}
 west_label = next(p for p in load('cleaned/official_supplementary_names.json')
                   if p['label_id'] == 'LABEL_016')
 if not all(node_id in nidx and node_id in barriers_by_id for node_id in west_node_ids):

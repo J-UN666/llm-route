@@ -210,9 +210,12 @@
       });
     }
 
-    /* 校内 OSM 地点：有 WGS84 坐标，可直接参与算路 */
+    /* 校内 OSM 地点：有 WGS84 坐标，可直接参与算路。
+     * barrier_or_gate 是校门的原始 OSM 节点，由 gates 统一表示；若同时
+     * 进入地点索引，会以 place 分数压过校门并让同名门重新产生歧义。 */
     (D.places || []).forEach(function (p) {
       if (!p || !p.n) return;
+      if (p.c === 'barrier_or_gate') return;
       var f = {};
       addForm(f, p.n);
       addForm(f, shortName(p.n));
@@ -224,14 +227,16 @@
       });
     });
 
-    /* 校门 */
+    /* 校门：同一稳定 ID 可带多个别名（如“东门”/“东大门”） */
     (D.gates || []).forEach(function (g) {
       if (!g || !g.n) return;
       var f = {};
       addForm(f, g.n);
+      (g.aliases || []).forEach(function (a) { addForm(f, a); });
       pushEntry({
         kind: 'gate', id: g.id, name: g.n, fullName: g.n,
-        lng: g.x, lat: g.y, category: 'gate', forms: f
+        lng: g.x, lat: g.y, category: 'gate',
+        aliases: g.aliases || [], forms: f
       });
     });
 
@@ -436,6 +441,27 @@
     };
   };
 
+  /* ---------- 校门实体解析 ----------
+   * 表单、自然语言和地图共用同一稳定校门 ID；名称只用于回退匹配。
+   * 同一校门的别名（如“东门”“东大门”）都解析到同一条目。 */
+  Agent.prototype.findGate = function (ref) {
+    var gates = (this.ctx.data && this.ctx.data.gates) || [];
+    if (!ref) return null;
+    if (typeof ref === 'string') ref = { name: ref };
+    var id = ref.id || ref.gateId;
+    if (id) {
+      var byId = gates.filter(function (g) { return g.id === id; })[0];
+      if (byId) return byId;
+    }
+    var name = ref.name || ref.n || ref.label || ref.fullName;
+    if (!name) return null;
+    var nn = normName(name);
+    return gates.filter(function (g) {
+      if (normName(g.n) === nn) return true;
+      return (g.aliases || []).some(function (a) { return normName(a) === nn; });
+    })[0] || null;
+  };
+
   /* ---------- 校门选择 ---------- */
   Agent.prototype.pickGate = function (destName) {
     var D = this.ctx.data;
@@ -480,7 +506,11 @@
       return { ok: false, reason: (origin && origin.reason) || '起点缺少可用坐标，无法计算路线' };
     }
     if (!gate) return { ok: false, reason: '未选定校门' };
-    var plan = router.planToGate(origin.lng, origin.lat, gate, opts);
+    opts = opts || {};
+    var plan = router.planToGate(origin.lng, origin.lat, gate, {
+      mode: opts.mode,
+      direction: opts.direction     /* 缺省为 out：校内→校外走出校车道 */
+    });
     if (!plan || !plan.plans.length) {
       return { ok: false, reason: '路网中未找到连通路径（起点或校门不在同一连通分量）' };
     }
@@ -488,6 +518,8 @@
     return {
       ok: true,
       gate: gate,
+      gateNodeId: plan.gateNodeId,
+      direction: plan.direction,
       plans: plan.plans.map(function (p) {
         return {
           key: p.key,
@@ -500,6 +532,42 @@
       }),
       chosen: best.key,
       accessDist: Math.round(plan.startNode.dist)
+    };
+  };
+
+  /* 起点为校门：从进校车道节点接入校内路网（“从东门到图书馆”类反向查询） */
+  Agent.prototype.routeFromGate = function (gate, dest, opts) {
+    var router = this.ctx.router;
+    if (!gate) return { ok: false, reason: '未选定起点校门' };
+    if (!dest || dest.lng == null) {
+      return { ok: false, reason: (dest && dest.reason) || '目的地缺少可用坐标，无法计算路线' };
+    }
+    opts = opts || {};
+    var nodeId = router.gateRouteNodeId(gate, { mode: opts.mode, direction: 'in' });
+    var idx = router.nodeIndexById(nodeId);
+    if (idx < 0) return { ok: false, reason: '校门的进校车道节点不在路网中' };
+    var node = this.ctx.data.nodes[idx];
+    var plan = router.planBetween(
+      { lng: node[0], lat: node[1] },
+      { lng: dest.lng, lat: dest.lat }
+    );
+    if (!plan) return { ok: false, reason: '校门与目的地不在同一连通分量' };
+    return {
+      ok: true,
+      gate: gate,
+      gateRole: 'origin',
+      gateNodeId: nodeId,
+      direction: 'in',
+      plans: [{
+        key: 'A',
+        label: '最短步行',
+        meters: plan.summary.meters,
+        coords: plan.coords,
+        summary: plan.summary,
+        accessDist: Math.round(plan.startAccess)
+      }],
+      chosen: 'A',
+      accessDist: Math.round(plan.startAccess)
     };
   };
 
@@ -553,12 +621,20 @@
     var lines = [];
     if (r.campus && r.campus.ok) {
       var p = r.campus.plans[0];
-      if (r.campus.intraCampus) {
+      var gate = r.campus.gate;
+      var gateLanes = gate && (gate.laneNodes || gate.routeNodes);
+      var lane = gateLanes
+        ? (r.campus.direction === 'in' ? '（进校车道）' : '（出校车道）')
+        : '';
+      if (r.campus.gateRole === 'origin' && gate) {
+        lines.push('从「' + gate.n + '」进校' + lane + '步行至「' + (r.destName || '终点') +
+          '」约 ' + p.meters + ' 米，共 ' + p.summary.segments.length + ' 段。');
+      } else if (r.campus.intraCampus) {
         lines.push('从「' + (r.originName || '起点') + '」到「' + (r.destName || '终点') +
           '」校内步行约 ' + p.meters + ' 米，共 ' + p.summary.segments.length + ' 段。');
-      } else if (r.campus.gate) {
-        lines.push('从「' + (r.originName || '起点') + '」到「' + r.campus.gate.n + '」步行约 ' +
-          p.meters + ' 米，共 ' + p.summary.segments.length + ' 段。');
+      } else if (gate) {
+        lines.push('从「' + (r.originName || '起点') + '」到「' + gate.n + '」步行约 ' +
+          p.meters + ' 米' + lane + '，共 ' + p.summary.segments.length + ' 段。');
       } else {
         lines.push('校内步行约 ' + p.meters + ' 米，共 ' + p.summary.segments.length + ' 段。');
       }
@@ -706,24 +782,43 @@
     }
 
     /* 校门：若目的地是校门，则视为终点。
-     * 沿用旧逻辑按 D.gates 顺序覆盖，保证“东门”两个同名门里仍选
-     * osm_node_13469658219，并让“西南门”优先于其中的“南门”。 */
-    var gateHit = null;
+     * 同一校门的正式名和别名都参与匹配；多个门同时出现时取更靠后
+     * （通常是目的地）且更长的完整提及。校门实体已按稳定 ID 合并，
+     * 不再依赖 D.gates 顺序覆盖同名门。 */
+    var gateHit = null, gateBest = -1, gatePos = -1;
     (D.gates || []).forEach(function (g) {
-      var ng = normName(g.n);
-      if (!ng) return;
-      var gp = -1;
-      while ((gp = ntext.indexOf(ng, gp + 1)) >= 0) {
-        if (mentionBoundaryOk(ntext, gp, gp + ng.length)) {
-          gateHit = g;
-          break;
+      [g.n].concat(g.aliases || []).forEach(function (form) {
+        var ng = normName(form);
+        if (!ng) return;
+        var gp = -1;
+        while ((gp = ntext.indexOf(ng, gp + 1)) >= 0) {
+          if (!mentionBoundaryOk(ntext, gp, gp + ng.length)) continue;
+          var score = gp * 1000 + ng.length;
+          if (score > gateBest) {
+            gateBest = score;
+            gateHit = g;
+            gatePos = gp;
+          }
         }
-      }
+      });
     });
     if (gateHit) {
+      var gatePoint = { name: gateHit.n, type: 'gate', lng: gateHit.x, lat: gateHit.y, id: gateHit.id };
       result.gate = gateHit;
-      if (!result.to || (result.to.type === 'place' && result.to.name === gateHit.n)) {
-        result.to = { name: gateHit.n, type: 'gate', lng: gateHit.x, lat: gateHit.y, id: gateHit.id };
+      /* 按“到/去/前往/至/回/终点”的位置判断校门是起点还是终点，
+       * 例如“从东门到图书馆”中的东门是起点，“四食堂到东门”中的东门是终点。 */
+      var toMarker = ntext.search(/去|到|前往|至|终点|回/);
+      var gateIsOrigin = toMarker >= 0 && gatePos < toMarker;
+      if (gateIsOrigin) {
+        var oldFrom = result.from;
+        result.from = gatePoint;
+        if (oldFrom && oldFrom.type === 'place' && !result.to) result.to = oldFrom;
+      } else {
+        /* 单个校内地点命中且没有“从/在”线索时，它通常是起点（如“四食堂到东门”）。 */
+        if (!result.from && result.to && result.to.type === 'place' && result.to.id !== gateHit.id) {
+          result.from = result.to;
+        }
+        result.to = gatePoint;
       }
     }
 
@@ -800,6 +895,8 @@
     var gateInfo = null;
     var destIsCampus = dest && dest.type === 'place';
     var destIsGate = dest && dest.type === 'gate';
+    /* 起点是校门时按进校车道接入，不能沿用校门外侧的 x/y。 */
+    var originGate = origin && origin.type === 'gate' ? this.findGate(origin) : null;
     var gateSkipReason = null;
     if (!origin || origin.lng == null) {
       gateSkipReason = (origin && origin.reason) || '起点缺少可用坐标，无法选门';
@@ -813,10 +910,8 @@
       if (destIsCampus) {
         gateInfo = null;   /* 校内到校内，无需出校 */
       } else if (destIsGate) {
-        var gSel = this.ctx.data.gates.filter(function (g) {
-          return g.id === dest.id || g.n === dest.name;
-        })[0];
-        gateInfo = gSel ? { gate: gSel, all: [gSel], basis: 'user_specified' } : this.pickGate(null);
+        var gSel = this.findGate(dest);
+        gateInfo = gSel ? { gate: gSel, all: [gSel], basis: 'user_specified' } : null;
       } else if (intent.gate) {
         gateInfo = { gate: intent.gate, all: this.ctx.data.gates, basis: 'user_specified' };
       } else {
@@ -828,7 +923,7 @@
         args: { destination: dest ? dest.name : null },
         result: gateInfo
           ? { gate: gateInfo.gate.n, basis: gateInfo.basis }
-          : { skipped: true, reason: '校内目的地，无需出校' },
+          : { skipped: true, reason: destIsGate ? '未匹配到校门实体' : '校内目的地，无需出校' },
         ms: 5
       });
     } else {
@@ -847,36 +942,62 @@
     /* --- 工具 4: 校内路径 --- */
     var campus = null;
     if (origin && origin.lng != null && dest && dest.lng != null) {
-      var hasGateRouteNode = destIsGate && gateInfo && gateInfo.gate.routeNodeId;
-      if (destIsCampus || (destIsGate && !hasGateRouteNode)) {
-        var rb = this.ctx.router.planBetween(
-          { lng: origin.lng, lat: origin.lat },
-          { lng: dest.lng, lat: dest.lat }
-        );
-        if (rb) {
-          campus = {
-            ok: true,
-            gate: null,
-            intraCampus: true,
-            plans: [{
-              key: 'A', label: '最短步行',
-              meters: rb.summary.meters,
-              coords: rb.coords,
-              summary: rb.summary,
-              accessDist: Math.round(rb.startAccess)
-            }],
-            chosen: 'A',
-            accessDist: Math.round(rb.startAccess)
-          };
+      if (destIsCampus) {
+        if (originGate) {
+          /* 校门 → 校内地点：从进校车道节点起步 */
+          campus = this.routeFromGate(originGate, dest, opts);
+          steps.push({
+            tool: 'route_campus',
+            desc: '校内步行路径（A*）',
+            args: { gate: originGate.n, destination: dest.name },
+            result: campus.ok
+              ? {
+                meters: campus.plans[0].meters,
+                segments: campus.plans[0].summary.segments.length,
+                gateNodeId: campus.gateNodeId, direction: campus.direction
+              }
+              : { ok: false, reason: campus.reason },
+            ms: 12
+          });
         } else {
-          campus = { ok: false, reason: '两点不在同一连通分量' };
+          var rb = this.ctx.router.planBetween(
+            { lng: origin.lng, lat: origin.lat },
+            { lng: dest.lng, lat: dest.lat }
+          );
+          if (rb) {
+            campus = {
+              ok: true,
+              gate: null,
+              intraCampus: true,
+              plans: [{
+                key: 'A', label: '最短步行',
+                meters: rb.summary.meters,
+                coords: rb.coords,
+                summary: rb.summary,
+                accessDist: Math.round(rb.startAccess)
+              }],
+              chosen: 'A',
+              accessDist: Math.round(rb.startAccess)
+            };
+          } else {
+            campus = { ok: false, reason: '两点不在同一连通分量' };
+          }
+          steps.push({
+            tool: 'route_campus',
+            desc: '校内步行路径（A*）',
+            args: { origin: origin.name, destination: dest.name },
+            result: campus.ok ? { meters: campus.plans[0].meters, segments: campus.plans[0].summary.segments.length } : { ok: false, reason: campus.reason },
+            ms: 12
+          });
         }
+      } else if (destIsGate && !gateInfo) {
+        campus = { ok: false, reason: '无法从校门数据中解析目的地校门' };
         steps.push({
           tool: 'route_campus',
           desc: '校内步行路径（A*）',
           args: { origin: origin.name, destination: dest.name },
-          result: campus.ok ? { meters: campus.plans[0].meters, segments: campus.plans[0].summary.segments.length } : { ok: false, reason: campus.reason },
-          ms: 12
+          result: { ok: false, reason: campus.reason },
+          ms: 1
         });
       } else if (gateInfo) {
         campus = this.routeCampus(origin, gateInfo.gate, opts);
@@ -885,7 +1006,11 @@
           desc: '校内步行路径（A*）',
           args: { origin: origin.name, gate: gateInfo.gate.n },
           result: campus.ok
-            ? { meters: campus.plans[0].meters, plans: campus.plans.length, segments: campus.plans[0].summary.segments.length }
+            ? {
+              meters: campus.plans[0].meters, plans: campus.plans.length,
+              segments: campus.plans[0].summary.segments.length,
+              gateNodeId: campus.gateNodeId, direction: campus.direction
+            }
             : { ok: false, reason: campus.reason },
           ms: 12
         });
