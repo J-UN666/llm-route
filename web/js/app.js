@@ -1117,6 +1117,9 @@
         h.push('</div>');
       });
       h.push('</div></div>');
+    } else if (res.city && res.city.reason) {
+      h.push('<div class="notice notice-warn"><span class="n-ico">⚠</span><div>' +
+        esc(res.city.reason) + '</div></div>');
     }
 
     /* 数据提示 */
@@ -1288,12 +1291,11 @@
   }
 
   function openGateDrawer(g) {
-    var html = kv('名称', g.n) + kv('OSM ID', g.id) +
+    var html = kv('名称', g.n) + kv('OSM 门节点', g.nodeIds ? g.nodeIds.join(' / ') : g.id) +
       kv('坐标', g.x + ', ' + g.y) + kv('坐标系', 'WGS84') +
       kv('距边界', g.bd + ' m') + kv('通行状态', g.pass) +
       kv('routing_ready', 'false') +
       '<div class="notice notice-warn" style="margin-top:14px"><span class="n-ico">⚠</span><div>' +
-      '数据包明确要求：<strong>不能凭相似名称视为同一校门</strong>，6 个候选点中包含两个"东门"节点，' +
       '开放时间与步行权限均未核实。</div></div>';
     openDrawer(g.n, html);
   }

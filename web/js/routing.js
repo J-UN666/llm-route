@@ -255,7 +255,7 @@
     opts = opts || {};
     var self = this;
     var startN = this.nearestNode(fromLng, fromLat, { connectedOnly: true });
-    var gateIdx = this.nodeIndexById(gate.id);
+    var gateIdx = this.nodeIndexById(gate.routeNodeId || gate.id);
     if (gateIdx < 0) return null;
 
     var plans = [];
