@@ -442,7 +442,8 @@
     var city = this.ctx.city;
     var dest = (city.destinations || []).filter(function (d) { return d.name === destName; })[0];
 
-    var gates = D.gates.map(function (g) { return Object.assign({}, g); });
+    var gates = D.gates.filter(function (g) { return !g.campusOnly; })
+      .map(function (g) { return Object.assign({}, g); });
     if (!dest) {
       /* 无城市目的地：默认推荐南门（离地铁接驳最近之一），但标注为待核实 */
       gates.forEach(function (g) { g.reason = '未指定城市目的地，按默认策略排序'; });
@@ -504,6 +505,7 @@
 
   /* ---------- 城市段 ---------- */
   Agent.prototype.routeCity = function (gate, destName) {
+    if (gate.campusOnly) return { ok: false, reason: '「' + gate.n + '」的城市接驳数据待核实' };
     var city = this.ctx.city;
     var dest = (city.destinations || []).filter(function (d) { return d.name === destName; })[0];
     if (!dest) return { ok: false, reason: '城市目的地未收录' };
@@ -845,7 +847,8 @@
     /* --- 工具 4: 校内路径 --- */
     var campus = null;
     if (origin && origin.lng != null && dest && dest.lng != null) {
-      if (destIsCampus || destIsGate) {
+      var hasGateRouteNode = destIsGate && gateInfo && gateInfo.gate.routeNodeId;
+      if (destIsCampus || (destIsGate && !hasGateRouteNode)) {
         var rb = this.ctx.router.planBetween(
           { lng: origin.lng, lat: origin.lat },
           { lng: dest.lng, lat: dest.lat }
@@ -919,7 +922,7 @@
         tool: 'route_city',
         desc: '城市段接驳',
         args: { gate: gateInfo.gate.n, destination: dest.name },
-        result: { options: cityRes.options ? cityRes.options.length : 0, distanceKm: cityRes.distanceKm },
+        result: cityRes.ok ? { options: cityRes.options.length, distanceKm: cityRes.distanceKm } : cityRes,
         ms: 8
       });
     } else {

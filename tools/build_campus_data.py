@@ -115,6 +115,28 @@ gate_list = [{
     'pass': g['current_passability'],
 } for g in gates]
 
+# 官方图上的西门对应两条车道。应用层用一个校门 ID，演示路线接到出校侧。
+west_route_node_id = 'osm_node_11668769188'
+west_node_ids = [west_route_node_id, 'osm_node_11668769187']
+barriers_by_id = {g['gate_id']: g for g in load('cleaned/osm_barrier_points.json')}
+west_label = next(p for p in load('cleaned/official_supplementary_names.json')
+                  if p['label_id'] == 'LABEL_016')
+if not all(node_id in nidx and node_id in barriers_by_id for node_id in west_node_ids):
+    raise ValueError('西门关联的 OSM 门节点必须存在于门禁数据和路网中')
+west_route_node = barriers_by_id[west_route_node_id]
+gate_list.append({
+    'id': 'campus_gate_west',
+    'n': west_label['name'],
+    'x': west_route_node['longitude'],
+    'y': west_route_node['latitude'],
+    'bd': west_route_node['boundary_distance_m'],
+    'pass': west_route_node['current_passability'],
+    'nodeIds': west_node_ids,
+    'routeNodeId': west_route_node_id,
+    'sourceIds': [west_label['source_id'], west_route_node['source_id']],
+    'campusOnly': True,
+})
+
 # ---------- 周边交通点 ----------
 transit_list = []
 for t in transit:
