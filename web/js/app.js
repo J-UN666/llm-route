@@ -722,13 +722,22 @@
 
   var originInput = document.getElementById('originInput');
   var destInput = document.getElementById('destInput');
+  var nlInput = document.getElementById('nlInput');
   var originHint = document.getElementById('originHint');
   var destHint = document.getElementById('destHint');
+
+  /* 查询来源跟踪：
+   *   nlActive = 当前请求来源是自然语言（首屏预填、用户编辑、Ctrl+Enter、示例 chip）。
+   * 提交后保持为 true：成功或失败后再次查询都重新解析当前文本，失败重试不会
+   * 掉回上一次成功查询留下的旧表单地点。只有手动选择起终点、交换或清空才把
+   * 查询来源交回表单。不能因为上次查询回填了 state.dest 就跳过新文本。 */
+  var nlActive = false;
 
   var originCombo = buildCombo(originInput, document.getElementById('originList'), {
     allowCity: false,
     onPick: function (h) {
       state.origin = h;
+      nlActive = false;
       setHint(originHint, h, true);
     }
   });
@@ -736,6 +745,7 @@
     allowCity: true,
     onPick: function (h) {
       state.dest = h;
+      nlActive = false;
       setHint(destHint, h, false);
     }
   });
@@ -771,6 +781,7 @@
     state.origin = d; state.dest = o;
     originInput.value = d ? d.label : '';
     destInput.value = o ? o.label : '';
+    nlActive = false;
     if (state.origin) setHint(originHint, state.origin, true);
     if (state.dest) setHint(destHint, state.dest, false);
     if (state.plans) runPlan();
@@ -792,11 +803,19 @@
   var traceEl = document.getElementById('trace');
   var traceCount = document.getElementById('traceCount');
 
-  function runPlan(utterance) {
-    var text = utterance || document.getElementById('nlInput').value.trim();
+  /* source: 'nl' = 确定的自然语言请求（例如示例 chip、Ctrl+Enter）；
+   *         'form' = 明确使用起终点表单的当前选择；
+   *         省略 = 当前查询来源为自然语言则用文本框，否则用表单。
+   * 自然语言来源在提交后保持活跃：失败重试仍解析当前文本，不能因为上次
+   * 查询回填了 state.dest 就转去查旧表单地点。 */
+  function runPlan(utterance, source) {
+    var text = utterance != null ? String(utterance).trim() : nlInput.value.trim();
+    var useNL = !!text && (source === 'nl' || (source !== 'form' && nlActive));
 
-    /* 如果输入框里有内容，优先走自然语言解析 */
-    var useNL = !!(text && !state.dest);
+    /* 明确来自自然语言的提交把来源标为 NL；省略 source 的普通按钮沿用当前来源。
+     * 不要在这里清掉 NL 来源：解析失败后再次点击仍应重试当前文本。 */
+    if (source === 'nl') nlActive = true;
+    else if (source === 'form') nlActive = false;
 
     btnPlan.classList.add('loading');
     btnPlan.querySelector('.btn-label').textContent = '规划中';
@@ -1196,7 +1215,8 @@
   /* ================= 事件绑定 ================= */
   btnPlan.onclick = function () { runPlan(); };
   document.getElementById('btnClear').onclick = function () {
-    document.getElementById('nlInput').value = '';
+    nlInput.value = '';
+    nlActive = false;
     resultBody.innerHTML = '<div class="empty-state"><div class="empty-ico">🧭</div>' +
       '<p>输入一句话，Agent 会自动完成<br />「理解 → 选门 → 算路 → 校验」</p></div>';
     traceEl.innerHTML = '';
@@ -1213,15 +1233,20 @@
     if (!collapsed) setTimeout(function () { map._resize(); }, 260);
   };
 
-  document.getElementById('nlInput').addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); runPlan(); }
+  /* 用户直接编辑自然语言框：下一次查询以这段新文本为准 */
+  nlInput.addEventListener('input', function () { nlActive = true; });
+
+  nlInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      runPlan(null, 'nl');  /* 在自然语言框内提交，来源明确为自然语言 */
+    }
   });
 
   document.querySelectorAll('#exampleChips .chip').forEach(function (c) {
     c.onclick = function () {
-      document.getElementById('nlInput').value = c.dataset.q;
-      state.dest = null;
-      runPlan(c.dataset.q);
+      nlInput.value = c.dataset.q;
+      runPlan(c.dataset.q, 'nl');
     };
   });
 
@@ -1341,7 +1366,8 @@
   setTimeout(function () {
     map.fitBounds(DATA.boundary[0].filter(function (_, i) { return i % 3 === 0; }), 56, false);
     updateScale();
-    document.getElementById('nlInput').value = '我从图书馆出发，想去天府广场，怎么走最快？';
+    nlInput.value = '我从图书馆出发，想去天府广场，怎么走最快？';
+    nlActive = true;  /* 预填的是待查询文本，首次点击应按自然语言解析 */
   }, 60);
 
 })();
