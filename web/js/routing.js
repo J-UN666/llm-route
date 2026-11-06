@@ -356,29 +356,58 @@
     };
   };
 
-  /* 城市段方案生成 */
+  /* 城市段方案生成：只返回有来源的接驳记录，不用固定距离兜底。
+   * 校门对应未确认时强制归零距离，避免仅凭已有坐标/路线继续展示。 */
   CampusRouter.prototype.planCity = function (gateName, dest, city) {
     var conn = (city.gate_connections || []).filter(function (c) { return c.gate === gateName; });
-    var line = null, stationName = dest.station;
+    var lineMeta = null;
     (city.lines || []).forEach(function (l) {
-      if (l.id === dest.line) line = l;
+      if (l.id === dest.line) lineMeta = l;
     });
-    var out = [];
-    var hubCandidates = conn.length ? conn : [{ hub: '地铁犀浦站', walk_m: 800, evidence: '按几何估算', confidence: 'low' }];
+    return conn.map(function (c) {
+      var gateOk = !!(c.gate_match && c.gate_match.status === 'confirmed');
+      var hubOk = !!(c.hub_match && c.hub_match.status === 'confirmed');
+      var walkM = gateOk ? c.walk_m : null;
+      var straightM = gateOk ? c.straight_m : null;
+      var walkStatus = gateOk
+        ? (c.walk_status || (walkM != null ? 'route' : (straightM != null ? 'straight' : 'pending')))
+        : 'pending';
+      var route = gateOk ? c.route : null;
 
-    hubCandidates.forEach(function (c) {
-      out.push({
+      /* 站名/入口未确认时，不把已有路线当作到该接驳点的步行距离。 */
+      if (walkStatus === 'route' && (walkM == null || !hubOk)) {
+        walkM = null;
+        route = null;
+        walkStatus = straightM != null ? 'straight' : 'pending';
+      }
+      if (walkStatus === 'straight' && straightM == null) walkStatus = 'pending';
+
+      var itinerary = (gateOk && hubOk && c.itineraries) ? c.itineraries[dest.id] || null : null;
+      var firstLeg = itinerary && itinerary.legs && itinerary.legs[0];
+      return {
         hub: c.hub,
-        walkM: c.walk_m,
-        evidence: c.evidence,
+        walkM: walkM,
+        walkDisplayM: walkM != null
+          ? (c.walk_display_m != null ? c.walk_display_m : Math.round(walkM))
+          : null,
+        straightM: straightM,
+        walkStatus: walkStatus,
+        walkSource: walkStatus === 'route' ? (c.walk_source || '地图估算') : null,
+        gateMatch: c.gate_match,
+        hubMatch: c.hub_match,
+        route: walkStatus === 'route' ? route : null,
+        endpoints: c.endpoints,
+        endpointNote: c.endpoint_note,
+        evidence: c.evidence || [],
         confidence: c.confidence,
-        line: line ? line.name : '地铁',
-        lineColor: line ? line.color : '#888',
-        station: stationName,
+        line: firstLeg ? firstLeg.line_name : (lineMeta ? lineMeta.name : '接驳'),
+        lineName: firstLeg ? firstLeg.line_name : '接驳',
+        lineColor: firstLeg ? firstLeg.line_color : '#8a94a6',
+        station: dest.station,
+        itinerary: itinerary,
         note: dest.note
-      });
+      };
     });
-    return out;
   };
 
   global.CampusRouting = {

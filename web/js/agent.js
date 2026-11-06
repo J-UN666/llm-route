@@ -491,9 +491,18 @@
       var gb = bearing(hubLng, hubLat, g.x, g.y);
       var diff = Math.abs(((gb - destBearing + 540) % 360) - 180);   // 0..180
       var conn = (city.gate_connections || []).filter(function (c) { return c.gate === g.n; });
-      var walk = conn.length ? Math.min.apply(null, conn.map(function (c) { return c.walk_m; })) : 1200;
-      g.score = Math.round(180 - diff + Math.max(0, (1200 - walk) / 10));
-      g.reason = '与目的地方位差 ' + Math.round(diff) + '°，最近接驳步行约 ' + walk + ' m';
+      var dists = conn.map(function (c) {
+        /* 校门对应未确认的记录不参与距离打分。 */
+        if (!c.gate_match || c.gate_match.status !== 'confirmed') return null;
+        if (c.walk_m != null && c.hub_match && c.hub_match.status === 'confirmed') {
+          return c.walk_m;
+        }
+        return c.straight_m;
+      }).filter(function (v) { return v != null; });
+      var walk = dists.length ? Math.min.apply(null, dists) : null;
+      g.score = Math.round(180 - diff + Math.max(0, (1200 - (walk == null ? 1200 : walk)) / 10));
+      g.reason = '与目的地方位差 ' + Math.round(diff) + '°，' +
+        (walk == null ? '接驳距离待核实' : '最近接驳约 ' + Math.round(walk) + ' m');
     });
     gates.sort(function (a, b) { return b.score - a.score; });
     return { gate: gates[0], all: gates, basis: 'bearing+connector', destBearing: destBearing };
@@ -573,26 +582,14 @@
 
   /* ---------- 城市段 ---------- */
   Agent.prototype.routeCity = function (gate, destName) {
-    if (gate.campusOnly) return { ok: false, reason: '「' + gate.n + '」的城市接驳数据待核实' };
+    if (!gate) return { ok: false, reason: '未选定校门' };
     var city = this.ctx.city;
     var dest = (city.destinations || []).filter(function (d) { return d.name === destName; })[0];
     if (!dest) return { ok: false, reason: '城市目的地未收录' };
-    var conns = (city.gate_connections || []).filter(function (c) { return c.gate === gate.n; });
-    var line = (city.lines || []).filter(function (l) { return l.id === dest.line; })[0];
-    var options = (conns.length ? conns : [{
-      hub: '地铁犀浦站', walk_m: 900, evidence: '按几何距离估算，未核实', confidence: 'low'
-    }]).map(function (c) {
-      return {
-        hub: c.hub,
-        walkM: c.walk_m,
-        evidence: c.evidence,
-        confidence: c.confidence,
-        lineName: line ? line.name : '地铁',
-        lineColor: line ? line.color : '#8a94a6',
-        station: dest.station,
-        note: dest.note
-      };
-    });
+    var options = this.ctx.router.planCity(gate.n, dest, city);
+    if (!options.length) {
+      return { ok: false, reason: '「' + gate.n + '」接驳待核实（无可用端点或来源）' };
+    }
     return {
       ok: true,
       dest: dest,
@@ -644,8 +641,29 @@
     }
     if (r.city && r.city.ok && r.city.options && r.city.options.length) {
       var o = r.city.options[0];
-      lines.push('出校门后建议前往「' + o.hub + '」，步行约 ' + o.walkM +
-        ' 米，乘 ' + o.lineName + ' 至「' + o.station + '」。');
+      if (o.gateMatch && o.gateMatch.status !== 'confirmed') {
+        lines.push('「' + o.hub + '」接驳待核实：校门对应关系未确认，暂不提供步行/直线距离。');
+      } else {
+        var cityLine = '出校门后建议前往「' + o.hub + '」，';
+        if (o.walkStatus === 'route' && o.walkM != null) {
+          cityLine += '步行约 ' + (o.walkDisplayM != null ? o.walkDisplayM : Math.round(o.walkM)) +
+            ' 米 · 地图估算，';
+        } else if (o.walkStatus === 'straight' && o.straightM != null) {
+          cityLine += '直线约 ' + Math.round(o.straightM) + ' 米（步行距离未提供），';
+        } else {
+          cityLine += '接驳待核实，';
+        }
+        if (o.itinerary && o.itinerary.text) {
+          cityLine += '乘 ' + o.itinerary.text + '。';
+        } else if (o.walkStatus === 'route') {
+          cityLine += '城市段线路待核实（目的地「' + o.station + '」）。';
+        } else if (o.walkStatus === 'straight') {
+          cityLine += '接驳点站名待核实，暂不提供至「' + o.station + '」的城市段线路。';
+        } else {
+          cityLine += '接驳待核实。';
+        }
+        lines.push(cityLine);
+      }
     }
     if (!lines.length) {
       var rr = r.reason || '起点或目的地信息不足。';

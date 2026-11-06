@@ -1168,16 +1168,56 @@
       h.push('<div style="font-size:11.5px;color:#7c8a9c;margin-bottom:9px">' +
         '直线距离约 ' + res.city.distanceKm + ' km · 城市段数据为人工整理</div>');
       res.city.options.forEach(function (o) {
+        var gateConfirmed = !!(o.gateMatch && o.gateMatch.status === 'confirmed');
+        var isRoute = gateConfirmed && o.walkStatus === 'route' && o.walkM != null;
+        var isStraight = gateConfirmed && o.walkStatus === 'straight' && o.straightM != null;
+        var unconfirmed = !gateConfirmed ||
+          (o.hubMatch && o.hubMatch.status !== 'confirmed');
+        var metric = isRoute
+          ? '步行约 ' + (o.walkDisplayM != null ? o.walkDisplayM : Math.round(o.walkM)) + ' 米 · 地图估算'
+          : (isStraight ? '直线约 ' + Math.round(o.straightM) + ' 米 · 接驳待核实' : '接驳待核实');
+        var transit = o.itinerary && o.itinerary.text
+          ? o.itinerary.text
+          : (isRoute ? '城市段线路待核实' : '');
+        var badge = o.lineName && o.lineName !== '接驳'
+          ? o.lineName.replace('地铁', '').slice(0, 3)
+          : '接驳';
         h.push('<div class="city-opt">');
         h.push('<div class="line-badge" style="background:' + o.lineColor + '">' +
-          esc((o.lineName || '').replace('地铁', '').slice(0, 3)) + '</div>');
+          esc(badge) + '</div>');
         h.push('<div class="city-opt-info">');
         h.push('<div class="co-name">' + esc(o.hub) + '</div>');
-        h.push('<div class="co-meta">步行 ' + o.walkM + ' m · ' + esc(o.lineName) +
-          ' → ' + esc(o.station) + '</div>');
+        h.push('<div class="co-meta">' + metric +
+          (transit ? ' · ' + esc(transit) : '') + '</div>');
+        var details = [];
+        if (o.route) {
+          details.push('路线来源：' + esc(o.route.service) + ' · ' + esc(o.route.profile) +
+            ' · 查询日期 ' + esc(o.route.query_date));
+        }
+        if (Array.isArray(o.evidence) && o.evidence.length) {
+          o.evidence.forEach(function (e) {
+            details.push(esc(e.evidence_id) + '：约 ' + e.distance_m + ' 米（来源 ' +
+              esc(e.source_id) + '，' + esc(e.source_published_at) + '，' +
+              (e.current_verified ? '已核实' : '原始记录未核实') + '）');
+          });
+        }
+        if (!gateConfirmed && o.gateMatch && o.gateMatch.basis) {
+          details.push('校门对应：' + esc(o.gateMatch.basis));
+        }
+        if (o.hubMatch && o.hubMatch.status !== 'confirmed' && o.hubMatch.basis) {
+          details.push('接驳点：' + esc(o.hubMatch.basis));
+        }
+        if (o.endpointNote) details.push(esc(o.endpointNote));
+        if (details.length) {
+          h.push('<details style="font-size:11px;color:#8c99a9;margin-top:4px">' +
+            '<summary style="cursor:pointer">来源与原始资料</summary>' +
+            details.map(function (d) {
+              return '<div style="margin-top:3px;line-height:1.5">' + d + '</div>';
+            }).join('') + '</details>');
+        }
         h.push('</div>');
-        h.push('<span class="pill ' + (o.confidence === 'low' ? 'pill-warn' : 'pill-info') + '">' +
-          (o.confidence === 'low' ? '低置信' : '中置信') + '</span>');
+        h.push('<span class="pill ' + (isRoute && !unconfirmed ? 'pill-info' : 'pill-warn') + '">' +
+          (isRoute && !unconfirmed ? '地图估算' : '接驳待核实') + '</span>');
         h.push('</div>');
       });
       h.push('</div></div>');
@@ -1188,8 +1228,9 @@
 
     /* 数据提示 */
     h.push('<div class="notice notice-warn"><span class="n-ico">⚠</span><div>' +
-      '本结果基于<strong>未实地验收</strong>的候选路网：楼宇质心≠入口，校门开放规则缺失，' +
-      '接驳距离存在官方来源冲突（300m / 500m）。请勿作为实际导航使用。</div></div>');
+      '本结果基于<strong>未实地验收</strong>的候选路网：楼宇质心≠入口，校门开放规则缺失；' +
+      '校门接驳的原始文字记录存在 300m / 500m 冲突；有可追溯路线时采用 OSM 步行路线估算，' +
+      '校门对应未确认时显示接驳待核实，详见数据可信度页。请勿作为实际导航使用。</div></div>');
 
     /* 校车信息 */
     var sh = (DATA.shuttle || []).filter(function (s) { return s.d === 'weekday'; }).slice(0, 8);
@@ -1420,6 +1461,42 @@
         '<div class="q-value' + (c.small ? ' small' : '') + '">' + esc(c.value) + '</div>' +
         '<div class="q-note">' + esc(c.note) + '</div></div>';
     }).join('');
+
+    var gateTable = document.getElementById('gateConnTable');
+    if (gateTable) {
+      var gcRows = ['<div class="issue-row head"><div>校门</div><div>距离与来源</div><div class="i-action">核对依据</div></div>'];
+      (CITY.gate_connections || []).forEach(function (c) {
+        var gateConfirmed = !!(c.gate_match && c.gate_match.status === 'confirmed');
+        var metric = !gateConfirmed
+          ? '接驳待核实'
+          : (c.walk_status === 'route'
+            ? '步行约 ' + c.walk_display_m + ' 米 · 地图估算'
+            : (c.walk_status === 'straight'
+              ? '直线约 ' + Math.round(c.straight_m) + ' 米 · 步行距离未提供'
+              : '接驳待核实'));
+        var source = !gateConfirmed
+          ? '校门对应关系未确认，不输出步行/直线距离'
+          : (c.route
+            ? esc(c.route.service) + ' · ' + esc(c.route.profile) + ' · 查询日期 ' + esc(c.route.query_date)
+            : esc(c.endpoint_note || '无可用路线来源'));
+        var ev = (c.evidence || []).map(function (e) {
+          return esc(e.evidence_id) + ' 约 ' + e.distance_m + ' 米（' + esc(e.source_id) +
+            '，' + esc(e.source_published_at) + '）';
+        }).join('；');
+        var basis = (c.gate_match ? c.gate_match.basis : '') +
+          (c.hub_match && c.hub_match.status !== 'confirmed' ? ' ' + c.hub_match.basis : '');
+        gcRows.push('<div class="issue-row">' +
+          '<div class="i-id">' + esc(c.gate) + '</div>' +
+          '<div class="i-title">' + esc(c.gate) + ' → ' + esc(c.hub) +
+          '<div style="font-size:11.5px;color:#5b6a7d;margin-top:4px">' + metric + '</div>' +
+          '<div style="font-size:11px;color:#8c99a9;margin-top:3px">来源：' + source + '</div>' +
+          (ev ? '<div style="font-size:11px;color:#8c99a9;margin-top:3px">原始资料：' + ev + '</div>' : '') +
+          '</div>' +
+          '<div class="i-action">' + esc(basis) + '</div>' +
+          '</div>');
+      });
+      gateTable.innerHTML = gcRows.join('');
+    }
 
     var issues = DATA.unverified || [];
     var t = document.getElementById('issueTable');
