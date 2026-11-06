@@ -19,6 +19,44 @@
     return;
   }
 
+  /* ---------- 步骤耗时 ----------
+   * 只记录表单路径里实际执行的本地函数；跳过的步骤不写 ms。 */
+  function stepNow() {
+    if (typeof performance !== 'undefined' && performance && typeof performance.now === 'function') {
+      return performance.now();
+    }
+    return Date.now();
+  }
+
+  function stepElapsed(t0) {
+    var ms = stepNow() - t0;
+    return Math.round((ms > 0 ? ms : 0) * 100) / 100;
+  }
+
+  function stepRecord(tool, desc, args, result, t0) {
+    return {
+      tool: tool,
+      desc: desc,
+      args: args,
+      result: result,
+      ms: stepElapsed(t0),
+      measured: true,
+      engine: 'rule'
+    };
+  }
+
+  function stepSkipped(tool, desc, args, result) {
+    return {
+      tool: tool,
+      desc: desc,
+      args: args,
+      result: result,
+      ms: null,
+      measured: false,
+      engine: 'rule'
+    };
+  }
+
   /* ---------- 主题色 ---------- */
   var C = {
     boundaryLine: 'rgba(29,111,191,.38)',
@@ -883,26 +921,50 @@
       from: o, to: d
     };
 
-    /* 起点解析 */
-    steps.push({
-      tool: 'resolve_origin',
-      desc: '解析起点',
-      args: { text: o ? o.label : null },
-      result: o ? { name: o.label, type: o.kind, lng: o.lng, lat: o.lat } : { name: null },
-      ms: 3
-    });
+    /* 起点解析：表单实体已选定，但仍执行与自然语言路径相同的解析函数，
+     * 耗时来自真实调用；路线沿用选定实体，避免按名称重查改变稳定 ID。 */
+    if (o) {
+      var tOrigin = stepNow();
+      var originRes = agent.resolveOrigin(o.label);
+      steps.push(stepRecord(
+        'resolve_origin',
+        '解析起点',
+        { text: o.label },
+        originRes,
+        tOrigin
+      ));
+    } else {
+      steps.push(stepSkipped(
+        'resolve_origin',
+        '解析起点',
+        { text: null },
+        { skipped: true, reason: '未选择起点' }
+      ));
+    }
 
-    /* 目的地 */
-    steps.push({
-      tool: 'search_place',
-      desc: '识别目的地',
-      args: { query: d ? d.label : null },
-      result: { hits: d ? [{ name: d.label, kind: d.kind }] : [] },
-      ms: 4
-    });
+    /* 目的地检索：同样执行真实 searchPlace，路线沿用表单选定的实体。 */
+    if (d) {
+      var tDest = stepNow();
+      var destSearch = agent.searchPlace(d.label);
+      steps.push(stepRecord(
+        'search_place',
+        '检索目的地',
+        { query: d.label },
+        { query: destSearch.query, hits: destSearch.hits },
+        tDest
+      ));
+    } else {
+      steps.push(stepSkipped(
+        'search_place',
+        '检索目的地',
+        { query: null },
+        { skipped: true, reason: '未选择目的地', hits: [] }
+      ));
+    }
 
     /* 校门 */
     var gateInfo = null;
+    var tGate = stepNow();
     if (o && o.lng != null) {
       if (d && d.kind === 'gate') {
         /* 表单与自然语言共用同一校门解析（稳定 ID 优先，别名回退） */
@@ -914,15 +976,32 @@
       } else {
         gateInfo = agent.pickGate(d ? d.label : null);
       }
-      steps.push({
-        tool: 'pick_gate',
-        desc: '选择校门',
-        args: { destination: d ? d.label : null },
-        result: gateInfo ? { gate: gateInfo.gate.n, basis: gateInfo.basis } : { skipped: true, reason: '校内目的地，无需出校' },
-        ms: 5
-      });
+      if (gateInfo) {
+        steps.push(stepRecord(
+          'pick_gate',
+          '选择校门',
+          { destination: d ? d.label : null },
+          { gate: gateInfo.gate.n, basis: gateInfo.basis },
+          tGate
+        ));
+      } else {
+        steps.push(stepSkipped(
+          'pick_gate',
+          '选择校门',
+          { destination: d ? d.label : null },
+          {
+            skipped: true,
+            reason: d && d.kind === 'gate' ? '未匹配到校门实体' : '校内目的地，无需出校'
+          }
+        ));
+      }
     } else {
-      steps.push({ tool: 'pick_gate', desc: '选择校门', args: {}, result: { skipped: true, reason: '起点坐标不可用' }, ms: 1 });
+      steps.push(stepSkipped(
+        'pick_gate',
+        '选择校门',
+        {},
+        { skipped: true, reason: '起点坐标不可用' }
+      ));
     }
 
     /* 校内路径 */
@@ -931,22 +1010,23 @@
     var originGate = o && o.kind === 'gate' ? agent.findGate(o) : null;
     if (o && o.lng != null && d) {
       if (d.kind === 'place') {
+        var tCampus = stepNow();
         if (originGate) {
           campus = agent.routeFromGate(originGate,
             { lng: d.lng, lat: d.lat, name: d.label }, { mode: state.mode });
-          steps.push({
-            tool: 'route_campus',
-            desc: '校内步行路径（A*）',
-            args: { gate: originGate.n, destination: d.label },
-            result: campus.ok
+          steps.push(stepRecord(
+            'route_campus',
+            '校内步行路径（A*）',
+            { gate: originGate.n, destination: d.label },
+            campus.ok
               ? {
                 meters: campus.plans[0].meters,
                 segments: campus.plans[0].summary.segments.length,
                 gateNodeId: campus.gateNodeId, direction: campus.direction
               }
               : { ok: false, reason: campus.reason },
-            ms: 14
-          });
+            tCampus
+          ));
         } else {
           /* 校内点到校内点 */
           var r = router.planBetween(
@@ -970,71 +1050,94 @@
           } else {
             campus = { ok: false, reason: '两点不在同一连通分量' };
           }
-          steps.push({
-            tool: 'route_campus',
-            desc: '校内步行路径（A*）',
-            args: { origin: o.label, destination: d.label },
-            result: campus.ok ? { meters: campus.plans[0].meters, segments: campus.plans[0].summary.segments.length } : { ok: false, reason: campus.reason },
-            ms: 14
-          });
+          steps.push(stepRecord(
+            'route_campus',
+            '校内步行路径（A*）',
+            { origin: o.label, destination: d.label },
+            campus.ok ? { meters: campus.plans[0].meters, segments: campus.plans[0].summary.segments.length } : { ok: false, reason: campus.reason },
+            tCampus
+          ));
         }
       } else if (gateInfo) {
+        var tCampusGate = stepNow();
         campus = agent.routeCampus({ lng: o.lng, lat: o.lat, name: o.label }, gateInfo.gate, { mode: state.mode });
-        steps.push({
-          tool: 'route_campus',
-          desc: '校内步行路径（A*）',
-          args: { origin: o.label, gate: gateInfo.gate.n },
-          result: campus.ok
+        steps.push(stepRecord(
+          'route_campus',
+          '校内步行路径（A*）',
+          { origin: o.label, gate: gateInfo.gate.n },
+          campus.ok
             ? {
               meters: campus.plans[0].meters, plans: campus.plans.length,
               segments: campus.plans[0].summary.segments.length,
               gateNodeId: campus.gateNodeId, direction: campus.direction
             }
             : { ok: false, reason: campus.reason },
-          ms: 14
-        });
+          tCampusGate
+        ));
+      } else {
+        steps.push(stepSkipped(
+          'route_campus',
+          '校内步行路径（A*）',
+          { origin: o.label, destination: d.label },
+          { skipped: true, reason: '缺少可用校门，无法计算校内路径' }
+        ));
       }
     } else {
-      steps.push({ tool: 'route_campus', desc: '校内步行路径（A*）', args: {}, result: { skipped: true, reason: '缺少可用坐标' }, ms: 1 });
+      steps.push(stepSkipped(
+        'route_campus',
+        '校内步行路径（A*）',
+        {},
+        { skipped: true, reason: '缺少可用坐标' }
+      ));
     }
 
     /* 城市段 */
     var cityRes = null;
     if (d && d.kind === 'city' && gateInfo) {
+      var tCity = stepNow();
       cityRes = agent.routeCity(gateInfo.gate, d.label);
-      steps.push({
-        tool: 'route_city',
-        desc: '城市段接驳',
-        args: { gate: gateInfo.gate.n, destination: d.label },
-        result: { options: cityRes.options ? cityRes.options.length : 0, distanceKm: cityRes.distanceKm },
-        ms: 9
-      });
+      steps.push(stepRecord(
+        'route_city',
+        '城市段接驳',
+        { gate: gateInfo.gate.n, destination: d.label },
+        { options: cityRes.options ? cityRes.options.length : 0, distanceKm: cityRes.distanceKm },
+        tCity
+      ));
     } else {
-      steps.push({
-        tool: 'route_city', desc: '城市段接驳', args: {},
-        result: { skipped: true, reason: d && d.kind === 'city' ? '缺少校门' : '目的地为校内' },
-        ms: 1
-      });
+      steps.push(stepSkipped(
+        'route_city',
+        '城市段接驳',
+        {},
+        {
+          skipped: true,
+          reason: !d ? '未识别目的地' : (d.kind === 'city' ? '缺少校门' : '目的地为校内')
+        }
+      ));
     }
 
     /* 质量 */
+    var tQuality = stepNow();
     var q = agent.checkDataQuality();
-    steps.push({
-      tool: 'check_data_quality',
-      desc: '数据可信度检查',
-      args: {},
-      result: {
+    steps.push(stepRecord(
+      'check_data_quality',
+      '数据可信度检查',
+      {},
+      {
         routingReady: q.routingReady, p0Count: q.p0Count, totalIssues: q.totalIssues,
         walkableEdges: q.networkStats.walkable, prohibitedEdges: q.networkStats.prohibited
       },
-      ms: 2
-    });
+      tQuality
+    ));
 
+    var tDescribe = stepNow();
     var descText = agent.describe({ campus: campus, city: cityRes, originName: o ? o.label : null });
-    steps.push({
-      tool: 'describe_route', desc: '生成路线说明', args: {},
-      result: { text: descText }, ms: 6
-    });
+    steps.push(stepRecord(
+      'describe_route',
+      '生成路线说明',
+      {},
+      { text: descText },
+      tDescribe
+    ));
 
     return {
       intent: intent,
@@ -1052,12 +1155,22 @@
   }
 
   /* ---------- 轨迹渲染 ---------- */
+  function fmtMs(ms) {
+    if (ms >= 10) return String(Math.round(ms));
+    if (ms >= 1) return (Math.round(ms * 10) / 10).toFixed(1);
+    return (Math.round(ms * 100) / 100).toFixed(2);
+  }
+
   function renderTrace(steps) {
     traceEl.innerHTML = '';
     steps.forEach(function (s, i) {
       var div = document.createElement('div');
       div.className = 'trace-item done';
       var resTxt = fmtResult(s.result);
+      var measured = s.measured === true && typeof s.ms === 'number';
+      var msTxt = measured
+        ? '实测 ' + fmtMs(s.ms) + 'ms'
+        : ((s.result && s.result.skipped) ? '跳过' : '未执行');
       div.innerHTML =
         '<div class="trace-idx">' + (i + 1) + '</div>' +
         '<div class="trace-content">' +
@@ -1065,10 +1178,11 @@
         '<span class="trace-desc">' + esc(s.desc || '') + '</span></div>' +
         '<div class="trace-result">' + esc(resTxt) + '</div>' +
         '</div>' +
-        '<div class="trace-ms">' + (s.ms || 0) + 'ms</div>';
+        '<div class="trace-ms">' + esc(msTxt) + '</div>';
       traceEl.appendChild(div);
     });
-    traceCount.textContent = steps.length + ' 步';
+    traceCount.textContent = steps.length + ' 步 · 规则工具演示';
+    traceCount.title = '未接入模型：本轨迹为本地规则工具演示，耗时来自本地函数实测';
   }
 
   function fmtResult(r) {

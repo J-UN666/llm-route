@@ -1,5 +1,5 @@
 /* =========================================================================
- * agent.js — LLM Agent 调度层（演示版）
+ * agent.js — Agent 调度层（规则工具演示版）
  * -------------------------------------------------------------------------
  * 设计要点（对应项目要求"LLM Agent 工具应用"）：
  *   Agent = 意图理解 → 工具编排 → 结果生成 → 不确定性声明
@@ -11,11 +11,52 @@
  *   route_city          城市段接驳方案
  *   check_data_quality  数据可信度检查（含 16 项待核实清单）
  *   describe_route      自然语言路线描述
- * 说明：本文件内置离线规则解析器；若在设置中填入 LLM API Key，
- *       可通过 callLLM() 走真实模型（OpenAI 兼容 /chat/completions）。
+ * 说明：本文件内置离线规则解析器；当前演示版未接入 LLM（无 callLLM 实现），
+ *       步骤的 engine='rule' 表示规则工具演示，ms 为本地函数实测耗时。
  * ========================================================================= */
 (function (global) {
   'use strict';
+
+  /* ---------- 步骤耗时测量 ----------
+   * 时间只取 performance.now()（不可用时退回 Date.now()），记录本步骤里
+   * 实际执行的本地函数耗时；没有执行的步骤不写 ms，避免把演示当实测。 */
+  var RULE_ENGINE = 'rule';
+
+  function nowMs() {
+    if (typeof performance !== 'undefined' && performance && typeof performance.now === 'function') {
+      return performance.now();
+    }
+    return Date.now();
+  }
+
+  function elapsedMs(t0) {
+    var ms = nowMs() - t0;
+    return Math.round((ms > 0 ? ms : 0) * 100) / 100;
+  }
+
+  function measuredStep(name, desc, args, result, t0) {
+    return {
+      tool: name,
+      desc: desc,
+      args: args,
+      result: result,
+      ms: elapsedMs(t0),
+      measured: true,
+      engine: RULE_ENGINE
+    };
+  }
+
+  function skippedStep(name, desc, args, result) {
+    return {
+      tool: name,
+      desc: desc,
+      args: args,
+      result: result,
+      ms: null,
+      measured: false,
+      engine: RULE_ENGINE
+    };
+  }
 
   /* ---------- 工具注册表 ---------- */
   function Agent(ctx) {
@@ -125,16 +166,17 @@
   Agent.prototype.call = function (name, args) {
     var t = this.tools[name];
     if (!t) throw new Error('unknown tool: ' + name);
-    var t0 = performance.now();
+    var t0 = nowMs();
     var res = t.fn(args || {});
-    var ms = Math.round(performance.now() - t0);
     if (this.ctx.onStep) {
       this.ctx.onStep({
         tool: name,
         desc: t.desc,
         args: args,
         result: res,
-        ms: ms
+        ms: elapsedMs(t0),
+        measured: true,
+        engine: RULE_ENGINE
       });
     }
     return res;
@@ -673,7 +715,7 @@
   };
 
   /* =======================================================================
-   * 自然语言解析（离线规则 + 可选真实 LLM）
+   * 自然语言解析（当前仅离线规则；真实 LLM 未接入）
    * ===================================================================== */
   Agent.prototype.parseUtterance = function (text) {
     var t = (text || '').trim();
@@ -864,34 +906,46 @@
     var steps = [];
     var onStep = function (s) { steps.push(s); };
 
+    /* --- 工具 1: 解析请求/起点 ---
+     * 计时必须包住 parseUtterance：它才是自然语言解析的实际工作。 */
+    var tOrigin = nowMs();
     var intent = this.parseUtterance(utterance);
-
-    /* --- 工具 1: 检索/解析起点 --- */
     var origin = null;
     if (opts.origin) {
       origin = opts.origin;
     } else if (intent.from) {
       origin = intent.from;
     }
-    steps.push({
-      tool: 'resolve_origin',
-      desc: '解析起点',
-      args: { text: utterance },
-      result: origin
+    steps.push(measuredStep(
+      'resolve_origin',
+      '解析请求与起点',
+      { text: utterance },
+      origin
         ? { name: origin.name, type: origin.type, hasXY: origin.lng != null }
         : { name: null },
-      ms: 3
-    });
+      tOrigin
+    ));
 
-    /* --- 工具 2: 目的地 --- */
+    /* --- 工具 2: 检索目的地 --- */
     var dest = opts.destination || (intent.to ? intent.to : null);
-    steps.push({
-      tool: 'search_place',
-      desc: '识别目的地',
-      args: { query: dest ? dest.name : '（未识别）' },
-      result: { hits: dest ? [{ name: dest.name, kind: dest.type }] : [] },
-      ms: 4
-    });
+    if (dest) {
+      var tDest = nowMs();
+      var destSearch = this.searchPlace(dest.name);
+      steps.push(measuredStep(
+        'search_place',
+        '检索目的地',
+        { query: dest.name },
+        { query: destSearch.query, hits: destSearch.hits },
+        tDest
+      ));
+    } else {
+      steps.push(skippedStep(
+        'search_place',
+        '检索目的地',
+        { query: '（未识别）' },
+        { skipped: true, reason: '未识别目的地', hits: [] }
+      ));
+    }
 
     /* 起点/目的地缺少可靠坐标时，先给出明确原因，后续工具不再硬算。 */
     var failureReason = null;
@@ -913,6 +967,7 @@
     var gateInfo = null;
     var destIsCampus = dest && dest.type === 'place';
     var destIsGate = dest && dest.type === 'gate';
+    var tGate = nowMs();
     /* 起点是校门时按进校车道接入，不能沿用校门外侧的 x/y。 */
     var originGate = origin && origin.type === 'gate' ? this.findGate(origin) : null;
     var gateSkipReason = null;
@@ -935,26 +990,34 @@
       } else {
         gateInfo = this.pickGate(dest ? dest.name : null);
       }
-      steps.push({
-        tool: 'pick_gate',
-        desc: '选择校门',
-        args: { destination: dest ? dest.name : null },
-        result: gateInfo
-          ? { gate: gateInfo.gate.n, basis: gateInfo.basis }
-          : { skipped: true, reason: destIsGate ? '未匹配到校门实体' : '校内目的地，无需出校' },
-        ms: 5
-      });
+      if (gateInfo) {
+        steps.push(measuredStep(
+          'pick_gate',
+          '选择校门',
+          { destination: dest ? dest.name : null },
+          { gate: gateInfo.gate.n, basis: gateInfo.basis },
+          tGate
+        ));
+      } else {
+        steps.push(skippedStep(
+          'pick_gate',
+          '选择校门',
+          { destination: dest ? dest.name : null },
+          {
+            skipped: true,
+            reason: destIsCampus
+              ? '校内目的地，无需出校'
+              : (destIsGate ? '未匹配到校门实体' : '未选出可用校门')
+          }
+        ));
+      }
     } else {
-      steps.push({
-        tool: 'pick_gate',
-        desc: '选择校门',
-        args: {},
-        result: {
-          skipped: true,
-          reason: gateSkipReason || '无法选择校门'
-        },
-        ms: 1
-      });
+      steps.push(skippedStep(
+        'pick_gate',
+        '选择校门',
+        {},
+        { skipped: true, reason: gateSkipReason || '无法选择校门' }
+      ));
     }
 
     /* --- 工具 4: 校内路径 --- */
@@ -963,21 +1026,23 @@
       if (destIsCampus) {
         if (originGate) {
           /* 校门 → 校内地点：从进校车道节点起步 */
+          var tFromGate = nowMs();
           campus = this.routeFromGate(originGate, dest, opts);
-          steps.push({
-            tool: 'route_campus',
-            desc: '校内步行路径（A*）',
-            args: { gate: originGate.n, destination: dest.name },
-            result: campus.ok
+          steps.push(measuredStep(
+            'route_campus',
+            '校内步行路径（A*）',
+            { gate: originGate.n, destination: dest.name },
+            campus.ok
               ? {
                 meters: campus.plans[0].meters,
                 segments: campus.plans[0].summary.segments.length,
                 gateNodeId: campus.gateNodeId, direction: campus.direction
               }
               : { ok: false, reason: campus.reason },
-            ms: 12
-          });
+            tFromGate
+          ));
         } else {
+          var tBetween = nowMs();
           var rb = this.ctx.router.planBetween(
             { lng: origin.lng, lat: origin.lat },
             { lng: dest.lng, lat: dest.lat }
@@ -1000,38 +1065,47 @@
           } else {
             campus = { ok: false, reason: '两点不在同一连通分量' };
           }
-          steps.push({
-            tool: 'route_campus',
-            desc: '校内步行路径（A*）',
-            args: { origin: origin.name, destination: dest.name },
-            result: campus.ok ? { meters: campus.plans[0].meters, segments: campus.plans[0].summary.segments.length } : { ok: false, reason: campus.reason },
-            ms: 12
-          });
+          steps.push(measuredStep(
+            'route_campus',
+            '校内步行路径（A*）',
+            { origin: origin.name, destination: dest.name },
+            campus.ok ? { meters: campus.plans[0].meters, segments: campus.plans[0].summary.segments.length } : { ok: false, reason: campus.reason },
+            tBetween
+          ));
         }
       } else if (destIsGate && !gateInfo) {
         campus = { ok: false, reason: '无法从校门数据中解析目的地校门' };
-        steps.push({
-          tool: 'route_campus',
-          desc: '校内步行路径（A*）',
-          args: { origin: origin.name, destination: dest.name },
-          result: { ok: false, reason: campus.reason },
-          ms: 1
-        });
+        steps.push(skippedStep(
+          'route_campus',
+          '校内步行路径（A*）',
+          { origin: origin.name, destination: dest.name },
+          { skipped: true, reason: campus.reason }
+        ));
       } else if (gateInfo) {
+        var tCampus = nowMs();
         campus = this.routeCampus(origin, gateInfo.gate, opts);
-        steps.push({
-          tool: 'route_campus',
-          desc: '校内步行路径（A*）',
-          args: { origin: origin.name, gate: gateInfo.gate.n },
-          result: campus.ok
+        steps.push(measuredStep(
+          'route_campus',
+          '校内步行路径（A*）',
+          { origin: origin.name, gate: gateInfo.gate.n },
+          campus.ok
             ? {
               meters: campus.plans[0].meters, plans: campus.plans.length,
               segments: campus.plans[0].summary.segments.length,
               gateNodeId: campus.gateNodeId, direction: campus.direction
             }
             : { ok: false, reason: campus.reason },
-          ms: 12
-        });
+          tCampus
+        ));
+      } else {
+        /* 理论上城市目的地应已选出校门；保底仍保留第 4 步，避免轨迹缺环。 */
+        campus = { ok: false, reason: '缺少可用校门，无法计算校内路径' };
+        steps.push(skippedStep(
+          'route_campus',
+          '校内步行路径（A*）',
+          { origin: origin.name, destination: dest.name },
+          { skipped: true, reason: campus.reason }
+        ));
       }
     } else {
       var campusSkipReason;
@@ -1048,26 +1122,26 @@
        * 不需要为缺少坐标另加一套静默分支。 */
       var campusReason = failureReason || campusSkipReason;
       campus = { ok: false, reason: campusReason };
-      steps.push({
-        tool: 'route_campus',
-        desc: '校内步行路径（A*）',
-        args: {},
-        result: { skipped: true, reason: campusReason },
-        ms: 1
-      });
+      steps.push(skippedStep(
+        'route_campus',
+        '校内步行路径（A*）',
+        {},
+        { skipped: true, reason: campusReason }
+      ));
     }
 
     /* --- 工具 5: 城市段 --- */
     var cityRes = null;
     if (dest && dest.type === 'city' && gateInfo) {
+      var tCity = nowMs();
       cityRes = this.routeCity(gateInfo.gate, dest.name);
-      steps.push({
-        tool: 'route_city',
-        desc: '城市段接驳',
-        args: { gate: gateInfo.gate.n, destination: dest.name },
-        result: cityRes.ok ? { options: cityRes.options.length, distanceKm: cityRes.distanceKm } : cityRes,
-        ms: 8
-      });
+      steps.push(measuredStep(
+        'route_city',
+        '城市段接驳',
+        { gate: gateInfo.gate.n, destination: dest.name },
+        cityRes.ok ? { options: cityRes.options.length, distanceKm: cityRes.distanceKm } : cityRes,
+        tCity
+      ));
     } else {
       var citySkipReason;
       if (!dest) {
@@ -1079,33 +1153,34 @@
       } else {
         citySkipReason = '缺少校门';
       }
-      steps.push({
-        tool: 'route_city',
-        desc: '城市段接驳',
-        args: {},
-        result: { skipped: true, reason: citySkipReason },
-        ms: 1
-      });
+      steps.push(skippedStep(
+        'route_city',
+        '城市段接驳',
+        {},
+        { skipped: true, reason: citySkipReason }
+      ));
     }
 
     /* --- 工具 6: 数据质量 --- */
+    var tQuality = nowMs();
     var quality = this.checkDataQuality();
-    steps.push({
-      tool: 'check_data_quality',
-      desc: '数据可信度检查',
-      args: {},
-      result: {
+    steps.push(measuredStep(
+      'check_data_quality',
+      '数据可信度检查',
+      {},
+      {
         routingReady: quality.routingReady,
         p0Count: quality.p0Count,
         totalIssues: quality.totalIssues,
         walkableEdges: quality.networkStats.walkable,
         prohibitedEdges: quality.networkStats.prohibited
       },
-      ms: 2
-    });
+      tQuality
+    ));
 
     /* --- 工具 7: 生成描述 --- */
     var reason = failureReason || (campus && !campus.ok ? campus.reason : null);
+    var tDescribe = nowMs();
     var desc = this.describe({
       campus: campus,
       city: cityRes,
@@ -1113,13 +1188,13 @@
       destName: dest ? dest.name : null,
       reason: reason
     });
-    steps.push({
-      tool: 'describe_route',
-      desc: '生成路线说明',
-      args: {},
-      result: { text: desc },
-      ms: 6
-    });
+    steps.push(measuredStep(
+      'describe_route',
+      '生成路线说明',
+      {},
+      { text: desc },
+      tDescribe
+    ));
 
     return {
       intent: intent,
