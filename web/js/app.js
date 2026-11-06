@@ -105,6 +105,123 @@
     mode: 'walk'
   };
 
+  /* 出行方式支持状态：当前只有步行使用本地候选路网计算。
+   * 骑行/无障碍没有独立路网、标签或算法，不能把同一条步行路线改标后展示；
+   * 驾车只由自然语言解析产生，同样没有独立算法，一并拦截。 */
+  var MODE_INFO = {
+    walk: { label: '步行', supported: true },
+    bike: { label: '骑行', supported: false, reason: '骑行尚无独立通行数据与算法' },
+    accessible: { label: '无障碍', supported: false, reason: '无障碍尚无独立通行数据与算法' },
+    car: { label: '驾车', supported: false, reason: '驾车尚无独立通行数据与算法' }
+  };
+
+  function modeInfo(mode) {
+    return MODE_INFO[mode] || {
+      label: mode || '未知方式',
+      supported: false,
+      reason: '该出行方式尚无独立通行数据与算法'
+    };
+  }
+
+  function isModeSupported(mode) {
+    return modeInfo(mode).supported === true;
+  }
+
+  /* agent.js 只认“骑车/自行车/单车”等词，未覆盖“骑行/山地车”，也不处理否定。
+   * 这里补一层显式方式识别：先找肯定方式，再判断紧邻的否定词；排除“骑行道”
+   * 等道路名，避免把普通步行描述误判成骑行请求。 */
+  var MODE_TERMS = [
+    { mode: 'bike', re: '骑行(?!道)|骑车|自行车(?!道)|单车(?!道)|山地车|公路车|电动车|电瓶车|摩托车|骑[^，。,.!?！？；;]{0,6}车' },
+    { mode: 'car', re: '自驾|驾车|打车|开车|出租' },
+    { mode: 'accessible', re: '无障碍|轮椅' }
+  ];
+  var NEGATION_HEAD = '(?:不|别|勿|无需|无须|不用|不必|不需|不要|不愿|拒绝|避免|而非|并非|不是|除了|没(?:有)?|并未|从未|禁止|严禁)';
+  var NEGATION_AUX = '(?:需要|必要|需|用|要|想|打算|准备|建议|推荐|考虑|喜欢|选择|坐|乘|使用|再|继续|骑|走|能|会|可|愿意|愿|敢|肯|必须|值得|得|是)';
+  var NEGATION_AT_END = new RegExp('(?:' + NEGATION_HEAD + NEGATION_AUX + '*)+\\s*$');
+  var TEXT_EDGE_PUNCT = /^[\s，。,.!?！？；;、]+|[\s，。,.!?！？；;、]+$/g;
+
+  function modeMentions(text) {
+    var src = String(text || '');
+    var mentions = [];
+    MODE_TERMS.forEach(function (t) {
+      var rx = new RegExp(t.re, 'g');
+      var m;
+      while ((m = rx.exec(src)) !== null) {
+        if (m[0]) mentions.push({ mode: t.mode, index: m.index, text: m[0] });
+      }
+    });
+    mentions.sort(function (a, b) { return a.index - b.index; });
+    return mentions;
+  }
+
+  function negationStart(text, index) {
+    var m = String(text || '').slice(0, index).match(NEGATION_AT_END);
+    return m ? index - m[0].length : index;
+  }
+
+  /* “不能不坐轮椅”“不得不坐轮椅”是双重否定，语义仍是需要轮椅；
+   * 只有奇数个否定词才把这次提到的方式视为被否定。 */
+  function isNegatedMention(text, index) {
+    var start = negationStart(text, index);
+    if (start === index) return false;
+    var span = String(text || '').slice(start, index);
+    var negs = span.match(new RegExp(NEGATION_HEAD, 'g')) || [];
+    return negs.length % 2 === 1;
+  }
+
+  function resolveRequestedMode(text) {
+    var mentions = modeMentions(text);
+    /* 没有显式方式词就按步行处理。不能直接沿用 agent.js 的 mode：
+     * 它把“自行车道”也认成骑行，而这里已经用否定前瞻排除了道路名。 */
+    if (!mentions.length) return 'walk';
+    for (var i = 0; i < mentions.length; i++) {
+      if (!isNegatedMention(text, mentions[i].index)) {
+        return mentions[i].mode;
+      }
+    }
+    return 'walk';
+  }
+
+  /* “步行到东门，不骑行”里的“不骑行”会被 agent.js 当成校门后缀，导致目的地
+   * 解析失败。步行请求只删除被否定的未支持方式短语；肯定步行描述原样传参。 */
+  function normalizeWalkText(text) {
+    var src = String(text || '').trim();
+    if (!src) return src;
+    src = src.replace(TEXT_EDGE_PUNCT, '').trim();
+    var spans = [];
+    modeMentions(src).forEach(function (m) {
+      if (!isNegatedMention(src, m.index)) return;
+      var start = negationStart(src, m.index);
+      /* 连带删掉连接词，避免“不骑行也不坐轮椅”留下“也”挡住目的地。 */
+      var lead = src.slice(0, start).match(/(?:也|既|又|还|并|且|以及|和|与)\s*$/);
+      if (lead) start -= lead[0].length;
+      var end = m.index + m.text.length;
+      var tail = src.slice(end).match(/^(?:的(?:路线|方式|方案|路径))?/);
+      end += tail[0].length;
+      spans.push([start, end]);
+    });
+    if (spans.length) {
+      spans.sort(function (a, b) { return a[0] - b[0]; });
+      var merged = [spans[0]];
+      for (var i = 1; i < spans.length; i++) {
+        var last = merged[merged.length - 1];
+        if (spans[i][0] <= last[1]) last[1] = Math.max(last[1], spans[i][1]);
+        else merged.push(spans[i]);
+      }
+      var out = '';
+      var pos = 0;
+      merged.forEach(function (s) {
+        out += src.slice(pos, s[0]);
+        pos = s[1];
+      });
+      src = out + src.slice(pos);
+    }
+    src = src.replace(TEXT_EDGE_PUNCT, '').trim();
+    /* 句尾“我，步行就好”“步行即可”只是方式偏好，留着会挡住校门后缀识别。 */
+    src = src.replace(/[，,]?\s*(?:我\s*[，,]?\s*)?(?:步行|走路|徒步|走)(?:就好|就行|即可|吧|好了|也可以|也行|都可以|即可吧)?\s*$/, '');
+    return src.replace(TEXT_EDGE_PUNCT, '').trim();
+  }
+
   /* ---------- 1. 底图：校园边界 + 绿地 ---------- */
   var bgLayer = map.addLayer({
     id: 'bg',
@@ -844,6 +961,8 @@
   /* 出行方式 */
   document.querySelectorAll('.mode').forEach(function (b) {
     b.onclick = function () {
+      /* disabled 通常不会触发 click；这里再防一层，避免脚本改状态后误切换。 */
+      if (!isModeSupported(b.dataset.mode)) return;
       document.querySelectorAll('.mode').forEach(function (x) { x.classList.remove('active'); });
       b.classList.add('active');
       state.mode = b.dataset.mode;
@@ -856,6 +975,11 @@
   var resultBody = document.getElementById('resultBody');
   var traceEl = document.getElementById('trace');
   var traceCount = document.getElementById('traceCount');
+
+  function setPlanBusy(busy) {
+    btnPlan.classList.toggle('loading', !!busy);
+    btnPlan.querySelector('.btn-label').textContent = busy ? '规划中' : '生成路线';
+  }
 
   /* source: 'nl' = 确定的自然语言请求（例如示例 chip、Ctrl+Enter）；
    *         'form' = 明确使用起终点表单的当前选择；
@@ -871,8 +995,7 @@
     if (source === 'nl') nlActive = true;
     else if (source === 'form') nlActive = false;
 
-    btnPlan.classList.add('loading');
-    btnPlan.querySelector('.btn-label').textContent = '规划中';
+    setPlanBusy(true);
 
     traceEl.innerHTML = '';
     traceCount.textContent = '0 步';
@@ -880,7 +1003,32 @@
     setTimeout(function () {
       var res;
       if (useNL) {
-        res = agent.plan(text, { mode: state.mode });
+        /* 先解析请求方式：骑行/无障碍/驾车没有独立算法，必须在算路前拦截，
+         * 否则会把同一条步行路线当成已验证结果展示。 */
+        var tMode = stepNow();
+        var parsed = agent.parseUtterance(text);
+        var requestMode = resolveRequestedMode(text);
+        if (!isModeSupported(requestMode)) {
+          var minfo = modeInfo(requestMode);
+          renderTrace([stepRecord(
+            'check_mode',
+            '识别出行方式',
+            { text: text },
+            {
+              requestedMode: requestMode,
+              modeLabel: minfo.label,
+              supported: false,
+              reason: minfo.reason,
+              from: parsed.from ? parsed.from.name : null,
+              to: parsed.to ? parsed.to.name : null
+            },
+            tMode
+          )]);
+          renderUnsupportedMode(requestMode, parsed);
+          setPlanBusy(false);
+          return;
+        }
+        res = agent.plan(requestMode === 'walk' ? normalizeWalkText(text) : text, { mode: requestMode });
         /* 回填输入框 */
         if (res.origin) {
           originInput.value = res.origin.name;
@@ -901,6 +1049,11 @@
           setHint(destHint, state.dest, false);
         }
       } else {
+        if (!isModeSupported(state.mode)) {
+          renderUnsupportedMode(state.mode, null);
+          setPlanBusy(false);
+          return;
+        }
         res = planFromFields();
       }
 
@@ -908,8 +1061,7 @@
       renderResult(res);
       drawPlans(res);
 
-      btnPlan.classList.remove('loading');
-      btnPlan.querySelector('.btn-label').textContent = '生成路线';
+      setPlanBusy(false);
     }, 320);
   }
 
@@ -1189,6 +1341,7 @@
     if (!r) return '';
     if (r.skipped) return '⊘ ' + (r.reason || '跳过');
     if (r.ok === false) return '✕ ' + (r.reason || '失败');
+    if (r.requestedMode && r.supported === false) return '⊘ ' + (r.modeLabel || r.requestedMode) + '：未支持';
     if (r.meters != null) return '→ ' + r.meters + ' m' + (r.plans ? ' · ' + r.plans + ' 方案' : '');
     if (r.gate) return '→ ' + r.gate;
     if (r.options) return '→ ' + r.options + ' 个接驳方案 · ' + r.distanceKm + ' km';
@@ -1391,6 +1544,34 @@
         map.invalidate();
       });
     }
+  }
+
+  /* 骑行/无障碍/驾车没有独立算法：只报告识别结果与未支持状态，绝不生成路线。 */
+  function renderUnsupportedMode(mode, intent) {
+    var info = modeInfo(mode);
+    var from = intent && intent.from ? (intent.from.name || intent.from.label) : null;
+    var to = intent && intent.to ? (intent.to.name || intent.to.label) : null;
+    var h = [];
+    h.push('<div class="res-card mode-unsupported" data-mode="' + esc(mode) + '">');
+    h.push('<div class="res-card-head"><span class="dotmark" style="background:var(--amber-500)"></span>' +
+      '出行方式暂未支持</div>');
+    h.push('<div class="res-card-body" style="font-size:12.5px;line-height:1.85">');
+    h.push('<div style="margin-bottom:7px"><span class="pill pill-warn">' + esc(info.label) +
+      '</span><span style="color:var(--ink-400);font-size:11px;margin-left:6px">未实现</span></div>');
+    if (from || to) {
+      h.push('<div style="color:var(--ink-500);font-size:11.5px;margin-bottom:7px">' +
+        '识别到：' + esc(from || '—') + ' → ' + esc(to || '—') + '</div>');
+    }
+    h.push('<p>' + esc(info.reason) + '。当前版本只有步行使用校园候选路网计算。</p>');
+    h.push('<p style="margin-top:6px">为避免把同一条步行路线当作<strong>' + esc(info.label) +
+      '</strong>结果，本次<strong>未生成路线</strong>。请选择「步行」或改用步行描述后重试。</p>');
+    h.push('</div></div>');
+    h.push('<div class="notice notice-warn"><span class="n-ico">⚠</span><div>' +
+      '当前可用的出行方式只有步行；骑行、无障碍尚缺独立通行数据与算法。</div></div>');
+    resultBody.innerHTML = h.join('');
+    state.plans = null;
+    state.activePlan = 0;
+    map.invalidate();
   }
 
   function renderSteps(p) {

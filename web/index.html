@@ -92,10 +92,16 @@
         <div class="field-hint" id="destHint">可输入：天府广场 / 成都东客站 / 春熙路 …</div>
       </div>
 
-      <div class="mode-row" role="group" aria-label="出行方式">
-        <button class="mode active" data-mode="walk">步行</button>
-        <button class="mode" data-mode="bike">骑行</button>
-        <button class="mode" data-mode="accessible">无障碍</button>
+      <div class="mode-row" role="group" aria-label="出行方式（当前仅支持步行）">
+        <button class="mode active" data-mode="walk" type="button" aria-pressed="true">步行</button>
+        <button class="mode" data-mode="bike" type="button" disabled aria-describedby="modeNote"
+          title="尚无独立骑行通行数据与算法，暂未支持">骑行<span class="mode-tag">未支持</span></button>
+        <button class="mode" data-mode="accessible" type="button" disabled aria-describedby="modeNote"
+          title="尚无独立无障碍通行数据与算法，暂未支持">无障碍<span class="mode-tag">未支持</span></button>
+      </div>
+      <div class="mode-note" id="modeNote">
+        <span class="mode-note-ico" aria-hidden="true">ⓘ</span>
+        当前仅支持步行路线；骑行和无障碍尚无独立通行数据与算法，暂未支持。
       </div>
     </section>
 
