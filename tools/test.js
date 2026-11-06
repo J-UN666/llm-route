@@ -377,4 +377,151 @@ const westPlan = agent.plan('四食堂到西门', {});
 assert.ok(westPlan.campus && westPlan.campus.ok, '西门仍应能生成校内路线');
 assert.strictEqual(westPlan.campus.gateNodeId, 'osm_node_11668769188', '西门应继续走既有 routeNodeId');
 
+/* 8. 最短性：10 个 MVP 地点 × 6 个校门，以独立 Dijkstra 为基准。
+ * 基准图直接由原始边构建，不使用 routing.js 的 astar/邻接表；禁行边同样排除。 */
+function buildBaselineAdj() {
+  const adj = Array.from({ length: DATA.nodes.length }, () => []);
+  DATA.edges.forEach(e => {
+    if (e[3] === 3) return;
+    adj[e[0]].push({ to: e[1], w: e[2] });
+    adj[e[1]].push({ to: e[0], w: e[2] });
+  });
+  return adj;
+}
+
+function BaselineHeap() { this.a = []; }
+BaselineHeap.prototype.push = function (key, node) {
+  const a = this.a;
+  a.push([key, node]);
+  let i = a.length - 1;
+  while (i > 0) {
+    const p = (i - 1) >> 1;
+    if (a[p][0] <= a[i][0]) break;
+    const t = a[p]; a[p] = a[i]; a[i] = t; i = p;
+  }
+};
+BaselineHeap.prototype.pop = function () {
+  const a = this.a;
+  if (!a.length) return null;
+  const top = a[0], last = a.pop();
+  if (a.length) {
+    a[0] = last;
+    let i = 0;
+    for (;;) {
+      const l = 2 * i + 1, r = l + 1;
+      let m = i;
+      if (l < a.length && a[l][0] < a[m][0]) m = l;
+      if (r < a.length && a[r][0] < a[m][0]) m = r;
+      if (m === i) break;
+      const t = a[m]; a[m] = a[i]; a[i] = t; i = m;
+    }
+  }
+  return top;
+};
+BaselineHeap.prototype.size = function () { return this.a.length; };
+
+const baselineAdj = buildBaselineAdj();
+
+function baselineDijkstra(start, goal) {
+  const n = DATA.nodes.length;
+  const dist = new Float64Array(n).fill(Infinity);
+  const prev = new Int32Array(n).fill(-1);
+  const prevEdge = new Array(n).fill(null);
+  const heap = new BaselineHeap();
+  dist[start] = 0;
+  heap.push(0, start);
+  while (heap.size()) {
+    const item = heap.pop();
+    const d = item[0], u = item[1];
+    if (d > dist[u]) continue;
+    if (u === goal) break;
+    for (const nb of baselineAdj[u]) {
+      const nd = d + nb.w;
+      if (nd < dist[nb.to]) {
+        dist[nb.to] = nd;
+        prev[nb.to] = u;
+        prevEdge[nb.to] = nb.w;
+        heap.push(nd, nb.to);
+      }
+    }
+  }
+  if (dist[goal] === Infinity) return null;
+  let cur = goal, meters = 0;
+  const path = [];
+  while (cur !== -1) {
+    path.push(cur);
+    if (prevEdge[cur] != null) meters += prevEdge[cur];
+    cur = prev[cur];
+  }
+  path.reverse();
+  return { path, meters };
+}
+
+const prohibitedRaw = DATA.edges.filter(e => e[3] === 3).length;
+assert.ok(prohibitedRaw > 0, '数据中应存在禁行边，才能验证排除逻辑');
+assert.strictEqual(router.adj.every(list => list.every(nb => nb.e[3] !== 3)), true,
+  '可步行邻接表必须排除全部禁行边');
+assert.strictEqual(router.adj.reduce((sum, list) => sum + list.length, 0),
+  2 * (DATA.edges.length - prohibitedRaw), '邻接表应只包含非禁行边的双向展开');
+
+const baselinePairs = [];
+assert.strictEqual(DATA.mvp.length, 10, 'MVP 地点应为 10 个');
+assert.strictEqual(DATA.gates.length, 6, '校门应为 6 个');
+
+DATA.mvp.forEach(p => {
+  DATA.gates.forEach(g => {
+    const label = p.n + ' → ' + g.n;
+    const start = router.nearestNode(p.x, p.y, { connectedOnly: true });
+    const gate = router.gateNodeIndex(g, {});
+    assert.ok(start.index >= 0, label + ' 应有可接入的起点节点');
+    assert.ok(gate.index >= 0, label + ' 应有可接入的校门终点节点');
+
+    const expected = baselineDijkstra(start.index, gate.index);
+    assert.ok(expected, label + ' 在独立 Dijkstra 基准中应可达');
+
+    const planned = router.planToGate(p.x, p.y, g, {});
+    assert.ok(planned && planned.plans.length > 0, label + ' 应生成校内路线');
+    assert.strictEqual(planned.startNode.index, start.index, label + ' 起点接入节点应与基准一致');
+    assert.strictEqual(planned.gateIdx, gate.index, label + ' 校门终点节点应与基准一致');
+
+    const shortest = planned.plans.filter(pl => pl.key === 'A')[0];
+    assert.ok(shortest, label + ' 应包含最短方案 A');
+    const edgeMeters = shortest.result.edges.reduce((sum, e) => sum + e[2], 0);
+    assert.ok(Math.abs(edgeMeters - shortest.result.meters) < 1e-9,
+      label + ' 路线距离应等于各边权之和');
+    assert.ok(Math.abs(shortest.result.meters - expected.meters) < 1e-6,
+      label + ' A* 结果 ' + shortest.result.meters + ' m 应等于 Dijkstra 基准 ' +
+      expected.meters + ' m');
+    assert.strictEqual(shortest.result.edges.some(e => e[3] === 3), false,
+      label + ' 最短路径不得包含禁行边');
+
+    baselinePairs.push({
+      placeName: p.n,
+      gateName: g.n,
+      meters: shortest.result.meters,
+      baselineMeters: expected.meters,
+      diff: shortest.result.meters - expected.meters
+    });
+  });
+});
+
+assert.strictEqual(baselinePairs.length, 60,
+  '10 个 MVP 地点 × 6 个校门应完成 60 组最短性对照');
+assert.strictEqual(baselinePairs.every(pair => Math.abs(pair.diff) < 1e-6), true,
+  '60 组 A* 路径距离必须全部与独立 Dijkstra 基准一致');
+
+/* 验收点名的三组：图书馆、8 教、北区校车站 → 西北一门。 */
+[
+  { label: '图书馆', placeName: '西南交通大学犀浦校区图书馆' },
+  { label: '8教', placeName: '西南交大犀浦8号教学楼' },
+  { label: '北区校车站', placeName: '北区校车站' }
+].forEach(item => {
+  const pair = baselinePairs.filter(p =>
+    p.placeName === item.placeName && p.gateName === '西北一门')[0];
+  assert.ok(pair, item.label + ' → 西北一门 应完成最短性对照');
+  assert.ok(Math.abs(pair.diff) < 1e-6,
+    item.label + ' → 西北一门 不应长于 Dijkstra 基准（差值 ' + pair.diff + ' m）');
+});
+
 console.log('验收断言通过：东门两条单行车道合并为一个校门实体（保留节点/连边），东门/东大门表单与自然语言同终点；校内→校外走出校车道，校门→校内走进校车道；其他校门与城市接驳正常。');
+console.log('最短性断言通过：10 个 MVP 地点 × 6 个校门共 60 组均与独立 Dijkstra 基准一致，含图书馆、8教、北区校车站 → 西北一门；禁行边仍排除。');

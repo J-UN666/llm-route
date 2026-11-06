@@ -158,22 +158,24 @@
     return { index: best, dist: Math.sqrt(bd) };
   };
 
-  /* A*：返回 {path:[nodeIdx], meters, edges:[rawEdge]} */
+  /* 最短路径：返回 {path:[nodeIdx], meters, edges:[rawEdge]}
+   *
+   * 这里保留 astar 接口，但启发函数取 h=0，即退化为堆优化 Dijkstra。
+   * 原因：候选边的 length_m 与其端点经纬度直线距离的比值在数据中低至
+   * 约 0.95，而旧实现按 102400 m/° 经度、111000 m/° 纬度估算直线距离，
+   * 会高估剩余代价；h 不可采纳时，终点首次弹出不保证最短。原始边权
+   * 保持不变，h=0 对任意非负边权都可证明最优，weightFn 仍用于方案 B
+   * 的加权代价。 */
   CampusRouter.prototype.astar = function (startIdx, goalIdx, weightFn) {
     var nodes = this.nodes, adj = this.adj;
     if (startIdx === goalIdx) return { path: [startIdx], meters: 0, edges: [] };
-    var gx = nodes[goalIdx][0], gy = nodes[goalIdx][1];
-    function h(i) {
-      var dx = (nodes[i][0] - gx) * 102400, dy = (nodes[i][1] - gy) * 111000;
-      return Math.sqrt(dx * dx + dy * dy) * 1.0;
-    }
     var gScore = new Float64Array(nodes.length).fill(Infinity);
     var prev = new Int32Array(nodes.length).fill(-1);
     var prevEdge = new Array(nodes.length).fill(null);
     var closed = new Uint8Array(nodes.length);
     var heap = new Heap();
     gScore[startIdx] = 0;
-    heap.push(h(startIdx), startIdx);
+    heap.push(0, startIdx);
 
     while (heap.size()) {
       var item = heap.pop();
@@ -190,7 +192,7 @@
           gScore[nb.to] = ng;
           prev[nb.to] = u;
           prevEdge[nb.to] = nb.e;
-          heap.push(ng + h(nb.to), nb.to);
+          heap.push(ng, nb.to);
         }
       }
     }
