@@ -1,0 +1,19 @@
+{
+  "name": "交大智行",
+  "appid": "",
+  "description": "交大智行微信小程序：犀浦校区到成都目的地的一体化出行规划",
+  "versionName": "0.1.0",
+  "versionCode": "100",
+  "transformPx": false,
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": false
+    },
+    "usingComponents": true
+  },
+  "uniStatistics": {
+    "enable": false
+  },
+  "vueVersion": "3"
+}

@@ -9,6 +9,7 @@
 /AGENTS.md
 /docs/
 /backend/README.md
+/frontend/README.md
 
 # Maven build output, test reports and temporary logs
 **/target/
@@ -20,3 +21,12 @@
 .idea/
 .vscode/
 *.iml
+
+# Frontend（uni-app 小程序）依赖与构建产物
+/frontend/node_modules/
+/frontend/dist/
+/frontend/unpackage/
+/frontend/logs/
+/frontend/*.local
+**/project.private.config.json
+*.tsbuildinfo
