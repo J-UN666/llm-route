@@ -1,2 +1,22 @@
-web/key.local.js
-docs
+# Local credentials and configuration
+/web/key.local.js
+.env
+.env.*
+!.env.example
+
+# Local agent instructions and supplementary documentation
+/AGENT.md
+/AGENTS.md
+/docs/
+/backend/README.md
+
+# Maven build output, test reports and temporary logs
+**/target/
+*.log
+*.tmp
+
+# macOS and IDE metadata
+.DS_Store
+.idea/
+.vscode/
+*.iml

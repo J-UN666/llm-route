@@ -1,0 +1,46 @@
+# 交大智行后端基础配置。
+# 凭证只从环境变量读取，任何真实账号与口令都不写入本文件或仓库。
+spring:
+  application:
+    name: llm-route-backend
+
+  # 运行账号（日常读写）连接云端 MySQL；本机通过 127.0.0.1:13306 隧道访问。
+  # 默认 DB_URL 的 useSSL=false 仅适用于本机 SSH 隧道开发；直连或正式环境需按实际 TLS 要求调整。
+  datasource:
+    url: "${DB_URL:jdbc:mysql://127.0.0.1:13306/llmroute?useSSL=false&allowPublicKeyRetrieval=true&connectionTimeZone=UTC&characterEncoding=UTF-8}"
+    username: "${DB_USER:}"
+    password: "${DB_PASSWORD:}"
+    hikari:
+      pool-name: llm-route-hikari
+      maximum-pool-size: 5
+      minimum-idle: 1
+      connection-timeout: 3000
+      # 数据库暂不可用时仍允许应用启动：存活检查不受数据库影响，由 readiness 反映数据库状态。
+      initialization-fail-timeout: -1
+
+  # 运行账号没有 DDL 权限，运行期迁移关闭；迁移由 Maven flyway-maven-plugin 用迁移账号执行。
+  flyway:
+    enabled: false
+
+server:
+  port: ${SERVER_PORT:8080}
+  address: ${SERVER_ADDRESS:127.0.0.1}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        # 开启 /actuator/health/liveness 与 /actuator/health/readiness。
+        enabled: true
+      # 健康响应只输出状态分组，不暴露数据源连接细节。
+      show-details: never
+      group:
+        liveness:
+          include: livenessState
+        readiness:
+          # 数据库连接就是应用就绪条件之一；连接池等待超过 connection-timeout 后 readiness 为 DOWN。
+          include: readinessState,db
