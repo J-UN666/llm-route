@@ -103,13 +103,17 @@ class PlaceServiceTests {
     }
 
     @Test
-    void seedOriginCandidateHasNoEntranceButKeepsFootprintPosition() {
+    void teamConfirmedOriginKeepsDisplayCentroidSeparateFromRoutingPoint() {
         PlaceCandidate seed = placeService.getById("osm_way_1098786977");
         assertThat(seed.kind()).isEqualTo(PlaceKind.CAMPUS);
         assertThat(seed.aliases()).contains("图书馆");
-        assertThat(seed.routingReady()).isFalse();
-        assertThat(seed.routingPosition()).isNull();
-        assertThat(seed.unavailableReason()).contains("入口");
+        assertThat(seed.routingReady()).isTrue();
+        assertThat(seed.routingPosition().pointId()).isEqualTo("osm_node_5167087319");
+        assertThat(seed.routingPosition().positionRole()).isEqualTo("building_external_access_point");
+        assertThat(seed.routingPosition().longitude()).isEqualTo(103.9832456);
+        assertThat(seed.unavailableReason()).isNull();
+        assertThat(seed.verificationStatus()).isEqualTo("APPLICATION_VERIFIED");
+        assertThat(seed.sourceRefs()).contains("TEAM_CONFIRMATION_2026_11_15", "DEMO_WALKWAY_DEFAULT_OPEN");
         assertThat(seed.displayPosition().positionRole()).isEqualTo("footprint_centroid_not_entrance");
         assertThat(seed.displayPosition().coordinateSystem()).isEqualTo("WGS84");
     }

@@ -1,0 +1,279 @@
+{
+  "dataVersion": "test-fixture-prohibited-access-1",
+  "description": "W1-05 测试夹具（仅测试）：两条均为 APPLICATION_VERIFIED，但一条校门明确禁止行人通行、一条含 PROHIBITED 分段，用于回归复审 P1——接口必须排除并返回 422 及明确原因。",
+  "connectors": [
+    {
+      "id": "fixture_connector_pedestrian_prohibited",
+      "originId": "osm_way_1098786977",
+      "originName": "西南交通大学犀浦校区图书馆",
+      "originPoint": {
+        "pointId": "osm_node_5167087319",
+        "longitude": 103.9832456,
+        "latitude": 30.7693165,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_access_point",
+        "evidence": [
+          "fixture：S04 节点"
+        ]
+      },
+      "gateId": "campus_gate_east",
+      "gateName": "东门",
+      "gatePoints": [
+        {
+          "pointId": "osm_node_13469658219",
+          "longitude": 103.9912939,
+          "latitude": 30.7716985,
+          "coordinateSystem": "WGS84",
+          "direction": "OUTBOUND",
+          "positionRole": "gate_exit",
+          "evidence": [
+            "fixture"
+          ]
+        },
+        {
+          "pointId": "osm_node_4150911420",
+          "longitude": 103.9912343,
+          "latitude": 30.771786,
+          "coordinateSystem": "WGS84",
+          "direction": "INBOUND",
+          "positionRole": "gate_inbound_lane",
+          "evidence": [
+            "fixture"
+          ]
+        }
+      ],
+      "gateExitPoint": {
+        "pointId": "osm_node_13469658219",
+        "longitude": 103.9912939,
+        "latitude": 30.7716985,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit",
+        "evidence": [
+          "fixture"
+        ]
+      },
+      "segments": [
+        {
+          "segmentId": "fixture_connector_pedestrian_prohibited_01",
+          "order": 1,
+          "description": "夹具第一段",
+          "fromPointId": "osm_node_5167087319",
+          "toPointId": "fixture_mid_node",
+          "lengthMeters": 40.0,
+          "durationSeconds": 31,
+          "highway": "pedestrian",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "fixture",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9832456,
+                30.7693165
+              ],
+              [
+                103.9832971,
+                30.769491
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "535905500"
+          ],
+          "sourceRefs": [
+            "S04"
+          ]
+        },
+        {
+          "segmentId": "fixture_connector_pedestrian_prohibited_02",
+          "order": 2,
+          "description": "夹具第二段",
+          "fromPointId": "fixture_mid_node",
+          "toPointId": "osm_node_13469658219",
+          "lengthMeters": 40.0,
+          "durationSeconds": 30,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "OPEN_UNVERIFIED",
+          "passabilityNote": "fixture",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9832971,
+                30.769491
+              ],
+              [
+                103.9912939,
+                30.7716985
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207570494"
+          ],
+          "sourceRefs": [
+            "S04"
+          ]
+        }
+      ],
+      "walkMeters": 80.0,
+      "durationSeconds": 61,
+      "durationBasis": "测试夹具：分段秒数加总",
+      "verificationStatus": "APPLICATION_VERIFIED",
+      "verifiedAt": "2026-11-15",
+      "verificationMethod": "fixture",
+      "verificationBasis": [
+        "fixture"
+      ],
+      "missingEvidence": [],
+      "accessRules": {
+        "direction": "OUTBOUND",
+        "pedestrianAccess": "PROHIBITED",
+        "pedestrianAccessBasis": "夹具：校门明确禁止行人通行，用于验证接口返回 422 与原因（复审 P1）。",
+        "gateOpenHours": null,
+        "gateOpenHoursStatus": "UNVERIFIED",
+        "timeRestrictions": [],
+        "timeRestrictionBasis": "fixture 无已知限制"
+      },
+      "sourceRefs": [
+        "S04"
+      ],
+      "unavailableReasonCode": null,
+      "unavailableReason": null
+    },
+    {
+      "id": "fixture_connector_prohibited_segment",
+      "originId": "osm_way_1098786977",
+      "originName": "西南交通大学犀浦校区图书馆",
+      "originPoint": {
+        "pointId": "osm_node_5167087319",
+        "longitude": 103.9832456,
+        "latitude": 30.7693165,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_access_point",
+        "evidence": [
+          "fixture"
+        ]
+      },
+      "gateId": "campus_gate_east",
+      "gateName": "东门",
+      "gatePoints": [
+        {
+          "pointId": "osm_node_13469658219",
+          "longitude": 103.9912939,
+          "latitude": 30.7716985,
+          "coordinateSystem": "WGS84",
+          "direction": "OUTBOUND",
+          "positionRole": "gate_exit",
+          "evidence": [
+            "fixture"
+          ]
+        }
+      ],
+      "gateExitPoint": {
+        "pointId": "osm_node_13469658219",
+        "longitude": 103.9912939,
+        "latitude": 30.7716985,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit",
+        "evidence": [
+          "fixture"
+        ]
+      },
+      "segments": [
+        {
+          "segmentId": "fixture_connector_prohibited_segment_01",
+          "order": 1,
+          "description": "夹具可走段",
+          "fromPointId": "osm_node_5167087319",
+          "toPointId": "fixture_mid_node",
+          "lengthMeters": 40.0,
+          "durationSeconds": 31,
+          "highway": "pedestrian",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "fixture",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9832456,
+                30.7693165
+              ],
+              [
+                103.9832971,
+                30.769491
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "535905500"
+          ],
+          "sourceRefs": [
+            "S04"
+          ]
+        },
+        {
+          "segmentId": "fixture_connector_prohibited_segment_02",
+          "order": 2,
+          "description": "夹具禁行段",
+          "fromPointId": "fixture_mid_node",
+          "toPointId": "osm_node_13469658219",
+          "lengthMeters": 41.0,
+          "durationSeconds": 31,
+          "highway": "service",
+          "roadName": null,
+          "passabilityStatus": "PROHIBITED",
+          "passabilityNote": "fixture：禁行",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9832971,
+                30.769491
+              ],
+              [
+                103.9912939,
+                30.7716985
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "fixture_way_prohibited"
+          ],
+          "sourceRefs": [
+            "S04"
+          ]
+        }
+      ],
+      "walkMeters": 81.0,
+      "durationSeconds": 62,
+      "durationBasis": "测试夹具",
+      "verificationStatus": "APPLICATION_VERIFIED",
+      "verifiedAt": "2026-11-15",
+      "verificationMethod": "fixture",
+      "verificationBasis": [
+        "fixture"
+      ],
+      "missingEvidence": [
+        "fixture"
+      ],
+      "accessRules": {
+        "direction": "OUTBOUND",
+        "pedestrianAccess": "permit",
+        "pedestrianAccessBasis": "fixture",
+        "gateOpenHours": null,
+        "gateOpenHoursStatus": "UNVERIFIED",
+        "timeRestrictions": [],
+        "timeRestrictionBasis": "fixture"
+      },
+      "sourceRefs": [
+        "S04"
+      ],
+      "unavailableReasonCode": null,
+      "unavailableReason": null
+    }
+  ]
+}

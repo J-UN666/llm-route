@@ -26,6 +26,8 @@ spring:
 campus:
   data-root: ${CAMPUS_DATA_ROOT:}
   application-places: classpath:data/application-places.json
+  # W1-05 应用层审核接驳数据：独立 JSON，只读加载；单测可用该属性指向测试夹具。
+  application-connectors: classpath:data/campus-connectors.json
 
 server:
   port: ${SERVER_PORT:8080}

@@ -43,7 +43,7 @@ class PlaceControllerTests {
                         .value("source_marker_not_verified_entrance"))
                 .andExpect(jsonPath("$.items[0].displayPosition.longitude").isNumber())
                 .andExpect(jsonPath("$.items[0].displayPosition.latitude").isNumber())
-                .andExpect(jsonPath("$.items[0].dataVersion").value("2026-11-15.1"))
+                .andExpect(jsonPath("$.items[0].dataVersion").value("2026-11-15.2"))
                 .andExpect(jsonPath("$.items[0].sourceRefs[0]").value("S03"))
                 .andExpect(jsonPath("$.items[0].aliases").isArray());
     }
@@ -84,7 +84,7 @@ class PlaceControllerTests {
                 .andExpect(jsonPath("$.items[0].routingPosition.pointId").value("osm_way_1395271422"))
                 .andExpect(jsonPath("$.items[0].routingPosition.coordinateSystem").value("WGS84"))
                 .andExpect(jsonPath("$.items[0].routingPosition.positionRole").value("destination_point"))
-                .andExpect(jsonPath("$.items[0].dataVersion").value("2026-11-15.1"));
+                .andExpect(jsonPath("$.items[0].dataVersion").value("2026-11-15.2"));
     }
 
     @Test
@@ -129,5 +129,17 @@ class PlaceControllerTests {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value("PLACE_NOT_FOUND"))
                 .andExpect(jsonPath("$.message").value(org.hamcrest.Matchers.containsString("not_a_place")));
+    }
+
+    @Test
+    void demoOriginsExposeSelectableExplicitRoutingPoints() throws Exception {
+        for (String id : java.util.List.of("osm_way_1098786977", "osm_way_1099340057")) {
+            mockMvc.perform(get("/api/places/" + id))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.routingReady").value(true))
+                    .andExpect(jsonPath("$.routingPosition.positionRole").value("building_external_access_point"))
+                    .andExpect(jsonPath("$.displayPosition.positionRole").value("footprint_centroid_not_entrance"))
+                    .andExpect(jsonPath("$.dataVersion").value("2026-11-15.2"));
+        }
     }
 }

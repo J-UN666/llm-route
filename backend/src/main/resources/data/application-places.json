@@ -1,5 +1,5 @@
 {
-  "dataVersion": "2026-11-15.1",
+  "dataVersion": "2026-11-15.2",
   "description": "W1-04 首批应用层地点补充：经核对的校门出校点、校园起点候选入口状态与城市目的地候选。基础地点/别名/校门来自 source-data/校园数据 与 web/data/campus.json，不在此重复；本文件只记录应用层核实结论、证据与缺失证据。",
   "places": [
     {
@@ -7,26 +7,46 @@
       "kind": "CAMPUS",
       "name": "西南交通大学犀浦校区图书馆",
       "category": "library",
-      "aliases": ["图书馆"],
-      "verificationStatus": "UNVERIFIED",
-      "verifiedAt": null,
+      "aliases": [
+        "图书馆"
+      ],
+      "verificationStatus": "APPLICATION_VERIFIED",
+      "verifiedAt": "2026-11-15",
       "displayPosition": null,
-      "routingPosition": null,
-      "unavailableReason": "来源只有 OSM 楼宇轮廓质心（WGS84，非入口），入口节点、入口到可步行路网的接边与通行限制未核实，暂不可算路。",
+      "routingPosition": {
+        "pointId": "osm_node_5167087319",
+        "longitude": 103.9832456,
+        "latitude": 30.7693165,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_external_access_point"
+      },
+      "unavailableReason": null,
       "evidence": [
         {
           "kind": "source_record",
           "detail": "cleaned/mvp_seed_candidates.json：OSM way 1098786977 图书馆楼宇轮廓，WGS84 质心 103.98312557033327,30.768801726087904，position_role=footprint_centroid_not_entrance；S04 快照采集日 2026-11-03。",
-          "sourceRefs": ["S04", "web/data/campus.json"]
+          "sourceRefs": [
+            "S04",
+            "web/data/campus.json"
+          ]
+        },
+        {
+          "kind": "team_confirmation",
+          "detail": "2026-11-15 用户确认人行道默认开放、东门可步行出校；演示使用本条楼外路网接入点，不要求精确到楼门，距离/耗时采用地图估算。",
+          "sourceRefs": [
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
         }
       ],
-      "missingEvidence": [
-        "楼宇入口节点或入口位置",
-        "入口到可步行路网的接边与通行许可",
-        "入口开放时段与入馆规则"
-      ],
-      "conditions": "仅作为校园起点候选（routingReady=false）；W1-05 核对入口与可走路段并写入 campus-connectors.json 后才可用于校园接驳。",
-      "sourceRefs": ["S04", "web/data/campus.json"]
+      "missingEvidence": [],
+      "conditions": "演示采用楼外路网接入点；人行道默认开放，东门按团队确认可步行通过，不按时段限制。具体接驳以campus-connectors.json为准。",
+      "sourceRefs": [
+        "S04",
+        "web/data/campus.json",
+        "TEAM_CONFIRMATION_2026_11_15",
+        "DEMO_WALKWAY_DEFAULT_OPEN"
+      ]
     },
     {
       "id": "osm_way_1099340057",
@@ -34,25 +54,43 @@
       "name": "天佑斋1号楼",
       "category": "dormitory",
       "aliases": [],
-      "verificationStatus": "UNVERIFIED",
-      "verifiedAt": null,
+      "verificationStatus": "APPLICATION_VERIFIED",
+      "verifiedAt": "2026-11-15",
       "displayPosition": null,
-      "routingPosition": null,
-      "unavailableReason": "来源只有 OSM 楼宇轮廓质心（WGS84，非入口），入口节点、入口到可步行路网的接边与通行限制未核实，暂不可算路。",
+      "routingPosition": {
+        "pointId": "osm_node_9893299669",
+        "longitude": 103.9839831,
+        "latitude": 30.7623128,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_external_access_point"
+      },
+      "unavailableReason": null,
       "evidence": [
         {
           "kind": "source_record",
           "detail": "cleaned/mvp_seed_candidates.json：OSM way 1099340057 天佑斋1号楼楼宇轮廓，WGS84 质心 103.98396663814233,30.762065556314408，position_role=footprint_centroid_not_entrance；S04 快照采集日 2026-11-03。",
-          "sourceRefs": ["S04", "web/data/campus.json"]
+          "sourceRefs": [
+            "S04",
+            "web/data/campus.json"
+          ]
+        },
+        {
+          "kind": "team_confirmation",
+          "detail": "2026-11-15 用户确认人行道默认开放、东门可步行出校；演示使用本条楼外路网接入点，不要求精确到楼门，距离/耗时采用地图估算。",
+          "sourceRefs": [
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
         }
       ],
-      "missingEvidence": [
-        "宿舍楼入口节点或入口位置",
-        "入口到可步行路网的接边与通行许可",
-        "入口开放时段与门禁规则"
-      ],
-      "conditions": "仅作为校园起点候选（routingReady=false）；W1-05 核对入口与可走路段并写入 campus-connectors.json 后才可用于校园接驳。",
-      "sourceRefs": ["S04", "web/data/campus.json"]
+      "missingEvidence": [],
+      "conditions": "演示采用楼外路网接入点；人行道默认开放，东门按团队确认可步行通过，不按时段限制。具体接驳以campus-connectors.json为准。",
+      "sourceRefs": [
+        "S04",
+        "web/data/campus.json",
+        "TEAM_CONFIRMATION_2026_11_15",
+        "DEMO_WALKWAY_DEFAULT_OPEN"
+      ]
     },
     {
       "id": "campus_gate_east",
@@ -72,21 +110,37 @@
         {
           "kind": "cross_source_correspondence",
           "detail": "官方图标签“东门”(LABEL_014,S01) 与 OSM 东侧门进/出车道节点 osm_node_4150911420、osm_node_13469658219 (S04) 按应用层实体 campus_gate_east 合并（web/data/campus.json 已保留该规范化 ID）；出校方向取单向车道节点 osm_node_13469658219。",
-          "sourceRefs": ["S01", "S04", "web/data/campus.json"]
+          "sourceRefs": [
+            "S01",
+            "S04",
+            "web/data/campus.json"
+          ]
         },
         {
           "kind": "route_query",
           "detail": "web/data/city.json gate_connections 中“东门 → 交大犀浦校区有轨电车站”gate_match.status=confirmed、level=application_entity，OSM routed-foot 步行约 1824.2 m（2026-11-06 查询）；该距离仅作对应关系证据，本卡不用于算路。",
-          "sourceRefs": ["web/data/city.json"]
+          "sourceRefs": [
+            "web/data/city.json"
+          ]
+        },
+        {
+          "kind": "team_confirmation",
+          "detail": "2026-11-15 用户明确确认东门该出校方向可步行通过；演示不按开放时段限制。",
+          "sourceRefs": [
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
         }
       ],
-      "missingEvidence": [
-        "校门开放时段",
-        "现场确认人行出入口位置及进出校通行规则",
-        "进出校车道与行人混行的风险说明与适用条件"
-      ],
-      "conditions": "仅作为“校园 → 城市”出校方向的接口点；进校方向节点 osm_node_4150911420 不用于城市段起点。开放与通行限制由 W1-05 的 accessRules 记录。",
-      "sourceRefs": ["S01", "S04", "web/data/campus.json"]
+      "missingEvidence": [],
+      "conditions": "东门出校方向按团队确认可步行通过；演示默认开放，入口坐标与接驳终点通过pointId关联。",
+      "sourceRefs": [
+        "S01",
+        "S04",
+        "web/data/campus.json",
+        "TEAM_CONFIRMATION_2026_11_15",
+        "DEMO_WALKWAY_DEFAULT_OPEN"
+      ]
     },
     {
       "id": "campus_gate_west",
@@ -100,12 +154,20 @@
         {
           "kind": "cross_source_correspondence",
           "detail": "官方图标签“西门”(LABEL_016,S01) 仅作名称线索；对应 OSM 西侧门节点 osm_node_11668769187 / osm_node_11668769188 (S04)，出校侧取 osm_node_11668769188（web/data/campus.json 规范化 ID campus_gate_west）。",
-          "sourceRefs": ["S01", "S04", "web/data/campus.json"]
+          "sourceRefs": [
+            "S01",
+            "S04",
+            "web/data/campus.json"
+          ]
         },
         {
           "kind": "application_policy",
           "detail": "tools/build_campus_data.py 为 campus_gate_west 写入 campusOnly=true，web/js/agent.js 选门规则排除 campusOnly 校门；因此本卡不提供城市出校点。",
-          "sourceRefs": ["tools/build_campus_data.py", "web/js/agent.js", "web/data/campus.json"]
+          "sourceRefs": [
+            "tools/build_campus_data.py",
+            "web/js/agent.js",
+            "web/data/campus.json"
+          ]
         }
       ],
       "missingEvidence": [
@@ -113,7 +175,13 @@
         "开放时段与人行/车行通行规则"
       ],
       "conditions": "仅用于校园接驳方向；作为城市段起点前，需要 W1-05 核对取消限制并更新本文件的 verificationStatus/routingPosition。",
-      "sourceRefs": ["S01", "S04", "web/data/campus.json", "tools/build_campus_data.py", "web/js/agent.js"]
+      "sourceRefs": [
+        "S01",
+        "S04",
+        "web/data/campus.json",
+        "tools/build_campus_data.py",
+        "web/js/agent.js"
+      ]
     },
     {
       "id": "C01",
@@ -142,12 +210,16 @@
         {
           "kind": "external_lookup",
           "detail": "OpenStreetMap Nominatim（2026-11-15）按名称命中天府广场 OSM way 1395271422，WGS84 104.063299,30.659841。数据 © OpenStreetMap contributors，ODbL 1.0。",
-          "sourceRefs": ["OSM_NOMINATIM_2026-11-15"]
+          "sourceRefs": [
+            "OSM_NOMINATIM_2026-11-15"
+          ]
         },
         {
           "kind": "source_conflict",
           "detail": "web/data/city.json C01 人工坐标为 104.1187,30.6819（data_status=manual_public_common_knowledge，未经本项目核验），与核对点相差约 5839 m；本卡不采用旧坐标，仅保留为冲突记录。",
-          "sourceRefs": ["web/data/city.json"]
+          "sourceRefs": [
+            "web/data/city.json"
+          ]
         }
       ],
       "missingEvidence": [
@@ -155,7 +227,10 @@
         "从校区出发的公共交通方案与耗时（属 W1-06 城市段任务）"
       ],
       "conditions": "routingPosition 仅作城市段目的地代表点（destination_point）；W1-06 调用地图服务前需按服务坐标系要求适配（当前为 WGS84）。",
-      "sourceRefs": ["web/data/city.json", "OSM_NOMINATIM_2026-11-15"]
+      "sourceRefs": [
+        "web/data/city.json",
+        "OSM_NOMINATIM_2026-11-15"
+      ]
     },
     {
       "id": "C02",
@@ -184,12 +259,16 @@
         {
           "kind": "external_lookup",
           "detail": "OpenStreetMap Nominatim（2026-11-15）按名称命中春熙路/太古里片区 OSM way 243328355，WGS84 104.0752984,30.6591874。数据 © OpenStreetMap contributors，ODbL 1.0。",
-          "sourceRefs": ["OSM_NOMINATIM_2026-11-15"]
+          "sourceRefs": [
+            "OSM_NOMINATIM_2026-11-15"
+          ]
         },
         {
           "kind": "source_conflict",
           "detail": "web/data/city.json C02 人工坐标为 104.126,30.6797（未经本项目核验），与核对点相差约 5359 m；本卡不采用旧坐标，仅保留为冲突记录。",
-          "sourceRefs": ["web/data/city.json"]
+          "sourceRefs": [
+            "web/data/city.json"
+          ]
         }
       ],
       "missingEvidence": [
@@ -197,7 +276,10 @@
         "从校区出发的公共交通方案与耗时（属 W1-06 城市段任务）"
       ],
       "conditions": "routingPosition 仅作城市段目的地代表点（destination_point）；W1-06 调用地图服务前需按服务坐标系要求适配（当前为 WGS84）。",
-      "sourceRefs": ["web/data/city.json", "OSM_NOMINATIM_2026-11-15"]
+      "sourceRefs": [
+        "web/data/city.json",
+        "OSM_NOMINATIM_2026-11-15"
+      ]
     },
     {
       "id": "C03",
@@ -226,12 +308,16 @@
         {
           "kind": "external_lookup",
           "detail": "OpenStreetMap Nominatim（2026-11-15）按名称命中成都东客站 OSM 节点 5616916019，WGS84 104.1371745,30.6317593。数据 © OpenStreetMap contributors，ODbL 1.0。",
-          "sourceRefs": ["OSM_NOMINATIM_2026-11-15"]
+          "sourceRefs": [
+            "OSM_NOMINATIM_2026-11-15"
+          ]
         },
         {
           "kind": "source_conflict",
           "detail": "web/data/city.json C03 人工坐标为 104.1713,30.6669（未经本项目核验），与核对点相差约 5092 m；本卡不采用旧坐标，仅保留为冲突记录。",
-          "sourceRefs": ["web/data/city.json"]
+          "sourceRefs": [
+            "web/data/city.json"
+          ]
         }
       ],
       "missingEvidence": [
@@ -239,7 +325,10 @@
         "从校区出发的公共交通方案与耗时（属 W1-06 城市段任务）"
       ],
       "conditions": "routingPosition 仅作城市段目的地代表点（destination_point）；W1-06 调用地图服务前需按服务坐标系要求适配（当前为 WGS84）。",
-      "sourceRefs": ["web/data/city.json", "OSM_NOMINATIM_2026-11-15"]
+      "sourceRefs": [
+        "web/data/city.json",
+        "OSM_NOMINATIM_2026-11-15"
+      ]
     },
     {
       "id": "C04",
@@ -268,12 +357,16 @@
         {
           "kind": "external_lookup",
           "detail": "OpenStreetMap Nominatim（2026-11-15）按名称命中成都站 OSM 节点 7213434053，WGS84 104.0714078,30.6980375。数据 © OpenStreetMap contributors，ODbL 1.0。",
-          "sourceRefs": ["OSM_NOMINATIM_2026-11-15"]
+          "sourceRefs": [
+            "OSM_NOMINATIM_2026-11-15"
+          ]
         },
         {
           "kind": "source_conflict",
           "detail": "web/data/city.json C04 人工坐标为 104.074,30.699（未经本项目核验），与核对点相差约 270 m；两坐标均位于车站片区，本卡以 OSM 核对点为代表点。",
-          "sourceRefs": ["web/data/city.json"]
+          "sourceRefs": [
+            "web/data/city.json"
+          ]
         }
       ],
       "missingEvidence": [
@@ -281,7 +374,10 @@
         "从校区出发的公共交通方案与耗时（属 W1-06 城市段任务）"
       ],
       "conditions": "routingPosition 仅作城市段目的地代表点（destination_point）；W1-06 调用地图服务前需按服务坐标系要求适配（当前为 WGS84）。",
-      "sourceRefs": ["web/data/city.json", "OSM_NOMINATIM_2026-11-15"]
+      "sourceRefs": [
+        "web/data/city.json",
+        "OSM_NOMINATIM_2026-11-15"
+      ]
     },
     {
       "id": "C08",
@@ -310,12 +406,16 @@
         {
           "kind": "external_lookup",
           "detail": "OpenStreetMap Nominatim（2026-11-15）按名称命中宽窄巷子 OSM way 588905842，WGS84 104.0508079,30.6661938。数据 © OpenStreetMap contributors，ODbL 1.0。",
-          "sourceRefs": ["OSM_NOMINATIM_2026-11-15"]
+          "sourceRefs": [
+            "OSM_NOMINATIM_2026-11-15"
+          ]
         },
         {
           "kind": "source_conflict",
           "detail": "web/data/city.json C08 人工坐标为 104.0615,30.6698（未经本项目核验），与核对点相差约 1098 m；本卡以 OSM 核对点为代表点，旧坐标保留为冲突记录。",
-          "sourceRefs": ["web/data/city.json"]
+          "sourceRefs": [
+            "web/data/city.json"
+          ]
         }
       ],
       "missingEvidence": [
@@ -323,7 +423,10 @@
         "从校区出发的公共交通方案与耗时（属 W1-06 城市段任务）"
       ],
       "conditions": "routingPosition 仅作城市段目的地代表点（destination_point）；W1-06 调用地图服务前需按服务坐标系要求适配（当前为 WGS84）。",
-      "sourceRefs": ["web/data/city.json", "OSM_NOMINATIM_2026-11-15"]
+      "sourceRefs": [
+        "web/data/city.json",
+        "OSM_NOMINATIM_2026-11-15"
+      ]
     }
   ]
 }

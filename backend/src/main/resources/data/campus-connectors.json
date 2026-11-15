@@ -1,0 +1,1300 @@
+{
+  "dataVersion": "2026-11-15.4",
+  "description": "W1-05 演示接驳：用户于2026-11-15确认东门可步行通过，并指定校内人行道默认开放。图书馆、天佑斋1号楼使用楼外路网接入点，两条东门路线按团队确认审核可用；几何与距离来自S04 OSM WGS84路网，耗时按1.33 m/s估算，精度与演示规则写入各条审核依据。西门仍待核实，西南门仍驳回；来源数据不修改，明确禁行边继续排除。",
+  "connectors": [
+    {
+      "id": "connector_library_east_gate",
+      "originId": "osm_way_1098786977",
+      "originName": "西南交通大学犀浦校区图书馆",
+      "originPoint": {
+        "pointId": "osm_node_5167087319",
+        "longitude": 103.9832456,
+        "latitude": 30.7693165,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_external_access_point",
+        "evidence": [
+          "演示采用现有楼外路网接入点；用户同意不要求精确到楼门。坐标取自 S04 OSM WGS84 路网节点。",
+          "S01/S02 官方总平面图用于建筑与周边路径的定性对照；通行依据为团队确认。"
+        ]
+      },
+      "gateId": "campus_gate_east",
+      "gateName": "东门",
+      "gatePoints": [
+        {
+          "pointId": "osm_node_4150911420",
+          "longitude": 103.9912343,
+          "latitude": 30.771786,
+          "coordinateSystem": "WGS84",
+          "direction": "INBOUND",
+          "positionRole": "gate_inbound_lane",
+          "evidence": [
+            "S04 OSM way 532472151：进校方向单向车道（oneway=yes、access=permit），节点顺序为校外→osm_node_4150911420→校内",
+            "W1-04 campus_gate_east 合并的进校侧节点"
+          ]
+        },
+        {
+          "pointId": "osm_node_13469658219",
+          "longitude": 103.9912939,
+          "latitude": 30.7716985,
+          "coordinateSystem": "WGS84",
+          "direction": "OUTBOUND",
+          "positionRole": "gate_exit",
+          "evidence": [
+            "S04 OSM way 532472150：出校方向单向车道（oneway=yes、access=permit），节点顺序为校内→osm_node_12113987436→osm_node_13469658219→校外",
+            "W1-04 application-places.json campus_gate_east routingPosition 指向该节点"
+          ]
+        }
+      ],
+      "gateExitPoint": {
+        "pointId": "osm_node_13469658219",
+        "longitude": 103.9912939,
+        "latitude": 30.7716985,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit",
+        "evidence": [
+          "S04 OSM 东门出校方向门节点（barrier=gate），位于校园边界外侧出校车道上",
+          "W1-04 应用地点已把 campus_gate_east 的 routingPosition 定为该点",
+          "2026-11-15 用户确认该东门方向可步行通过，作为演示城市段衔接点。"
+        ]
+      },
+      "segments": [
+        {
+          "segmentId": "connector_library_east_gate_01",
+          "order": 1,
+          "description": "从图书馆东北侧楼外步道接入点出发，沿步行区向东北至图书馆北侧主轴线",
+          "fromPointId": "osm_node_5167087319",
+          "toPointId": "osm_node_5167087320",
+          "lengthMeters": 20.02,
+          "durationSeconds": 16,
+          "highway": "pedestrian",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=pedestrian、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9832456,
+                30.7693165
+              ],
+              [
+                103.9832971,
+                30.769491
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "535905500"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_library_east_gate_02",
+          "order": 2,
+          "description": "沿图书馆北侧主轴线步行区向东偏南至东侧通道",
+          "fromPointId": "osm_node_5167087320",
+          "toPointId": "osm_node_9802949133",
+          "lengthMeters": 37.93,
+          "durationSeconds": 29,
+          "highway": "pedestrian",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=pedestrian、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9832971,
+                30.769491
+              ],
+              [
+                103.9833848,
+                30.7694767
+              ],
+              [
+                103.9835395,
+                30.7693849
+              ],
+              [
+                103.9836577,
+                30.769401
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1099344825"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_library_east_gate_03",
+          "order": 3,
+          "description": "沿图书馆东侧自行车/步行通道向东北至校园内部道路",
+          "fromPointId": "osm_node_9802949133",
+          "toPointId": "osm_node_2471746731",
+          "lengthMeters": 150.5,
+          "durationSeconds": 114,
+          "highway": "cycleway",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=cycleway、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9836577,
+                30.769401
+              ],
+              [
+                103.983759,
+                30.7694388
+              ],
+              [
+                103.9839062,
+                30.7694937
+              ],
+              [
+                103.9841432,
+                30.7695821
+              ],
+              [
+                103.984258,
+                30.7696249
+              ],
+              [
+                103.9843054,
+                30.769545
+              ],
+              [
+                103.9845872,
+                30.769647
+              ],
+              [
+                103.9850054,
+                30.7697887
+              ],
+              [
+                103.9850651,
+                30.7697777
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1067768047"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_library_east_gate_04",
+          "order": 4,
+          "description": "沿校园内部道路向东北至知行路",
+          "fromPointId": "osm_node_2471746731",
+          "toPointId": "osm_node_2178329877",
+          "lengthMeters": 175.13,
+          "durationSeconds": 132,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=residential、walk_permission=conditional、access=permit。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9850651,
+                30.7697777
+              ],
+              [
+                103.9855663,
+                30.769961
+              ],
+              [
+                103.9857114,
+                30.7700141
+              ],
+              [
+                103.9867517,
+                30.7703945
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "239380422"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_library_east_gate_05",
+          "order": 5,
+          "description": "沿知行路向东南至东门内路口",
+          "fromPointId": "osm_node_2178329877",
+          "toPointId": "osm_node_5166935451",
+          "lengthMeters": 35.72,
+          "durationSeconds": 27,
+          "highway": "residential",
+          "roadName": "知行路",
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=residential、walk_permission=conditional、access=permit。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9867517,
+                30.7703945
+              ],
+              [
+                103.9868542,
+                30.7701859
+              ],
+              [
+                103.9868982,
+                30.770099
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207570494"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_library_east_gate_06",
+          "order": 6,
+          "description": "沿东门出校单向车道向东北步行至东门出校点",
+          "fromPointId": "osm_node_5166935451",
+          "toPointId": "osm_node_13469658219",
+          "lengthMeters": 459.77,
+          "durationSeconds": 346,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "用户确认东门可步行通过（2026-11-15 团队确认）；OSM 来源属性保留：highway=residential、walk_permission=conditional、access=permit。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9868982,
+                30.770099
+              ],
+              [
+                103.9887397,
+                30.7707785
+              ],
+              [
+                103.9889297,
+                30.7707686
+              ],
+              [
+                103.9891335,
+                30.770842
+              ],
+              [
+                103.9892624,
+                30.7709646
+              ],
+              [
+                103.9912093,
+                30.7716785
+              ],
+              [
+                103.9912939,
+                30.7716985
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "532472150"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        }
+      ],
+      "walkMeters": 879.07,
+      "durationSeconds": 664,
+      "durationBasis": "按 1.33 m/s（约 4.8 km/h）平地步行速度估算；每段 durationSeconds=ceil(段长度/1.33)，总秒数=各段之和；未计入楼梯、坡道、闸机等待、校门排队与现场绕行，现场实测前为估算值。",
+      "verificationStatus": "APPLICATION_VERIFIED",
+      "verifiedAt": "2026-11-15",
+      "verificationMethod": "团队确认通行＋地图路网估算。2026-11-15 用户确认东门可步行通过，指定演示中人行道默认开放；起点采用楼外接入点，不要求精确到楼门，距离与耗时未做现场实测。",
+      "verificationBasis": [
+        "S04 OSM WGS84：图书馆楼外接入点 osm_node_5167087319，经步行区、校园道路与知行路连接东门。",
+        "S01/S02 总平面图对照建筑与周边路径；演示起点使用楼外路网点，不要求精确门位。",
+        "东门出校点与 W1-04 campus_gate_east 对齐：osm_node_13469658219。",
+        "TEAM_CONFIRMATION_2026_11_15：用户在项目会话中明确确认“可步行”，适用于东门出校方向。",
+        "DEMO_WALKWAY_DEFAULT_OPEN：用户指定演示人行道默认开放，楼外接入点即可，不要求精确门位。"
+      ],
+      "missingEvidence": [],
+      "accessRules": {
+        "direction": "OUTBOUND",
+        "pedestrianAccess": "PERMITTED",
+        "pedestrianAccessBasis": "2026-11-15 团队确认东门可步行通过，演示沿现有东门出校点衔接城市段；OSM 出校方向及几何保留，来源机动车道标签不作为团队确认的人行禁行依据。",
+        "gateOpenHours": "演示默认开放，不按时段限制",
+        "gateOpenHoursStatus": "DEMO_DEFAULT_OPEN",
+        "timeRestrictions": [],
+        "timeRestrictionBasis": "用户指定的演示简化规则：人行道默认开放，本阶段不按时段限制；后续明确限制按规则过滤。"
+      },
+      "sourceRefs": [
+        "S01",
+        "S02",
+        "S04",
+        "TEAM_CONFIRMATION_2026_11_15",
+        "DEMO_WALKWAY_DEFAULT_OPEN"
+      ],
+      "unavailableReasonCode": null,
+      "unavailableReason": null
+    },
+    {
+      "id": "connector_dorm1_east_gate",
+      "originId": "osm_way_1099340057",
+      "originName": "天佑斋1号楼",
+      "originPoint": {
+        "pointId": "osm_node_9893299669",
+        "longitude": 103.9839831,
+        "latitude": 30.7623128,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_external_access_point",
+        "evidence": [
+          "演示采用现有楼外路网接入点；用户同意不要求精确到楼门。坐标取自 S04 OSM WGS84 路网节点。",
+          "S01/S02 官方总平面图用于建筑与周边路径的定性对照；通行依据为团队确认。"
+        ]
+      },
+      "gateId": "campus_gate_east",
+      "gateName": "东门",
+      "gatePoints": [
+        {
+          "pointId": "osm_node_4150911420",
+          "longitude": 103.9912343,
+          "latitude": 30.771786,
+          "coordinateSystem": "WGS84",
+          "direction": "INBOUND",
+          "positionRole": "gate_inbound_lane",
+          "evidence": [
+            "S04 OSM way 532472151：进校方向单向车道（oneway=yes、access=permit），节点顺序为校外→osm_node_4150911420→校内",
+            "W1-04 campus_gate_east 合并的进校侧节点"
+          ]
+        },
+        {
+          "pointId": "osm_node_13469658219",
+          "longitude": 103.9912939,
+          "latitude": 30.7716985,
+          "coordinateSystem": "WGS84",
+          "direction": "OUTBOUND",
+          "positionRole": "gate_exit",
+          "evidence": [
+            "S04 OSM way 532472150：出校方向单向车道（oneway=yes、access=permit），节点顺序为校内→osm_node_12113987436→osm_node_13469658219→校外",
+            "W1-04 application-places.json campus_gate_east routingPosition 指向该节点"
+          ]
+        }
+      ],
+      "gateExitPoint": {
+        "pointId": "osm_node_13469658219",
+        "longitude": 103.9912939,
+        "latitude": 30.7716985,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit",
+        "evidence": [
+          "S04 OSM 东门出校方向门节点（barrier=gate），位于校园边界外侧出校车道上",
+          "W1-04 应用地点已把 campus_gate_east 的 routingPosition 定为该点",
+          "2026-11-15 用户确认该东门方向可步行通过，作为演示城市段衔接点。"
+        ]
+      },
+      "segments": [
+        {
+          "segmentId": "connector_dorm1_east_gate_01",
+          "order": 1,
+          "description": "从天佑斋1号楼北侧楼外接入点沿人行步道向西南",
+          "fromPointId": "osm_node_9893299669",
+          "toPointId": "osm_node_9893299672",
+          "lengthMeters": 95.52,
+          "durationSeconds": 72,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=footway、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9839831,
+                30.7623128
+              ],
+              [
+                103.9836851,
+                30.7621422
+              ],
+              [
+                103.9837194,
+                30.7618201
+              ],
+              [
+                103.9834906,
+                30.7617049
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1079229882"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_02",
+          "order": 2,
+          "description": "沿天佑斋1号、2号楼东侧人行步道向北",
+          "fromPointId": "osm_node_9893299672",
+          "toPointId": "osm_node_10156545584",
+          "lengthMeters": 62.18,
+          "durationSeconds": 47,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=footway、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9834906,
+                30.7617049
+              ],
+              [
+                103.9834804,
+                30.761817
+              ],
+              [
+                103.9834394,
+                30.7622624
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1099340058"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_03",
+          "order": 3,
+          "description": "沿人行步道向东南接入宿舍区内部道路",
+          "fromPointId": "osm_node_10156545584",
+          "toPointId": "osm_node_2178323811",
+          "lengthMeters": 12.08,
+          "durationSeconds": 10,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=footway、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9834394,
+                30.7622624
+              ],
+              [
+                103.9833685,
+                30.7623523
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1148128322"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_04",
+          "order": 4,
+          "description": "沿宿舍区生活性道路向东北",
+          "fromPointId": "osm_node_2178323811",
+          "toPointId": "osm_node_2178310297",
+          "lengthMeters": 183.18,
+          "durationSeconds": 138,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=living_street、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9833685,
+                30.7623523
+              ],
+              [
+                103.9840105,
+                30.7627244
+              ],
+              [
+                103.9844221,
+                30.7629893
+              ],
+              [
+                103.9849169,
+                30.7633223
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572452"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_05",
+          "order": 5,
+          "description": "沿宿舍区东侧自行车/步行通道向东北",
+          "fromPointId": "osm_node_2178310297",
+          "toPointId": "osm_node_2178309450",
+          "lengthMeters": 59.63,
+          "durationSeconds": 45,
+          "highway": "cycleway",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=cycleway、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9849169,
+                30.7633223
+              ],
+              [
+                103.9852164,
+                30.7635443
+              ],
+              [
+                103.9853895,
+                30.7636726
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207570542"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_06",
+          "order": 6,
+          "description": "过玻璃桥/蓝桥（自行车/步行通道）向东北",
+          "fromPointId": "osm_node_2178309450",
+          "toPointId": "osm_node_10060656354",
+          "lengthMeters": 23.95,
+          "durationSeconds": 19,
+          "highway": "cycleway",
+          "roadName": "玻璃桥/蓝桥",
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=cycleway、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9853895,
+                30.7636726
+              ],
+              [
+                103.9855752,
+                30.7638172
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1098787031"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_07",
+          "order": 7,
+          "description": "沿湖东侧自行车/步行通道向东北",
+          "fromPointId": "osm_node_10060656354",
+          "toPointId": "osm_node_2178323697",
+          "lengthMeters": 44.67,
+          "durationSeconds": 34,
+          "highway": "cycleway",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=cycleway、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9855752,
+                30.7638172
+              ],
+              [
+                103.9858784,
+                30.7640268
+              ],
+              [
+                103.9859148,
+                30.7640865
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207570505"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_08",
+          "order": 8,
+          "description": "沿宿舍区生活性道路向西北",
+          "fromPointId": "osm_node_2178323697",
+          "toPointId": "osm_node_10175244218",
+          "lengthMeters": 184.82,
+          "durationSeconds": 139,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=living_street、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9859148,
+                30.7640865
+              ],
+              [
+                103.9857791,
+                30.7644081
+              ],
+              [
+                103.9857106,
+                30.7645389
+              ],
+              [
+                103.9855955,
+                30.7647657
+              ],
+              [
+                103.985295,
+                30.7650881
+              ],
+              [
+                103.9851101,
+                30.7652497
+              ],
+              [
+                103.9848838,
+                30.7654642
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572445"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_09",
+          "order": 9,
+          "description": "沿自行车/步行通道向东北",
+          "fromPointId": "osm_node_10175244218",
+          "toPointId": "osm_node_10175244217",
+          "lengthMeters": 99.86,
+          "durationSeconds": 76,
+          "highway": "cycleway",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=cycleway、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9848838,
+                30.7654642
+              ],
+              [
+                103.9854678,
+                30.766209
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1112214518"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_10",
+          "order": 10,
+          "description": "沿自行车/步行通道向西北",
+          "fromPointId": "osm_node_10175244217",
+          "toPointId": "osm_node_10175220216",
+          "lengthMeters": 57.34,
+          "durationSeconds": 44,
+          "highway": "cycleway",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=cycleway、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9854678,
+                30.766209
+              ],
+              [
+                103.9850677,
+                30.7665934
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1112214517"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_11",
+          "order": 11,
+          "description": "沿生活性道路向东北",
+          "fromPointId": "osm_node_10175220216",
+          "toPointId": "osm_node_9893299840",
+          "lengthMeters": 44.19,
+          "durationSeconds": 34,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=living_street、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9850677,
+                30.7665934
+              ],
+              [
+                103.98541,
+                30.7668606
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572453"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_12",
+          "order": 12,
+          "description": "沿人行步道向北",
+          "fromPointId": "osm_node_9893299840",
+          "toPointId": "osm_node_9893299839",
+          "lengthMeters": 41.9,
+          "durationSeconds": 32,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=footway、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.98541,
+                30.7668606
+              ],
+              [
+                103.985247,
+                30.7672104
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1079229893"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_13",
+          "order": 13,
+          "description": "沿生活性道路向东北",
+          "fromPointId": "osm_node_9893299839",
+          "toPointId": "osm_node_5194469692",
+          "lengthMeters": 25.39,
+          "durationSeconds": 20,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=living_street、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.985247,
+                30.7672104
+              ],
+              [
+                103.9854863,
+                30.7673097
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1079229887"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_14",
+          "order": 14,
+          "description": "沿生活性道路向东北",
+          "fromPointId": "osm_node_5194469692",
+          "toPointId": "osm_node_5194469693",
+          "lengthMeters": 37.78,
+          "durationSeconds": 29,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=living_street、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9854863,
+                30.7673097
+              ],
+              [
+                103.985655,
+                30.7674382
+              ],
+              [
+                103.9857841,
+                30.7675332
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "536135135"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_15",
+          "order": 15,
+          "description": "过生活性道路交叉口",
+          "fromPointId": "osm_node_5194469693",
+          "toPointId": "osm_node_2178475822",
+          "lengthMeters": 1.91,
+          "durationSeconds": 2,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=living_street、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9857841,
+                30.7675332
+              ],
+              [
+                103.9857977,
+                30.7675206
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "530350942"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_16",
+          "order": 16,
+          "description": "沿北区生活性道路向东北",
+          "fromPointId": "osm_node_2178475822",
+          "toPointId": "osm_node_2178475736",
+          "lengthMeters": 219.53,
+          "durationSeconds": 166,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=living_street、walk_permission=unspecified、access=None。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9857977,
+                30.7675206
+              ],
+              [
+                103.9866964,
+                30.7682038
+              ],
+              [
+                103.9867961,
+                30.7682796
+              ],
+              [
+                103.9875258,
+                30.7688217
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207594070"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_17",
+          "order": 17,
+          "description": "沿知行路向西北至东门内路口",
+          "fromPointId": "osm_node_2178475736",
+          "toPointId": "osm_node_5166935451",
+          "lengthMeters": 154.17,
+          "durationSeconds": 116,
+          "highway": "residential",
+          "roadName": "知行路",
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "演示规则：校内人行道默认开放（2026-11-15 团队确认）；OSM 来源属性保留：highway=residential、walk_permission=conditional、access=permit。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9875258,
+                30.7688217
+              ],
+              [
+                103.9873718,
+                30.7691346
+              ],
+              [
+                103.9873588,
+                30.7691609
+              ],
+              [
+                103.9871094,
+                30.7696678
+              ],
+              [
+                103.9869807,
+                30.7699292
+              ],
+              [
+                103.9868982,
+                30.770099
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207570494"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_east_gate_18",
+          "order": 18,
+          "description": "沿东门出校单向车道向东北步行至东门出校点",
+          "fromPointId": "osm_node_5166935451",
+          "toPointId": "osm_node_13469658219",
+          "lengthMeters": 459.77,
+          "durationSeconds": 346,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "OPEN",
+          "passabilityNote": "用户确认东门可步行通过（2026-11-15 团队确认）；OSM 来源属性保留：highway=residential、walk_permission=conditional、access=permit。距离与耗时为地图估算。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9868982,
+                30.770099
+              ],
+              [
+                103.9887397,
+                30.7707785
+              ],
+              [
+                103.9889297,
+                30.7707686
+              ],
+              [
+                103.9891335,
+                30.770842
+              ],
+              [
+                103.9892624,
+                30.7709646
+              ],
+              [
+                103.9912093,
+                30.7716785
+              ],
+              [
+                103.9912939,
+                30.7716985
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "532472150"
+          ],
+          "sourceRefs": [
+            "S04",
+            "TEAM_CONFIRMATION_2026_11_15",
+            "DEMO_WALKWAY_DEFAULT_OPEN"
+          ]
+        }
+      ],
+      "walkMeters": 1807.87,
+      "durationSeconds": 1369,
+      "durationBasis": "按 1.33 m/s（约 4.8 km/h）平地步行速度估算；每段 durationSeconds=ceil(段长度/1.33)，总秒数=各段之和；未计入楼梯、坡道、闸机等待、校门排队与现场绕行，现场实测前为估算值。",
+      "verificationStatus": "APPLICATION_VERIFIED",
+      "verifiedAt": "2026-11-15",
+      "verificationMethod": "团队确认通行＋地图路网估算。2026-11-15 用户确认东门可步行通过，指定演示中人行道默认开放；起点采用楼外接入点，不要求精确到楼门，距离与耗时未做现场实测。",
+      "verificationBasis": [
+        "S04 OSM WGS84：天佑斋1号楼外接入点 osm_node_9893299669，经宿舍区通道与知行路连接东门。",
+        "S01/S02 总平面图对照建筑与周边路径；演示起点使用楼外路网点，不要求精确门位。",
+        "东门出校点与 W1-04 campus_gate_east 对齐：osm_node_13469658219。",
+        "TEAM_CONFIRMATION_2026_11_15：用户在项目会话中明确确认“可步行”，适用于东门出校方向。",
+        "DEMO_WALKWAY_DEFAULT_OPEN：用户指定演示人行道默认开放，楼外接入点即可，不要求精确门位。"
+      ],
+      "missingEvidence": [],
+      "accessRules": {
+        "direction": "OUTBOUND",
+        "pedestrianAccess": "PERMITTED",
+        "pedestrianAccessBasis": "2026-11-15 团队确认东门可步行通过，演示沿现有东门出校点衔接城市段；OSM 出校方向及几何保留，来源机动车道标签不作为团队确认的人行禁行依据。",
+        "gateOpenHours": "演示默认开放，不按时段限制",
+        "gateOpenHoursStatus": "DEMO_DEFAULT_OPEN",
+        "timeRestrictions": [],
+        "timeRestrictionBasis": "用户指定的演示简化规则：人行道默认开放，本阶段不按时段限制；后续明确限制按规则过滤。"
+      },
+      "sourceRefs": [
+        "S01",
+        "S02",
+        "S04",
+        "TEAM_CONFIRMATION_2026_11_15",
+        "DEMO_WALKWAY_DEFAULT_OPEN"
+      ],
+      "unavailableReasonCode": null,
+      "unavailableReason": null
+    },
+    {
+      "id": "connector_library_west_gate",
+      "originId": "osm_way_1098786977",
+      "originName": "西南交通大学犀浦校区图书馆",
+      "originPoint": {
+        "pointId": "osm_node_5167087319",
+        "longitude": 103.9832456,
+        "latitude": 30.7693165,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_access_point",
+        "evidence": [
+          "S04 OSM 建筑轮廓与相邻步道顶点核对；入口门位与开放规则待现场核实"
+        ]
+      },
+      "gateId": "campus_gate_west",
+      "gateName": "西门",
+      "gatePoints": [
+        {
+          "pointId": "osm_node_11668769187",
+          "longitude": 103.979311,
+          "latitude": 30.7643816,
+          "coordinateSystem": "WGS84",
+          "direction": "UNKNOWN",
+          "positionRole": "gate_candidate_node",
+          "evidence": [
+            "S04 OSM 无名门节点（barrier=gate、motor_vehicle=permit）；对应官方图标签“西门”（LABEL_016，S01），仅有名称线索"
+          ]
+        },
+        {
+          "pointId": "osm_node_11668769188",
+          "longitude": 103.9792051,
+          "latitude": 30.7644976,
+          "coordinateSystem": "WGS84",
+          "direction": "UNKNOWN",
+          "positionRole": "gate_candidate_node",
+          "evidence": [
+            "S04 OSM 无名门节点（barrier=gate、motor_vehicle=permit），邻接跨校界 residential 边 osm_edge_207572443_8 与 footway 过街边；进出方向未确认"
+          ]
+        }
+      ],
+      "gateExitPoint": null,
+      "segments": [],
+      "walkMeters": null,
+      "durationSeconds": null,
+      "durationBasis": null,
+      "verificationStatus": "PENDING_VERIFICATION",
+      "verifiedAt": null,
+      "verificationMethod": "OSM 门节点与官方图名称对应；出校方向、人行/车行规则与是否允许日常城市出行未核实。",
+      "verificationBasis": [
+        "S04 OSM 西侧门两个候选节点 osm_node_11668769187 / osm_node_11668769188（barrier=gate、motor_vehicle=permit）",
+        "S01 官方图标签“西门”（LABEL_016）仅作名称线索，官方图无门洞与通行方向符号",
+        "数据待核实 Q03/Q04：校门名与 OSM 未逐一对齐，东/西两个 MVP 校门的开放时段与人行规则未现场核实"
+      ],
+      "missingEvidence": [
+        "西门出校方向的物理点位（两个 OSM 门节点中哪一个是出校侧）",
+        "西门是否允许日常城市出行（W1-04 应用地点将 campus_gate_west 标为 campusOnly 且 routingPosition 为空）",
+        "西门开放时段、人行/车行通行规则与现场门位"
+      ],
+      "accessRules": {
+        "direction": "UNVERIFIED",
+        "pedestrianAccess": "UNVERIFIED",
+        "pedestrianAccessBasis": "无西门人行通行证据；官方图仅名称标签，OSM 节点无 foot/access 规则。",
+        "gateOpenHours": null,
+        "gateOpenHoursStatus": "EVIDENCE_UNAVAILABLE",
+        "timeRestrictions": [],
+        "timeRestrictionBasis": "无西门开放时段证据，不能假设全天开放。"
+      },
+      "sourceRefs": [
+        "S01",
+        "S04"
+      ],
+      "unavailableReasonCode": "GATE_EXIT_POINT_UNVERIFIED",
+      "unavailableReason": "西门两个 OSM 门节点（osm_node_11668769187 / osm_node_11668769188）的进出方向未确认，W1-04 应用地点将 campus_gate_west 标为 campusOnly 且 routingPosition 为空；W1-05 未取得日常城市出行与通行规则证据，不修改 W1-04 的 application-places.json，保持待核实。"
+    },
+    {
+      "id": "connector_dorm1_southwest_gate",
+      "originId": "osm_way_1099340057",
+      "originName": "天佑斋1号楼",
+      "originPoint": {
+        "pointId": "osm_node_9893299669",
+        "longitude": 103.9839831,
+        "latitude": 30.7623128,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_access_point",
+        "evidence": [
+          "S04 OSM 建筑轮廓与相邻人行步道顶点核对；入口门位与开放规则待现场核实"
+        ]
+      },
+      "gateId": "osm_node_9893305424",
+      "gateName": "西南门",
+      "gatePoints": [
+        {
+          "pointId": "osm_node_9893305424",
+          "longitude": 103.9825419,
+          "latitude": 30.759961,
+          "coordinateSystem": "WGS84",
+          "direction": "UNKNOWN",
+          "positionRole": "gate_candidate_node",
+          "evidence": [
+            "S04 OSM 西南门节点 barrier=gate、locked=yes；邻接跨校界 residential 边 osm_edge_413859301_9（精勤路）"
+          ]
+        }
+      ],
+      "gateExitPoint": null,
+      "segments": [],
+      "walkMeters": null,
+      "durationSeconds": null,
+      "durationBasis": null,
+      "verificationStatus": "REJECTED",
+      "verifiedAt": "2026-11-15",
+      "verificationMethod": "OSM 标签审核：西南门标注 locked=yes，视为当前不开放。",
+      "verificationBasis": [
+        "S04 OSM 西南门节点 osm_node_9893305424（barrier=gate、locked=yes，source_updated_at 2022-11-19）",
+        "该门不在 W1-04 首批应用地点校门范围内；无开放时段、人行规则与现场通行证据"
+      ],
+      "missingEvidence": [
+        "西南门当前是否仍 locked=yes（OSM 标签更新时间 2022-11-19，需现场核实）",
+        "若开放，出校方向点位、开放时段与人行规则"
+      ],
+      "accessRules": {
+        "direction": "UNVERIFIED",
+        "pedestrianAccess": "PROHIBITED",
+        "pedestrianAccessBasis": "S04 OSM 标签 barrier=gate、locked=yes；未取得现场开放证据，按不开放审核。",
+        "gateOpenHours": null,
+        "gateOpenHoursStatus": "EVIDENCE_UNAVAILABLE",
+        "timeRestrictions": [],
+        "timeRestrictionBasis": "无开放时段证据；locked=yes 表示当前关闭。"
+      },
+      "sourceRefs": [
+        "S04"
+      ],
+      "unavailableReasonCode": "GATE_LOCKED",
+      "unavailableReason": "S04 OSM 西南门节点 osm_node_9893305424 标注 barrier=gate、locked=yes，无开放时段与出校方向证据，审核不通过，不生成接驳路线。"
+    }
+  ]
+}
