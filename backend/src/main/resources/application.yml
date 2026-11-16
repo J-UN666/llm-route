@@ -29,6 +29,13 @@ campus:
   # W1-05 应用层审核接驳数据：独立 JSON，只读加载；单测可用该属性指向测试夹具。
   application-connectors: classpath:data/campus-connectors.json
 
+# 高德 Web 服务凭证只从服务端环境变量读取；空值时适配器返回 PROVIDER_NOT_CONFIGURED。
+amap:
+  web-service-key: "${AMAP_WEB_SERVICE_KEY:}"
+  transit-base-url: "${AMAP_TRANSIT_BASE_URL:https://restapi.amap.com/v3/direction/transit/integrated}"
+  connect-timeout-millis: ${AMAP_CONNECT_TIMEOUT_MILLIS:3000}
+  read-timeout-millis: ${AMAP_READ_TIMEOUT_MILLIS:10000}
+
 server:
   port: ${SERVER_PORT:8080}
   address: ${SERVER_ADDRESS:127.0.0.1}

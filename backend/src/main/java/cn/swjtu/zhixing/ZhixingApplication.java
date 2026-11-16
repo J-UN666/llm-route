@@ -2,6 +2,7 @@ package cn.swjtu.zhixing;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 /**
  * 交大智行后端服务入口。
@@ -10,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * 运行账号仅有业务读写权限，因此运行期 Flyway 关闭。</p>
  */
 @SpringBootApplication
+@ConfigurationPropertiesScan
 public class ZhixingApplication {
 
     public static void main(String[] args) {

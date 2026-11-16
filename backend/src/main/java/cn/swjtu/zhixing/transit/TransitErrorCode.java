@@ -1,0 +1,15 @@
+package cn.swjtu.zhixing.transit;
+
+/** 适配层可观察的脱敏错误分类。 */
+public enum TransitErrorCode {
+    COORDINATE_SYSTEM_UNSUPPORTED,
+    INVALID_PARAMETER,
+    PROVIDER_NOT_CONFIGURED,
+    NO_ROUTE,
+    AMAP_AUTHORIZATION_ERROR,
+    AMAP_QUOTA_ERROR,
+    NETWORK_TIMEOUT,
+    NETWORK_ERROR,
+    RESPONSE_STRUCTURE_ERROR,
+    PROVIDER_ERROR
+}
