@@ -379,13 +379,38 @@ function parseIsoToEpochMs(iso: string): number | null {
   return Date.UTC(year, month - 1, day, hour, minute, second) - offsetMinutes * 60 * 1000;
 }
 
+/** 北京时间展示片段；日期部分用于跨日判断，时钟部分用于卡片展示。 */
+export interface BeijingDateTimeParts {
+  /** YYYY-MM-DD */
+  date: string;
+  /** M月D日 */
+  monthDay: string;
+  /** HH:mm */
+  clock: string;
+}
+
+/**
+ * 把后端 ISO 时间解析为北京时间展示片段；无法解析时返回 null，不猜测时区。
+ * 页面（含 W1-10 方案卡）统一走这里，避免各组件重复实现 +08:00 换算。
+ */
+export function parseBeijingDateTime(iso: string | null | undefined): BeijingDateTimeParts | null {
+  if (!iso) return null;
+  const epochMs = parseIsoToEpochMs(iso);
+  if (epochMs === null) return null;
+  const shifted = new Date(epochMs + BEIJING_OFFSET_MINUTES * 60 * 1000);
+  const year = `${shifted.getUTCFullYear()}`;
+  const month = pad2(shifted.getUTCMonth() + 1);
+  const day = pad2(shifted.getUTCDate());
+  return {
+    date: `${year}-${month}-${day}`,
+    monthDay: `${Number(month)}月${Number(day)}日`,
+    clock: `${pad2(shifted.getUTCHours())}:${pad2(shifted.getUTCMinutes())}`
+  };
+}
+
 /** 把后端 ISO 时间按北京时间格式化；无法解析时原样显示，不隐藏数据。 */
 export function formatBeijingDateTime(iso: string | null | undefined, fallback = '时间未提供'): string {
   if (!iso) return fallback;
-  const epochMs = parseIsoToEpochMs(iso);
-  if (epochMs === null) return iso;
-  const shifted = new Date(epochMs + BEIJING_OFFSET_MINUTES * 60 * 1000);
-  return `${shifted.getUTCFullYear()}-${pad2(shifted.getUTCMonth() + 1)}-${pad2(
-    shifted.getUTCDate()
-  )} ${pad2(shifted.getUTCHours())}:${pad2(shifted.getUTCMinutes())}`;
+  const parts = parseBeijingDateTime(iso);
+  return parts ? `${parts.date} ${parts.clock}` : iso;
 }

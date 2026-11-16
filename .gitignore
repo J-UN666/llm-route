@@ -13,6 +13,7 @@
 
 # Temporary acceptance helpers
 /tools/mock_journey_api.js
+/frontend/src/data/journey-samples.ts
 
 # Maven build output, test reports and temporary logs
 **/target/

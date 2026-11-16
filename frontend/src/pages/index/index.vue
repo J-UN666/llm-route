@@ -24,7 +24,7 @@
       <view class="notice">
         <text class="notice-ico">ⓘ</text>
         <text class="notice-text">
-          当前接入：地点搜索走 W1-04 Java 接口；行程查询按 W1-08 约定提交 POST /api/journeys，页面覆盖加载、成功、无方案与失败四种状态。完整方案卡由 W1-10 接入。
+          当前接入：地点搜索走 W1-04 Java 接口；行程查询按 W1-08 约定提交 POST /api/journeys，页面覆盖加载、成功、无方案与失败四种状态，成功结果以候选方案卡展示（最多三条，点击卡片切换当前方案）。
         </text>
       </view>
 
@@ -152,7 +152,7 @@
           <text class="empty-ico">🧭</text>
           <text class="empty-title">尚未开始规划</text>
           <text class="empty-text">选择校园起点、城市终点并设置出发时间后，点击“查询路线”。</text>
-          <text class="empty-note">这里将展示结构化方案；完整方案卡与地图由 W1-10 及其后续任务接入。</text>
+          <text class="empty-note">查询成功后这里将展示最多三条实际候选方案卡，可点击卡片切换当前方案。</text>
         </view>
 
         <!-- 加载中 -->
@@ -190,29 +190,30 @@
             <text v-for="(warning, index) in responseWarnings" :key="index" class="warning-line">⚠ {{ warning }}</text>
           </view>
 
-          <view v-for="(plan, index) in journeyState.plans" :key="plan.planId" class="plan-preview">
-            <view class="plan-head">
-              <text class="plan-title">方案 {{ index + 1 }}</text>
-              <text v-if="journeyState.selectedPlanId === plan.planId" class="plan-selected">默认选中</text>
-              <text class="plan-gate">出校点 {{ formatGateName(plan) }}</text>
+          <view class="plan-list">
+            <JourneyCard
+              v-for="(plan, index) in journeyState.plans"
+              :key="plan.planId"
+              :plan="plan"
+              :index="index"
+              :selected="journeyState.selectedPlanId === plan.planId"
+              @select="selectPlan"
+            />
+          </view>
+
+          <view class="selection-strip">
+            <view class="selection-strip-main">
+              <text class="selection-strip-label">当前选中</text>
+              <text class="selection-strip-id">{{ selectedPlan ? selectedPlan.planId : '未选中' }}</text>
             </view>
-            <view class="plan-facts">
-              <text class="fact fact-strong">{{ formatDuration(plan.totalDurationSeconds) }}</text>
-              <text class="fact">到达 {{ formatBeijingDateTime(plan.arrivalTime) }}</text>
-              <text class="fact">步行 {{ formatWalkingDistance(plan.totalWalkingMeters) }}</text>
-              <text class="fact">{{ formatTransferCount(plan.transferCount) }}</text>
-              <text class="fact">{{ formatCost(plan.costYuan) }}</text>
-            </view>
-            <text class="plan-meta">
-              出发 {{ formatBeijingDateTime(plan.departureTime) }} · 城市段 {{ formatBeijingDateTime(plan.cityDepartureTime) }}
+            <text v-if="selectedPlan" class="selection-strip-hint">
+              方案 {{ selectedPlanIndex + 1 }} · 卡片数字来自该 plan；分段明细与地图由 W1-11 读取同一个 selectedPlan。
             </text>
-            <text class="plan-meta">
-              planId {{ plan.planId }} · {{ plan.segments.length }} 段 · 数据版本 {{ plan.campusDataVersion || '未提供' }}
-            </text>
+            <text v-else class="selection-strip-hint">点击上方方案卡切换选中项。</text>
           </view>
 
           <text class="handoff-note">
-            W1-10 交接：本页已维护 plans、selectedPlanId（选中项按 planId 计算，默认第一条）；完整方案卡、分段明细与地图由 W1-10 接入后替换以上预览。
+            W1-10 交接：本页维护 plans 与 selectedPlanId，selectedPlan 按 ID 从当前 plans 计算，成功默认第一条；点击卡片发出的 select(planId) 只更新选中项，不触发重查。
           </text>
         </view>
 
@@ -249,7 +250,7 @@
         </view>
       </view>
 
-      <text class="foot-note">交大智行 · W1-07 普通行程表单 · 后端监听地址按测试环境配置</text>
+      <text class="foot-note">交大智行 · W1-10 全程方案卡 · 后端监听地址按测试环境配置</text>
       <text class="foot-note">API 基址：{{ API_BASE_URL }}（{{ apiBaseUrlSourceLabel }}）</text>
       <text class="foot-note foot-note-gap">交大智行 · 地点数据版本以接口返回为准</text>
     </view>
@@ -258,14 +259,18 @@
 
 <script setup lang="ts">
 /**
- * 交大智行首页：普通行程查询表单（W1-07）。
+ * 交大智行首页：普通行程查询表单（W1-07）+ 候选方案卡（W1-10）。
  *
- * 结果状态（供 W1-10 消费，见 `@/types/journey` 的 JourneyQueryState）：
+ * 结果状态（见 `@/types/journey` 的 JourneyQueryState）：
  * - journeyState.status：idle/loading/success/noRoute/error；
- * - journeyState.plans：成功时的 JourneyPlan[]；
- * - journeyState.selectedPlanId：默认第一条，W1-10 切换时写回；
+ * - journeyState.plans：成功时后端已排序、去重、最多三条的 JourneyPlan[]；
+ * - journeyState.selectedPlanId：成功后默认 plans[0].planId，点击卡片时写回；
  * - journeyState.requestToken / responseRequestId：客户端请求标识 / 后端 requestId；
  * - journeyState.error：失败时本地化错误（code/hint/detail/retryable/requestId）。
+ *
+ * 方案选中：selectedPlan 始终按 selectedPlanId 从当前 plans 计算（见
+ * `@/services/journey-selection`），不缓存方案对象；失败/无方案时 plans 与
+ * selectedPlanId 一起清空，W1-11 读取的 selectedPlan 自然变为 null。
  *
  * 过期响应处理：每个请求用 LatestRequestTracker 取令牌；条件修改时 invalidate()，
  * 响应到达后再用 isCurrent() 校验，过期响应直接丢弃，不覆盖当前显示。
@@ -274,6 +279,7 @@
 import { computed, onBeforeUnmount, reactive, ref } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
 import PlacePicker from '@/components/PlacePicker.vue';
+import JourneyCard from '@/components/JourneyCard.vue';
 import type {
   JourneyPlan,
   JourneyPreference,
@@ -293,12 +299,10 @@ import {
   toJourneyUiError
 } from '@/services/api';
 import {
-  formatCost,
-  formatDuration,
-  formatGateName,
-  formatTransferCount,
-  formatWalkingDistance
-} from '@/services/journey-format';
+  defaultSelectedPlanId,
+  resolveSelectedPlan,
+  selectExistingPlanId
+} from '@/services/journey-selection';
 
 const statusBarHeight = ref(20);
 try {
@@ -347,10 +351,13 @@ const submittedSummary = ref<SubmittedSummary | null>(null);
 
 const loading = computed(() => journeyState.status === 'loading');
 const responseWarnings = computed(() => (journeyState.response && journeyState.response.warnings) || []);
-const selectedPlan = computed<JourneyPlan | null>(() => {
-  if (!journeyState.selectedPlanId) return null;
-  return journeyState.plans.find((plan) => plan.planId === journeyState.selectedPlanId) || null;
-});
+const selectedPlan = computed<JourneyPlan | null>(() =>
+  resolveSelectedPlan(journeyState.plans, journeyState.selectedPlanId)
+);
+
+const selectedPlanIndex = computed(() =>
+  journeyState.plans.findIndex((plan) => plan.planId === journeyState.selectedPlanId)
+);
 
 const STATUS_BADGES: Record<JourneyQueryState['status'], { text: string; className: string }> = {
   idle: { text: '待查询', className: 'badge-idle' },
@@ -587,8 +594,8 @@ function applyResponse(token: number, response: Awaited<ReturnType<typeof planJo
 
   journeyState.status = 'success';
   journeyState.plans = response.plans;
-  journeyState.selectedPlanId = response.plans[0].planId;
-  console.info('[W1-07] 查询成功', {
+  journeyState.selectedPlanId = defaultSelectedPlanId(response.plans);
+  console.info('[W1-10] 查询成功，默认选中第一条方案', {
     token,
     requestId: response.requestId,
     planCount: response.plans.length,
@@ -615,12 +622,34 @@ function onRetry(): void {
   void executeQuery(request);
 }
 
+/* ------------------ 方案选中（W1-10） ------------------ */
+
+/**
+ * 卡片点击回调：只接受属于当前候选的 planId，选中项写回 journeyState；
+ * selectedPlan 由 computed 按 ID 重新计算，卡片、详情与地图输入始终同源。
+ * 切换选中不重新发起查询。
+ */
+function selectPlan(planId: string): void {
+  const nextPlanId = selectExistingPlanId(journeyState.plans, planId);
+  if (!nextPlanId) {
+    console.warn('[W1-10] 忽略不属于当前候选的选中事件', { planId });
+    return;
+  }
+  if (journeyState.selectedPlanId === nextPlanId) return;
+  journeyState.selectedPlanId = nextPlanId;
+  console.info('[W1-10] 已切换当前方案', {
+    planId: nextPlanId,
+    index: journeyState.plans.findIndex((plan) => plan.planId === nextPlanId),
+    planCount: journeyState.plans.length
+  });
+}
+
 onBeforeUnmount(() => {
   requestTracker.invalidate();
 });
 
 onLoad(() => {
-  console.info('[交大智行] 首页加载完成（W1-07 普通行程表单）', {
+  console.info('[交大智行] 首页加载完成（W1-10 方案卡）', {
     apiBaseUrl: API_BASE_URL,
     apiBaseUrlSource: API_BASE_URL_SOURCE,
     preferences: JOURNEY_PREFERENCES.map((item) => item.value)
@@ -1249,75 +1278,48 @@ onLoad(() => {
   line-height: 1.55;
 }
 
-/* ---------- 方案预览（W1-10 接入前的简略事实） ---------- */
-.plan-preview {
-  margin-top: 20rpx;
-  padding: 18rpx 20rpx;
-  border-radius: 16rpx;
-  border: 1rpx solid #e6ecf3;
-  background: #ffffff;
+/* ---------- 候选方案卡与选中条（W1-10） ---------- */
+.plan-list {
+  display: flex;
+  flex-direction: column;
 }
 
-.plan-head {
+.selection-strip {
+  margin-top: 20rpx;
+  padding: 16rpx 20rpx;
+  border-radius: 14rpx;
+  background: #f2f7fd;
+  border: 1rpx solid #dbe8f7;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.selection-strip-main {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 10rpx;
 }
 
-.plan-title {
-  font-size: 26rpx;
-  font-weight: 650;
-  color: #131a24;
-  line-height: 1.4;
+.selection-strip-label {
+  font-size: 19rpx;
+  color: #5b6b7d;
+  line-height: 1.5;
 }
 
-.plan-selected {
-  font-size: 18rpx;
+.selection-strip-id {
+  font-size: 21rpx;
   font-weight: 600;
-  color: #157347;
-  background: #e2f5ea;
-  border-radius: 8rpx;
-  padding: 2rpx 10rpx;
-  line-height: 1.5;
-}
-
-.plan-gate {
-  margin-left: auto;
-  font-size: 20rpx;
-  color: #7c8a9c;
-  line-height: 1.5;
-}
-
-.plan-facts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8rpx;
-  margin-top: 12rpx;
-}
-
-.fact {
-  font-size: 20rpx;
-  color: #33404f;
-  background: #f2f6fb;
-  border-radius: 8rpx;
-  padding: 4rpx 12rpx;
-  line-height: 1.5;
-}
-
-.fact-strong {
   color: #17518c;
-  font-weight: 600;
-  background: #e6f1fb;
+  line-height: 1.5;
+  word-break: break-all;
 }
 
-.plan-meta {
-  display: block;
-  margin-top: 8rpx;
-  font-size: 20rpx;
+.selection-strip-hint {
+  font-size: 19rpx;
   color: #7c8a9c;
   line-height: 1.55;
-  word-break: break-all;
 }
 
 .handoff-note {
