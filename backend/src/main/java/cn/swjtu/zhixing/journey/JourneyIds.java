@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
 import java.util.UUID;
 
-/** 请求与方案标识生成。方案 ID 由输入与城市段结果确定性哈希得到，同一查询重复执行保持稳定。 */
+/** 请求与方案标识生成。方案 ID 由请求标识与实际路线身份确定性哈希得到，不依赖提供方返回顺序。 */
 final class JourneyIds {
 
     private JourneyIds() {
@@ -16,27 +16,22 @@ final class JourneyIds {
         return "jr-" + UUID.randomUUID().toString().replace("-", "").substring(0, 20);
     }
 
+    /**
+     * 方案 ID：由起点、终点、请求出发时刻、实际校门与路线身份（出校点 + 乘车序列）哈希。
+     * 不使用提供方返回序号，因此同一条路线即使被上游交换顺序，planId 也不变；同一查询
+     * 重复执行保持稳定。
+     */
     static String planId(String originId,
                          String destinationId,
                          String departureTime,
                          String gateId,
-                         int providerPlanIndex,
-                         String providerDepartureTime,
-                         Integer durationSeconds,
-                         Integer walkingMeters,
-                         Integer transferCount,
-                         String costYuan) {
+                         String routeIdentity) {
         String canonical = String.join("|",
                 nullToEmpty(originId),
                 nullToEmpty(destinationId),
                 nullToEmpty(departureTime),
                 nullToEmpty(gateId),
-                Integer.toString(providerPlanIndex),
-                nullToEmpty(providerDepartureTime),
-                nullToEmpty(durationSeconds),
-                nullToEmpty(walkingMeters),
-                nullToEmpty(transferCount),
-                nullToEmpty(costYuan));
+                nullToEmpty(routeIdentity));
         return "plan_" + sha256(canonical).substring(0, 16);
     }
 

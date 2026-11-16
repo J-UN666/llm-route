@@ -57,6 +57,9 @@ import org.springframework.stereotype.Service;
  *   <li>费用未知、步行距离未知、几何缺失均保留 {@code null}（不填 0、不猜值）；</li>
  *   <li>多出校点部分城市段查询失败时只展示成功候选并写入 {@code warnings}，
  *       全部失败才返回对应错误状态。</li>
+ *   <li>成功候选统一交给 {@link JourneyPlanRanking} 处理（W1-09）：按实际出校点与乘车段
+ *       序列去重、按请求偏好排序（未知指标排在已知值之后）、最多返回三条；比较只针对
+ *       本次查询实际获得的候选，不足三条时如实返回实际数量。</li>
  * </ul>
  */
 @Service
@@ -141,7 +144,7 @@ public class JourneyService {
         }
 
         String campusDataVersion = campusDataVersion(requestId);
-        List<JourneyPlan> plans = new ArrayList<>();
+        List<JourneyPlan> candidates = new ArrayList<>();
         List<ProviderFailure> failures = new ArrayList<>();
         boolean anySearchCompleted = false;
         String providerName = null;
@@ -179,13 +182,14 @@ public class JourneyService {
             if (result.status() == TransitStatus.NO_ROUTE || result.plans().isEmpty()) {
                 continue;
             }
-            for (int index = 0; index < result.plans().size(); index++) {
-                plans.add(buildPlan(origin, destination, connector, result, result.plans().get(index),
-                        index, departure, queriedAt, campusDataVersion));
+            for (TransitPlan transitPlan : result.plans()) {
+                candidates.add(buildPlan(origin, destination, connector, result, transitPlan,
+                        departure, queriedAt, campusDataVersion));
             }
         }
 
-        if (!plans.isEmpty()) {
+        if (!candidates.isEmpty()) {
+            List<JourneyPlan> plans = JourneyPlanRanking.arrange(candidates, preference);
             List<String> warnings = successWarnings(failures);
             return new JourneyResponse(requestId, JourneyStatus.SUCCEEDED, plans, queriedAt,
                     campusDataVersion, providerName, warnings);
@@ -202,7 +206,6 @@ public class JourneyService {
                                   CampusConnector connector,
                                   TransitSearchResult result,
                                   TransitPlan transitPlan,
-                                  int providerPlanIndex,
                                   OffsetDateTime departure,
                                   OffsetDateTime queriedAt,
                                   String campusDataVersion) {
@@ -226,24 +229,20 @@ public class JourneyService {
             sequence++;
         }
 
+        JourneyPoint exitPoint = gateExitPoint(connector);
         String planId = JourneyIds.planId(
                 origin.id(),
                 destination.id(),
                 departure.format(java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME),
                 connector.gateId(),
-                providerPlanIndex,
-                providerDeparture.format(java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-                transitPlan.durationSeconds(),
-                transitPlan.walkingMeters(),
-                transitPlan.transferCount(),
-                transitPlan.costYuan() == null ? null : transitPlan.costYuan().toPlainString());
+                JourneyPlanRanking.routeSignature(exitPoint, segments));
 
         return new JourneyPlan(
                 planId,
                 origin.id(),
                 destination.id(),
                 connector.gateId(),
-                gateExitPoint(connector),
+                exitPoint,
                 departure,
                 cityDeparture,
                 providerDeparture,

@@ -34,7 +34,10 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -253,6 +256,132 @@ class JourneyServiceTests {
     }
 
     @Test
+    void preferenceRankingAppliesAcrossAllAvailableGateCandidates() {
+        CampusConnector east = connector("gate_east", "东门", 800.0, 600, EXIT_POINT);
+        CampusConnector west = connector("gate_west", "西门", 900.0, 700, "osm_node_west_exit");
+        givenConnectors(east, west);
+        when(transitProvider.search(any(TransitPoint.class), any(TransitPoint.class),
+                any(OffsetDateTime.class), any(TransitPreference.class)))
+                .thenAnswer(invocation -> {
+                    TransitPoint origin = invocation.getArgument(0);
+                    OffsetDateTime requested = invocation.getArgument(2);
+                    List<TransitPlan> plans;
+                    if ("osm_node_west_exit".equals(origin.pointId())) {
+                        plans = List.of(planVia("line_7", "往十里店方向", "西南交大", "天府广场",
+                                900, 900, 1));
+                    } else {
+                        plans = List.of(
+                                planVia("line_2", "往龙泉驿方向", "犀浦", "天府广场",
+                                        1600, 700, 1),
+                                planVia("line_6", "往望丛祠方向", "犀浦", "天府广场",
+                                        1000, 300, 2));
+                    }
+                    return new TransitSearchResult("AMAP", QUERIED_AT, requested, requested, 0,
+                            TransitStatus.OK, plans);
+                });
+
+        List<JourneyPlan> recommended = service.plan(request(DEPARTURE)).plans();
+        assertThat(recommended).hasSize(3);
+        assertThat(gateIds(recommended)).containsExactly("gate_west", "gate_east", "gate_east");
+        assertThat(totalDurations(recommended)).containsExactly(1600, 1600, 2200);
+
+        List<JourneyPlan> lessWalking = service.plan(requestWithPreference("LESS_WALKING")).plans();
+        assertThat(lessWalking).hasSize(3);
+        assertThat(gateIds(lessWalking)).containsExactly("gate_east", "gate_east", "gate_west");
+        assertThat(totalWalking(lessWalking)).containsExactly(1100, 1500, 1800);
+
+        List<JourneyPlan> fewerTransfers =
+                service.plan(requestWithPreference("FEWER_TRANSFERS")).plans();
+        assertThat(fewerTransfers).hasSize(3);
+        assertThat(gateIds(fewerTransfers)).containsExactly("gate_east", "gate_west", "gate_east");
+        assertThat(totalDurations(fewerTransfers)).containsExactly(2200, 1600, 1600);
+        assertThat(transferCounts(fewerTransfers)).containsExactly(1, 1, 2);
+
+        verify(transitProvider, org.mockito.Mockito.times(2))
+                .search(any(TransitPoint.class), any(TransitPoint.class),
+                        any(OffsetDateTime.class), eq(TransitPreference.LESS_WALKING));
+        verify(transitProvider, org.mockito.Mockito.times(2))
+                .search(any(TransitPoint.class), any(TransitPoint.class),
+                        any(OffsetDateTime.class), eq(TransitPreference.FEWER_TRANSFERS));
+    }
+
+    @Test
+    void successResponseDeduplicatesPreferredCandidateAndLimitsToThreePlans() {
+        givenConnectors(connector("gate_east", "东门", 800.0, 600, EXIT_POINT));
+        givenProviderAnswer(requested -> new TransitSearchResult("AMAP", QUERIED_AT, requested,
+                requested, 0, TransitStatus.OK, List.of(
+                // 前两条为同一乘车序列的重复项：推荐偏好保留耗时更短的，少步行保留步行更少的。
+                planVia("line_2", "往龙泉驿方向", "犀浦", "天府广场", 1200, 250, 1),
+                planVia("line_2", "往龙泉驿方向", "犀浦", "天府广场", 1100, 400, 1),
+                planVia("line_6", "往望丛祠方向", "犀浦", "天府广场", 1300, 300, 2),
+                planVia("line_7", "往十里店方向", "西南交大", "天府广场", 1400, 350, 0))));
+
+        List<JourneyPlan> recommended = service.plan(request(DEPARTURE)).plans();
+        assertThat(recommended).hasSize(JourneyPlanRanking.MAX_PLANS);
+        assertThat(lineIds(recommended)).containsExactly("line_2", "line_6", "line_7");
+        assertThat(totalDurations(recommended)).containsExactly(1700, 1900, 2000);
+        assertThat(totalWalking(recommended)).containsExactly(1200, 1100, 1150);
+
+        // 同查询重复执行，排序与 planId 稳定。
+        assertThat(ids(service.plan(request(DEPARTURE)).plans()))
+                .isEqualTo(ids(recommended));
+
+        List<JourneyPlan> lessWalking = service.plan(requestWithPreference("LESS_WALKING")).plans();
+        assertThat(lessWalking).hasSize(JourneyPlanRanking.MAX_PLANS);
+        // 同一乘车序列的重复项共享路线身份与 planId：切换偏好只影响保留哪一条及其指标。
+        assertThat(ids(lessWalking)).isEqualTo(ids(recommended));
+        assertThat(totalWalking(lessWalking)).containsExactly(1050, 1100, 1150);
+        assertThat(totalDurations(lessWalking)).containsExactly(1800, 1900, 2000);
+    }
+
+    @Test
+    void planIdsFollowRouteIdentityWhenProviderReordersCandidates() {
+        givenConnectors(connector("gate_east", "东门", 800.0, 600, EXIT_POINT));
+        AtomicInteger calls = new AtomicInteger();
+        givenProviderAnswer(requested -> {
+            List<TransitPlan> plans = List.of(
+                    planVia("line_2", "往龙泉驿方向", "犀浦", "天府广场", 1200, 250, 1),
+                    planVia("line_6", "往望丛祠方向", "犀浦", "天府广场", 1300, 300, 2));
+            if (calls.getAndIncrement() % 2 == 1) {
+                plans = plans.reversed();
+            }
+            return new TransitSearchResult("AMAP", QUERIED_AT, requested, requested, 0,
+                    TransitStatus.OK, plans);
+        });
+
+        List<JourneyPlan> first = service.plan(request(DEPARTURE)).plans();
+        List<JourneyPlan> second = service.plan(request(DEPARTURE)).plans();
+
+        // 上游仅交换候选顺序时，每条路线的 planId、返回顺序与集合都保持不变。
+        assertThat(planIdByLine(second)).isEqualTo(planIdByLine(first));
+        assertThat(ids(second)).isEqualTo(ids(first));
+        assertThat(lineIds(second)).isEqualTo(lineIds(first));
+    }
+
+    @Test
+    void equalMetricPlansKeepStableTopThreeWhenProviderShufflesOrder() {
+        givenConnectors(connector("gate_east", "东门", 800.0, 600, EXIT_POINT));
+        List<TransitPlan> candidates = List.of(
+                planVia("line_2", "往龙泉驿方向", "犀浦", "天府广场", 1200, 300, 1),
+                planVia("line_6", "往望丛祠方向", "犀浦", "天府广场", 1200, 300, 1),
+                planVia("line_7", "往十里店方向", "犀浦", "天府广场", 1200, 300, 1),
+                planVia("bus_311", "往市区方向", "犀浦", "天府广场", 1200, 300, 1));
+        givenProviderAnswer(requested -> new TransitSearchResult("AMAP", QUERIED_AT, requested,
+                requested, 0, TransitStatus.OK, candidates));
+        List<JourneyPlan> forward = service.plan(request(DEPARTURE)).plans();
+
+        givenProviderAnswer(requested -> new TransitSearchResult("AMAP", QUERIED_AT, requested,
+                requested, 0, TransitStatus.OK, candidates.reversed()));
+        List<JourneyPlan> reversed = service.plan(request(DEPARTURE)).plans();
+
+        // 四条路线指标完全相同：planId 由路线身份决定，前三名的集合与顺序不随上游顺序漂移。
+        assertThat(forward).hasSize(JourneyPlanRanking.MAX_PLANS);
+        assertThat(ids(reversed)).isEqualTo(ids(forward));
+        assertThat(lineIds(reversed)).isEqualTo(lineIds(forward));
+        assertThat(planIdByLine(reversed)).isEqualTo(planIdByLine(forward));
+    }
+
+    @Test
     void unknownDestinationReturns404() {
         when(placeService.getById(DESTINATION)).thenThrow(new PlaceNotFoundException(DESTINATION));
 
@@ -369,6 +498,51 @@ class JourneyServiceTests {
                 .thenAnswer(invocation -> answer.apply(invocation.getArgument(2)));
     }
 
+    private JourneyRequest requestWithPreference(String preference) {
+        return new JourneyRequest(ORIGIN, DESTINATION, DEPARTURE, preference);
+    }
+
+    private static List<String> ids(List<JourneyPlan> plans) {
+        return plans.stream().map(JourneyPlan::planId).toList();
+    }
+
+    /** 按乘车线路标识稳定映射 planId，用于验证同一路线在候选换序后身份不变。 */
+    private static Map<String, String> planIdByLine(List<JourneyPlan> plans) {
+        Map<String, String> byLine = new LinkedHashMap<>();
+        for (JourneyPlan plan : plans) {
+            List<String> rides = lineIds(List.of(plan));
+            byLine.put(rides.isEmpty() ? plan.planId() : rides.get(0), plan.planId());
+        }
+        return byLine;
+    }
+
+    private static List<String> gateIds(List<JourneyPlan> plans) {
+        return plans.stream().map(JourneyPlan::gateId).toList();
+    }
+
+    private static List<Integer> totalDurations(List<JourneyPlan> plans) {
+        return plans.stream().map(JourneyPlan::totalDurationSeconds).toList();
+    }
+
+    private static List<Integer> totalWalking(List<JourneyPlan> plans) {
+        return plans.stream()
+                .map(plan -> plan.totalWalkingMeters() == null
+                        ? null : plan.totalWalkingMeters().intValue())
+                .toList();
+    }
+
+    private static List<Integer> transferCounts(List<JourneyPlan> plans) {
+        return plans.stream().map(JourneyPlan::transferCount).toList();
+    }
+
+    private static List<String> lineIds(List<JourneyPlan> plans) {
+        return plans.stream()
+                .flatMap(plan -> plan.segments().stream())
+                .filter(segment -> segment.lineId() != null)
+                .map(JourneySegment::lineId)
+                .toList();
+    }
+
     private static PlaceCandidate campusPlace(String id, String name) {
         GeoPosition routing = new GeoPosition(ORIGIN_POINT, 103.9832456, 30.7693165, "WGS84",
                 "building_external_access_point");
@@ -411,5 +585,19 @@ class JourneyServiceTests {
                 List.of(line), null, "AMAP_V3_TRANSIT_INTEGRATED");
         return new TransitPlan(durationSeconds, walkingMeters, transferCount, costYuan,
                 List.of(walk, subway), "AMAP_V3_TRANSIT_INTEGRATED");
+    }
+
+    /** 指定线路与上下车站的城市方案，用于构造不同去重签名的候选。 */
+    private static TransitPlan planVia(String lineId, String direction, String boarding,
+                                       String alighting, Integer durationSeconds,
+                                       Integer walkingMeters, Integer transferCount) {
+        TransitSegment walk = new TransitSegment("WALK", 300, 250, null, null, List.of(), null,
+                "AMAP_V3_TRANSIT_INTEGRATED");
+        TransitLine line = new TransitLine(lineId + "线", lineId, "SUBWAY", direction,
+                boarding, alighting, 1200, 8, null, "AMAP_V3_TRANSIT_INTEGRATED");
+        TransitSegment subway = new TransitSegment("SUBWAY", 1200, null, boarding, alighting,
+                List.of(line), null, "AMAP_V3_TRANSIT_INTEGRATED");
+        return new TransitPlan(durationSeconds, walkingMeters, transferCount,
+                new BigDecimal("5.00"), List.of(walk, subway), "AMAP_V3_TRANSIT_INTEGRATED");
     }
 }
