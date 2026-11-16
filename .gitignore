@@ -11,6 +11,9 @@
 /backend/README.md
 /frontend/README.md
 
+# Temporary acceptance helpers
+/tools/mock_journey_api.js
+
 # Maven build output, test reports and temporary logs
 **/target/
 *.log
