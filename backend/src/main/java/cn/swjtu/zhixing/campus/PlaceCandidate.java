@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * 地点候选：小程序地点搜索、选择与联调使用的稳定返回结构。
  *
- * <p>字段契约见 docs/contracts/place-api.md。约定：
+ * <p>字段契约见 docs/api.md。约定：
  * <ul>
  *   <li>id 是来源稳定 ID，同名实体各自保留独立 ID，不按名称合并；</li>
  *   <li>routingReady 与 routingPosition 保持一致：只有存在经核对的算路位置时才为 true；</li>

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  *   <li>GET /api/places?keyword=图书馆&amp;scope=CAMPUS —— 返回 {items:[PlaceCandidate]}，未知关键词 200 + 空 items；</li>
  *   <li>GET /api/places/{id} —— 返回 PlaceCandidate，未知 ID 404 + PLACE_NOT_FOUND。</li>
  * </ul>
- * 契约见 docs/contracts/place-api.md。
+ * 契约见 docs/api.md。
  */
 @RestController
 @RequestMapping("/api/places")

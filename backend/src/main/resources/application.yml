@@ -1,13 +1,11 @@
-# 交大智行后端基础配置。
-# 凭证只从环境变量读取，任何真实账号与口令都不写入本文件或仓库。
 spring:
   application:
     name: llm-route-backend
+  config:
+    import: optional:file:./backend/application-local.properties
 
-  # 运行账号（日常读写）连接云端 MySQL；本机通过 127.0.0.1:13306 隧道访问。
-  # 默认 DB_URL 的 useSSL=false 仅适用于本机 SSH 隧道开发；直连或正式环境需按实际 TLS 要求调整。
   datasource:
-    url: "${DB_URL:jdbc:mysql://127.0.0.1:13306/llmroute?useSSL=false&allowPublicKeyRetrieval=true&connectionTimeZone=UTC&characterEncoding=UTF-8}"
+    url: "${DB_URL:jdbc:mysql://127.0.0.1:3306/llmroute?connectionTimeZone=UTC&characterEncoding=UTF-8}"
     username: "${DB_USER:}"
     password: "${DB_PASSWORD:}"
     hikari:
@@ -15,28 +13,23 @@ spring:
       maximum-pool-size: 5
       minimum-idle: 1
       connection-timeout: 3000
-      # 数据库暂不可用时仍允许应用启动：存活检查不受数据库影响，由 readiness 反映数据库状态。
       initialization-fail-timeout: -1
 
-  # 运行账号没有 DDL 权限，运行期迁移关闭；迁移由 Maven flyway-maven-plugin 用迁移账号执行。
+  # 迁移使用独立账号，通过 Maven flyway:migrate 执行。
   flyway:
     enabled: false
 
-# 校园地点数据：CAMPUS_DATA_ROOT 指向仓库根目录，启动时只读加载；应用层补充数据随 jar 打包。
 campus:
-  data-root: ${CAMPUS_DATA_ROOT:}
+  data-root: ${CAMPUS_DATA_ROOT:.}
   application-places: classpath:data/application-places.json
-  # W1-05 应用层审核接驳数据：独立 JSON，只读加载；单测可用该属性指向测试夹具。
   application-connectors: classpath:data/campus-connectors.json
 
-# 高德 Web 服务凭证只从服务端环境变量读取；空值时适配器返回 PROVIDER_NOT_CONFIGURED。
 amap:
   web-service-key: "${AMAP_WEB_SERVICE_KEY:}"
   transit-base-url: "${AMAP_TRANSIT_BASE_URL:https://restapi.amap.com/v3/direction/transit/integrated}"
   connect-timeout-millis: ${AMAP_CONNECT_TIMEOUT_MILLIS:3000}
   read-timeout-millis: ${AMAP_READ_TIMEOUT_MILLIS:10000}
 
-# 模型工具调用自检（W1-13）：凭证只从服务端环境变量读取，缺失时接口返回 MODEL_NOT_CONFIGURED。
 assistant:
   llm:
     base-url: "${LLM_BASE_URL:}"
@@ -58,13 +51,10 @@ management:
   endpoint:
     health:
       probes:
-        # 开启 /actuator/health/liveness 与 /actuator/health/readiness。
         enabled: true
-      # 健康响应只输出状态分组，不暴露数据源连接细节。
       show-details: never
       group:
         liveness:
           include: livenessState
         readiness:
-          # 数据库连接就是应用就绪条件之一；连接池等待超过 connection-timeout 后 readiness 为 DOWN。
           include: readinessState,db

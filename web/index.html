@@ -197,12 +197,11 @@
     <div class="about-grid">
       <div class="about-card">
         <h3>项目背景</h3>
-        <p>立足城市交通出行、校园通勤、便民交通服务的<strong>轻量化场景痛点</strong>，针对传统交通服务软件开发周期长、功能固化、小众场景适配性差、运维成本高的问题，
-        依托 LLM Agent 智能体技术与 OPC 个人公司实践模式，面向本科生开展智慧交通类 APP 全流程开发与创业实践。</p>
+        <p>面向西南交通大学犀浦校区学生，查询从校园内部到成都目的地的出行路线。</p>
       </div>
       <div class="about-card">
-        <h3>核心工具</h3>
-        <p>以 <strong>Claude、龙虾 Skill（OpenClaw）</strong>为核心开发工具，结合交通行业高频刚需场景，打造轻量化、可迭代、个性化的智慧交通服务系统。</p>
+        <h3>版本说明</h3>
+        <p>本页是独立网页原型，采用规则解析和静态数据。当前 Java 后端与微信小程序的运行方式见仓库 README。</p>
       </div>
       <div class="about-card">
         <h3>本原型范围</h3>
@@ -214,7 +213,7 @@
         <ul class="tech-list">
           <li><b>数据层</b> 校园公开数据包（OSM + 官方目录，2026-11-03）</li>
           <li><b>算法层</b> A* 最短路 + 多方案（稳妥/最短）+ 校门方位选择</li>
-          <li><b>Agent 层</b> 意图解析 → 7 个工具编排 → 结果生成</li>
+          <li><b>解析层</b> 本地规则解析、工具编排与结果展示</li>
           <li><b>渲染层</b> Canvas 轻量矢量地图（离线可用，无需 CDN）</li>
         </ul>
       </div>
@@ -246,6 +245,5 @@
 <script src="js/app.js"></script>
 <script src="key.local.js"></script>
 <script src="chengdu-map.js"></script>
-<script src="chengdu-sync.js"></script>
 </body>
 </html>

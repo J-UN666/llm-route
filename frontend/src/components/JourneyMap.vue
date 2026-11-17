@@ -13,9 +13,7 @@
     <view class="jm-head">
       <view class="jm-head-main">
         <text class="jm-title">方案地图</text>
-        <text class="jm-crs">绘制坐标系 {{ MAP_INTERNAL_COORDINATE_SYSTEM }}</text>
       </view>
-      <text class="jm-plan-id">planId {{ model.planId || '未提供' }}</text>
     </view>
 
     <!-- 空计划：失败/无方案时明确清空，不保留上一次方案的线条、站点或校门 -->
@@ -23,9 +21,9 @@
       <text class="jm-empty-ico">▱</text>
       <text class="jm-empty-title">地图已清空</text>
       <text class="jm-empty-text">
-        当前没有选中的方案（查询失败或无可用方案），上一次方案的轨迹、站点与校门图层已清除。
+        当前没有可显示的路线。
       </text>
-      <text class="jm-empty-text">恢复查询并选中方案后，地图按新 planId 重新绘制。</text>
+      <text class="jm-empty-text">查询并选择方案后显示地图。</text>
     </view>
 
     <template v-else>
@@ -47,14 +45,13 @@
       </view>
 
       <view class="jm-markers">
-        <text class="jm-markers-label">绘制点位</text>
+        <text class="jm-markers-label">途经点</text>
         <text class="jm-markers-text">{{ markerSummary }}</text>
       </view>
 
       <view class="jm-meta">
         <text class="jm-meta-line">来源 {{ sourcesText }}</text>
         <text class="jm-meta-line">查询时间 {{ queriedAtText }}</text>
-        <text class="jm-meta-line">校园数据版本 {{ model.campusDataVersion || '未提供' }}</text>
         <text class="jm-meta-line">出校点 {{ model.gateText }}</text>
         <text v-if="model.hasDrawableGeometry" class="jm-meta-line">
           轨迹 {{ model.drawableSegmentCount }}/{{ model.segments.length }} 段 · 标记 {{ model.markers.length }} 个
@@ -67,30 +64,12 @@
         </text>
       </view>
 
-      <view class="jm-draw-info">
-        <text class="jm-draw-line">画布 {{ canvasCssText }} CSS px · DPR {{ dpr }} · 缓冲区 {{ canvasBufferText }} px</text>
-        <text class="jm-draw-line">
-          已绘制 {{ drawReport ? drawReport.segmentsDrawn : 0 }} 段轨迹 ·
-          {{ drawReport ? drawReport.markersDrawn : 0 }} 个标记点（含起点 / 出校点 / 上下车站 / 终点）
-        </text>
-        <text class="jm-draw-line jm-draw-note">
-          WGS84 段按 wgs84ToGcj02 转换后与 GCJ-02 城市段统一投影；源几何坐标系标识保留在详情与分段数据中。
-        </text>
-      </view>
     </template>
   </view>
 </template>
 
 <script setup lang="ts">
-/**
- * W1-11 方案地图：消费页面当前 `selectedPlan`，用 Canvas 2D 自绘轨迹与点位。
- *
- * - 内部绘制坐标系统一为 GCJ-02：WGS84 段先转换，城市段原样使用，再投影到像素；
- * - 校园步行 / 城市步行 / 乘车段使用不同颜色和线型，绘制起点、出校点、上下车站、终点；
- * - 视野按全部可用点（轨迹与标记）拟合；
- * - props.plan 变化（含 planId 切换、重新查询、失败置空）时重绘或清空，不保留旧图层；
- * - 几何缺失时保留文字详情入口提示，地图只画可用部分并标注无轨迹。
- */
+/** 绘制当前行程。WGS84 段转换为 GCJ-02 后统一投影；缺失轨迹仅展示已有部分。 */
 
 import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import type { JourneyPlan } from '@/types/journey';
@@ -100,7 +79,6 @@ import {
   drawJourneyMap,
   fitJourneyMapViewport,
   buildJourneyMapModel,
-  MAP_INTERNAL_COORDINATE_SYSTEM,
   type JourneyMapDrawReport
 } from '@/services/journey-map';
 import type { SegmentCategory } from '@/services/journey-segment-meta';
@@ -198,7 +176,7 @@ function queryCanvasNode(): Promise<any> {
         resolve(result && result[0] ? result[0] : null);
       });
     } catch (error) {
-      console.warn('[交大智行][W1-11] Canvas 节点查询失败', error);
+      console.warn('[交大智行] Canvas 节点查询失败', error);
       resolve(null);
     }
   });
@@ -234,21 +212,10 @@ function paintCanvas(currentModel: ReturnType<typeof buildJourneyMapModel>, fiel
     const report = drawJourneyMap(ctx, currentModel, viewport);
     drawReport.value = report;
     drawError.value = '';
-    console.info('[交大智行][W1-11] 地图绘制完成', {
-      planId: currentModel.planId,
-      cssWidth,
-      cssHeight,
-      pixelRatio,
-      bufferWidth: canvas.width,
-      bufferHeight: canvas.height,
-      segmentsDrawn: report.segmentsDrawn,
-      markersDrawn: report.markersDrawn,
-      state: report.state
-    });
   } catch (error) {
     drawReport.value = null;
     drawError.value = '地图绘制失败，请切换方案或重新查询';
-    console.warn('[交大智行][W1-11] 地图绘制失败', error);
+    console.warn('[交大智行] 地图绘制失败', error);
   }
 }
 
@@ -336,21 +303,6 @@ onBeforeUnmount(() => {
   color: #131a24;
   font-size: 27rpx;
   font-weight: 700;
-}
-
-.jm-crs {
-  padding: 2rpx 10rpx;
-  border-radius: 8rpx;
-  background: #eaf3fd;
-  color: #1d6fbf;
-  font-size: 18rpx;
-}
-
-.jm-plan-id {
-  color: #8a97a7;
-  font-size: 19rpx;
-  line-height: 1.5;
-  word-break: break-all;
 }
 
 .jm-empty {
@@ -495,23 +447,4 @@ onBeforeUnmount(() => {
   color: #9a5b00;
 }
 
-.jm-draw-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4rpx;
-  margin-top: 12rpx;
-  padding-top: 10rpx;
-  border-top: 1rpx dashed #e2e9f2;
-}
-
-.jm-draw-line {
-  color: #9fb0c2;
-  font-size: 17rpx;
-  line-height: 1.5;
-  word-break: break-all;
-}
-
-.jm-draw-note {
-  color: #9fb0c2;
-}
 </style>

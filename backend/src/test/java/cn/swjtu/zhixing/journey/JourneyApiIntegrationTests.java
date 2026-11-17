@@ -43,7 +43,7 @@ import org.springframework.test.web.servlet.MvcResult;
  * 高德城市段用桩 provider 注入 W1-06 真实调用记录中的方案数值（4256 秒 / 2248 米 / 换乘 1 次 / 5 元），
  * 核对同门衔接、端点、时间推进与总量合计。
  *
- * <p>真实高德调用需要 {@code AMAP_WEB_SERVICE_KEY}；本环境未配置，未验证项在 docs/contracts/journey-api.md 标注。</p>
+ * <p>真实高德调用需要 {@code AMAP_WEB_SERVICE_KEY}；本测试使用本地供应方桩，不代表真实高德验收。</p>
  */
 @SpringBootTest(properties = "DB_URL=jdbc:mysql://127.0.0.1:1/llmroute")
 @AutoConfigureMockMvc

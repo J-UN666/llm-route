@@ -1,5 +1,5 @@
 /**
- * W1-11 路线详情纯函数：把后端 `JourneyPlan` 转为按 `sequence` 排列的分段视图模型。
+ * 路线详情纯函数：把后端 `JourneyPlan` 转为按 `sequence` 排列的分段视图模型。
  *
  * 约定：
  * - 只读取后端字段，不重算路线、距离或耗时；缺失值保持“未提供”，不用 0 冒充；
@@ -13,8 +13,6 @@ import {
   MAP_INTERNAL_COORDINATE_SYSTEM,
   formatKnownMeters,
   formatKnownSeconds,
-  modeCategory,
-  modeLabel,
   segmentStyle,
   type SegmentCategory
 } from './journey-segment-meta';

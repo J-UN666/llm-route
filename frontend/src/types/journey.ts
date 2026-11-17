@@ -1,20 +1,12 @@
-/**
- * 普通行程查询的目标 DTO 与页面状态。
- *
- * 来源：`../按周Agent任务与验收.md` W1-08 任务卡的目标契约（W1-07 先行落地前端）。
- * 当前 main 基线尚未提供 `POST /api/journeys`（W1-08 未实现），因此本文件中的
- * 响应类型是“目标 DTO”，页面按它渲染，联调时用标注来源的交互样例（契约 stub）验证；
- * W1-08/W1-09 落地后以 `docs/contracts/journey-api.md` 与真实响应为准对齐字段，
- * 字段缺失时保留 null，不伪造 0 值。
- */
+/** 行程接口类型与页面状态。字段与 Java DTO 对齐；缺失指标保留 null。 */
 
 /** 地点查询范围：起点只允许校园内部地点，终点只允许城市目的地。 */
 export type PlaceScope = 'CAMPUS' | 'CITY';
 
-/** 地点类型，与 W1-04 `GET /api/places` 返回的 kind 一致。 */
+/** 地点类型，与 `GET /api/places` 返回的 kind 一致。 */
 export type PlaceKind = 'CAMPUS' | 'GATE' | 'CITY';
 
-/** 带坐标系的位置，字段与 W1-04 地点接口一致。 */
+/** 带坐标系的位置，字段与 地点接口一致。 */
 export interface GeoPosition {
   pointId: string;
   longitude: number | null;
@@ -23,7 +15,7 @@ export interface GeoPosition {
   positionRole: string;
 }
 
-/** W1-04 `GET /api/places` 返回的候选地点。 */
+/** `GET /api/places` 返回的候选地点。 */
 export interface PlaceCandidate {
   id: string;
   name: string;
@@ -39,12 +31,12 @@ export interface PlaceCandidate {
   sourceRefs: string[];
 }
 
-/** W1-04 `GET /api/places` 响应体。 */
+/** `GET /api/places` 响应体。 */
 export interface PlaceSearchResponse {
   items: PlaceCandidate[];
 }
 
-/** W1-09 统一的偏好枚举，提交时必须使用这里的 value。 */
+/** 统一的偏好枚举，提交时必须使用这里的 value。 */
 export type JourneyPreference = 'RECOMMENDED' | 'LESS_WALKING' | 'FEWER_TRANSFERS';
 
 export interface PreferenceOption {
@@ -53,7 +45,7 @@ export interface PreferenceOption {
   hint: string;
 }
 
-/** 偏好的唯一来源；页面与 W1-10 都从这里读取，避免各写一套中文字符串。 */
+/** 偏好的唯一来源；页面与 都从这里读取，避免各写一套中文字符串。 */
 export const JOURNEY_PREFERENCES: readonly PreferenceOption[] = [
   { value: 'RECOMMENDED', label: '综合推荐', hint: '总耗时优先，兼顾换乘与步行' },
   { value: 'LESS_WALKING', label: '少步行', hint: '步行距离优先' },
@@ -96,10 +88,7 @@ export interface JourneyGeometry {
   coordinateSystem: string;
 }
 
-/**
- * 行程段。字段名来自 W1-08 任务卡的目标描述（序号/mode/说明/起终点/线路站点/
- * 距离/耗时/geometry/coordinateSystem）；W1-08 落地时若字段名变化，只改这里与渲染层。
- */
+/** 行程分段，与后端 JourneySegment 对齐。 */
 export interface JourneySegment {
   sequence: number;
   mode: JourneySegmentMode;
@@ -117,7 +106,7 @@ export interface JourneySegment {
   coordinateSystem: string | null;
 }
 
-/** W1-08 单条候选方案。缺失指标保持 null，页面显示“未提供”。 */
+/** 单条候选方案。缺失指标保持 null，页面显示“未提供”。 */
 export interface JourneyPlan {
   planId: string;
   originId: string;
@@ -158,7 +147,7 @@ export interface JourneyErrorBody {
   retryable: boolean | null;
 }
 
-/** 页面结果状态机；W1-10 消费 success/noRoute/error 与 plans/selectedPlanId。 */
+/** 页面结果状态机；消费 success/noRoute/error 与 plans/selectedPlanId。 */
 export type JourneyViewStatus = 'idle' | 'loading' | 'success' | 'noRoute' | 'error';
 
 /** 已本地化的错误视图，保留后端 code 与 requestId 供排查。 */
@@ -172,7 +161,7 @@ export interface JourneyUiError {
 }
 
 /**
- * 统一结果状态（W1-10 交接点）。
+ * 统一结果状态。
  * - requestToken：客户端请求标识，用于丢弃过期响应；
  * - responseRequestId：后端 requestId，展示与排查用；
  * - plans/selectedPlanId：成功后默认选第一条；失败/无方案时清空。

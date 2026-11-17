@@ -1,137 +1,156 @@
-# 交大智行 · 犀浦校区智能出行规划（网页初稿）
+# 交大智行
 
-基于 LLM Agent 的「校园 → 成都」一体化路线规划网页原型，面向西南交通大学犀浦校区。
-本目录是**第一版可运行的前端初稿**，用于团队评审与后续迭代。
+从西南交通大学犀浦校区出发，经校门接入成都公交、地铁的出行查询项目。主程序为 Java 后端和微信小程序，`web/` 保留独立的规则演示原型。
 
----
+## 当前进度
 
-## 1. 快速运行
+截至 2026-11-17：
 
-**方式 A：直接双击（推荐，零依赖）**
-直接打开 `web/index.html` 即可。数据以 `window.__CAMPUS_DATA__` 形式注入，
-所以 `file://` 协议下也能正常工作，无需服务器。
+| 模块 | 状态 |
+|---|---|
+| 地点搜索 | 已实现名称、别名搜索和可用性区分，共 220 个候选；候选不等于可导航地点 |
+| 校园接驳 | 可用起点为图书馆、天佑斋1号楼，均经东门出校；距离、耗时采用地图估算，通行依据为团队的演示范围确认 |
+| 城市公共交通 | 已接入真实高德服务，支持推荐、少步行、少换乘；合并校园段，去重后最多返回 3 条方案 |
+| 小程序 | 已实现选点、时间与偏好、方案卡片、分段详情、Canvas 路线；已有开发者工具联调记录，完整手机链路待验收 |
+| LLM | 真实模型调用 `get_service_info` 已验证；地点/行程业务工具、问路接口、多轮会话和聊天界面尚未实现 |
+| 数据库 | 已有 MySQL/Flyway 配置和三张会话相关表的迁移；当前地点、接驳从 JSON 读取，会话持久化尚未接入 |
+| 交付 | 真机、正式部署、演示视频、OPC 报告和参赛材料待完成 |
 
-**方式 B：本地服务器（体验更完整）**
+应用层有坐标的城市目的地为天府广场、春熙路、成都东客站、成都站和宽窄巷子。已有真实高德验收覆盖图书馆→前三处、天佑斋1号楼→前两处，共五组查询；并非所有地点组合均已实测。历史校车和施工通知仅作参考，不参与实时算路。
+
+## 克隆后运行
+
+准备 JDK 21、Node.js 24 和微信开发者工具。Node 精确版本见 `frontend/.nvmrc`，依赖版本由 `package-lock.json` 锁定；Maven Wrapper 已包含，不必单独安装 Maven。
+
+```bash
+git clone https://github.com/J-UN666/llm-route.git
+cd llm-route
+```
+
+后续命令均在仓库根目录执行。首次构建需要联网下载 Maven 和 npm 依赖。
+
+### 1. 后端
+
+macOS / Linux：
+
+```bash
+cp backend/application-local.example.properties backend/application-local.properties
+```
+
+Windows PowerShell：
+
+```powershell
+Copy-Item backend/application-local.example.properties backend/application-local.properties
+```
+
+编辑 `backend/application-local.properties`，将自己的高德 **Web 服务 Key** 填入 `amap.web-service-key`。这不是给浏览器地图使用的 JavaScript API Key。LLM 配置可暂时留空，普通表单查询可以独立运行。本地配置被 Git 忽略，不会随仓库分享。
+
+启动：
+
+```bash
+./backend/mvnw -f backend/pom.xml spring-boot:run
+```
+
+Windows 使用：
+
+```powershell
+.\backend\mvnw.cmd -f backend/pom.xml spring-boot:run
+```
+
+打开以下地址检查：
+
+- `http://127.0.0.1:8080/actuator/health/liveness`：应返回 `UP`。
+- `http://127.0.0.1:8080/api/places?scope=CAMPUS`：应返回地点列表。
+
+缺少高德 Key 时服务和地点搜索仍可启动，但无法获得真实城市路线。没有配置数据库时 readiness 可能返回 503；当前普通查询不依赖数据库，检查启动应使用 liveness。
+
+### 2. 小程序
+
+另开一个终端，仍进入仓库根目录：
+
+```bash
+npm --prefix frontend ci
+```
+
+复制前端配置，macOS / Linux：
+
+```bash
+cp frontend/.env.example frontend/.env.local
+```
+
+Windows PowerShell：
+
+```powershell
+Copy-Item frontend/.env.example frontend/.env.local
+```
+
+同一台电脑的开发者工具使用默认 `VITE_API_BASE_URL=http://127.0.0.1:8080`。构建：
+
+```bash
+npm --prefix frontend run build:mp-weixin
+```
+
+在微信开发者工具中导入 `frontend/dist/build/mp-weixin`，使用自己的小程序 AppID 或工具允许的测试方式。修改 API 地址后需要重新构建；持续开发可运行 `npm --prefix frontend run dev:mp-weixin`，导入 `frontend/dist/dev/mp-weixin`。
+
+首次演示可选图书馆→天府广场，点击“现在”填写未来出发时间，再查询路线。起点和终点都要从候选列表确认。
+
+### 3. 手机调试
+
+手机与后端电脑连接同一局域网：
+
+1. 后端本地配置改为 `server.address=0.0.0.0`，重启。
+2. 前端 `.env.local` 改为电脑的局域网地址，例如 `VITE_API_BASE_URL=http://192.168.1.100:8080`，重新构建。
+3. 确认防火墙允许该端口，并按微信开发者工具的调试要求配置网络访问。手机上的 `127.0.0.1` 指向手机自身。
+
+正式发布还需要 HTTPS 服务、微信合法请求域名及实际真机验收；本仓库当前没有完成这一步。
+
+## 可选配置
+
+### 模型
+
+在后端本地配置中设置 `assistant.llm.base-url`、`assistant.llm.api-key`、`assistant.llm.model`，使用支持 Chat Completions 工具调用的服务。基址以 `/v1` 为例，具体取值以提供方为准。目前只开放工具自检接口，见 [接口说明](docs/api.md)。
+
+也可以通过环境变量配置 `AMAP_WEB_SERVICE_KEY`、`LLM_BASE_URL`、`LLM_API_KEY`、`LLM_MODEL`、`DB_URL`、`DB_USER`、`DB_PASSWORD`、`SERVER_ADDRESS`、`SERVER_PORT`、`CAMPUS_DATA_ROOT`。模板保留环境变量占位符；也可在本地文件中直接填写。
+
+### MySQL
+
+仅运行现有地点与行程查询时可跳过。后续会话功能使用 MySQL 8.4，迁移文件唯一入口为 `backend/src/main/resources/db/migration/`。三张业务表为 `conversation`、`conversation_message`、`journey_query`；Flyway 另维护版本表。运行服务不会自动建表。
+
+先由数据库管理员创建 `llmroute` 数据库和相应账号；服务账号配置到本地文件，迁移账号通过环境变量 `MIGRATION_DB_URL`、`MIGRATION_DB_USER`、`MIGRATION_DB_PASSWORD` 提供，然后执行：
+
+```bash
+./backend/mvnw -f backend/pom.xml flyway:migrate
+```
+
+Windows 将命令中的 Wrapper 换成 `.\backend\mvnw.cmd`。迁移环境变量不会从 `application-local.properties` 读取。不要将别人的 localhost、数据库账号或密钥直接复制到自己的设备。
+
+### 网页原型
+
 ```bash
 node tools/serve.js
-# 然后浏览器打开 http://127.0.0.1:5178
 ```
 
-> 说明：本机环境无法访问 CDN 与在线地图瓦片，因此地图采用**自研 Canvas 矢量渲染**，
-> 只读取本地 GeoJSON，完全离线可用，不会出现"地图加载不出来"的情况。
+打开 `http://127.0.0.1:5178`；Windows 也可双击 `启动预览.bat`。此页使用本地规则和静态参考数据，与小程序和 Java API 独立。可选的高德城市地图另需浏览器 JS API 配置，未配置时不影响本地校园原型。
 
----
+## 检查
 
-## 2. 目录结构
-
-```
-启航/
-├─ web/                       ← 前端成品（可直接部署）
-│  ├─ index.html
-│  ├─ css/app.css
-│  ├─ js/
-│  │  ├─ map.js               轻量矢量地图引擎（投影/平移/缩放/命中检测/图层）
-│  │  ├─ routing.js           A* 路网引擎（多方案、禁行边、连通分量）
-│  │  ├─ agent.js             LLM Agent 层（意图解析 + 7 个工具编排）
-│  │  └─ app.js               页面装配与交互
-│  └─ data/
-│     ├─ campus.js / .json    校园压缩数据（约 290 KB）
-│     └─ city.js   / .json    城市接驳数据（人工整理，已标注）
-├─ source-data/校园数据/        ← 你提供的原始数据包（未修改）
-├─ tools/
-│  ├─ build_campus_data.py    原始数据 → web/data/campus.js
-│  ├─ build_city_data.py      城市接驳数据 → web/data/city.js
-│  ├─ serve.js                本地静态服务器
-│  ├─ test.js                 无浏览器逻辑测试
-│  └─ shot.js                 无头浏览器截图 / 渲染自检
-└─ shots/                     验证截图
+```bash
+./backend/mvnw -f backend/pom.xml verify
+npm --prefix frontend run type-check
+npm --prefix frontend run build:mp-weixin
+node tools/test.js
 ```
 
----
+本次整理已通过后端 168 项测试与打包、前端类型检查与生产构建、原型路网断言；另从不含本机配置和依赖目录的副本验证了依赖安装、后端启动和 220 个地点加载。真实高德和真实模型的结论来自已有验收记录；本次整理未重新发起付费服务查询，未验收手机或真实数据库连接。
 
-## 3. 已实现的三个页面
+## 目录
 
-| 页面 | 内容 |
-|---|---|
-| **路线规划** | 自然语言输入 + 起终点选择 + 地图 + 结果卡 + Agent 执行轨迹 |
-| **数据可信度** | 路网统计、P0 风险项、16 条完整待核实清单 |
-| **项目说明** | 项目背景、核心工具、技术栈、合规与免责 |
+- `backend/`：地点、校园接驳、城市路线、行程组合和模型工具自检。
+- `frontend/`：uni-app / Vue 3 微信小程序。
+- `web/`：独立网页原型及生成的地图数据；后端也会读取其中的校门实体。
+- `source-data/校园数据/`：公开来源数据、地图与字段说明，保留来源候选状态。
+- `tools/`：数据生成脚本、原型预览与断言检查。
+- `docs/api.md`：当前接口与字段约定。
+- `docs/tasks.md`：剩余开发任务，可直接交给 Agent。
 
-### 路线规划的核心链路
-
-```
-自然语言 → 意图解析 → 选校门 → A* 校内路径 → 城市接驳 → 可信度校验 → 生成说明
-```
-
-Agent 面板会**逐步展示 7 个工具的调用与耗时**，这是项目要求里"LLM Agent 工具应用"
-最直观的展示面，答辩时可直接演示。
-
-| # | 工具 | 作用 |
-|---|---|---|
-| 1 | `resolve_origin` | 起点解析（支持简称、别名、当前位置） |
-| 2 | `search_place` | 目的地识别与消歧 |
-| 3 | `pick_gate` | 按**方位角 + 接驳距离**推荐校门 |
-| 4 | `route_campus` | A* 最短路，输出分段明细 |
-| 5 | `route_city` | 校门 → 地铁/公交接驳方案 |
-| 6 | `check_data_quality` | 标注可信度与待核实项 |
-| 7 | `describe_route` | 生成自然语言路线说明 |
-
----
-
-## 4. 数据使用方式（重要）
-
-严格遵循你数据包里 `README.md`、`数据质量与待核实.md`、`数据字典与导入说明.md` 的约束：
-
-- ✅ **只用 WGS84 的 OSM 数据参与算路**；官方目录 `UNDECLARED` 坐标**不混入导航**，仅用于名称搜索。
-- ✅ `walk_permission=prohibited` 的 **15 条边默认排除**；`conditional` 的 71 条边在"稳妥方案"里加权规避。
-- ✅ **楼宇质心 ≠ 入口**：起点接入路网时显示"接驳 X 米，入口未核实"。
-- ✅ **两个"东门"节点不合并**，点击可看到 OSM ID 与"待核实"提示。
-- ✅ **接驳距离冲突保留**：D2 出口→西门官方分别记 300m / 500m，页面不取平均。
-- ✅ 校车时刻标注 **2022 历史**，并写明"禁止作为实时班次推荐"。
-- ✅ 施工通知标注"未地理配准，不自动封闭道路"。
-- ✅ OSM 署名与 ODbL 1.0 已在地图右下角与项目说明页标注。
-
-### 当前路网实测
-
-| 指标 | 数值 |
-|---|---|
-| 节点 / 边 | 1294 / 1517 |
-| 可步行边 | 1502（排除 15 条禁行） |
-| 连通分量 | 3（最大分量 1281 个节点，9 个孤立节点） |
-| 校门候选 | 6（全部落在最大分量上） |
-| 地点两两可达性抽样 | 105 / 105 通过 |
-
-> 已修复：原始数据中存在 9 个孤立节点与 2 个 2 节点小分量，直接取"最近节点"会导致算路失败。
-> 引擎现在只允许接入**最大连通分量**，避免这类假失败。
-
----
-
-## 5. 城市段数据的定位（请务必知悉）
-
-`web/data/city.js` 里的地铁线路与目的地是**人工整理的公开常识**，不是本项目核验过的数据。
-页面中已用 `data_status: manual_public_common_knowledge` 和"未核验 / 低置信"标签显式标注。
-
-**后续建议**：接入高德/百度/腾讯地图 JS API，把城市段换成真实路径规划接口；
-校内段保留本地 A*，形成"校内自研 + 城市托管"的混合架构，这也正好符合数据包
-README 里"城市段路线仍按项目方案交给地图服务查询"的原始设计。
-
----
-
-## 6. 下一步可迭代方向
-
-1. **实地补入口**：从 10 个 MVP 候选点里挑 6–10 个，补齐楼宇入口与接驳路边，
-   把 `routing_ready` 从 `false` 翻成 `true`。
-2. **接高德/百度地图**：城市段换成真实接口，校内段保留自研 A*。
-3. **接真实 LLM**：`agent.js` 里 `parseUtterance()` 目前是离线规则解析，
-   可替换为 Claude / OpenClaw 的 function calling，把 7 个工具注册成 tools。
-4. **多模式扩展**：骑行、无障碍路径（需要补无障碍标签）。
-5. **校车/施工模块**：拿到 2026 年真实时刻表与围挡多边形后再启用实时推荐。
-
----
-
-## 7. 已知限制
-
-- 城市段地铁站点坐标为近似值，仅用于示意，不可用于实际导航。
-- 校门开放时间、通行权限在原始数据中即为空，页面只能标注"待核实"。
-- 自然语言解析目前是规则版，复杂句式（多途经点、时间约束）尚未支持。
-- 地图为矢量示意，无地名注记底图；如需真实底图请接入地图 SDK。
+应用层核实结论位于 `backend/src/main/resources/data/`，不覆盖来源数据来改变其核实状态。OSM 数据保留 © OpenStreetMap contributors 署名；其他来源和使用限制见 [数据说明](source-data/校园数据/README.md)。

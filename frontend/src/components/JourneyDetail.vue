@@ -10,7 +10,6 @@
         <text class="jd-title">分段明细</text>
         <text class="jd-count" v-if="model.hasPlan">{{ model.segments.length }} 段</text>
       </view>
-      <text class="jd-plan-id">planId {{ model.planId || '未提供' }}</text>
     </view>
 
     <!-- 空计划：明确清空状态 -->
@@ -18,7 +17,6 @@
       <text class="jd-empty-ico">◌</text>
       <text class="jd-empty-title">暂无分段明细</text>
       <text class="jd-empty-text">{{ model.emptyText }}</text>
-      <text class="jd-empty-text">查询失败或没有可用方案时，详情与地图一起清空，不展示上一次方案的分段。</text>
     </view>
 
     <template v-else>
@@ -27,7 +25,6 @@
         <view class="jd-summary-row">
           <text class="jd-summary-label">出校点</text>
           <text class="jd-summary-value">{{ gateText }}</text>
-          <text class="jd-summary-note">{{ gateIdText }}</text>
         </view>
         <view class="jd-summary-row">
           <text class="jd-summary-label">出发 / 到达</text>
@@ -83,32 +80,30 @@
           </view>
 
           <view class="jd-metrics">
-            <text class="jd-metric">已知距离 {{ segment.distanceText }}</text>
-            <text class="jd-metric">已知耗时 {{ segment.durationText }}</text>
-            <text class="jd-metric">源坐标系 {{ segment.sourceCoordinateSystem || '未提供' }}</text>
+            <text class="jd-metric">距离 {{ segment.distanceText }}</text>
           </view>
 
           <view class="jd-trace" :class="{ 'jd-trace-missing': !segment.hasGeometry }">
             <text class="jd-trace-badge" :class="{ 'jd-trace-badge-missing': !segment.hasGeometry }">
               {{ segment.hasGeometry ? '有轨迹' : '无轨迹' }}
             </text>
-            <text class="jd-trace-text">{{ segment.geometryText }}</text>
+            <text class="jd-trace-text">{{ segment.hasGeometry ? '见下方地图' : '此路段仅提供文字说明' }}</text>
           </view>
           <text v-if="segment.traceMissingText" class="jd-trace-reason">{{ segment.traceMissingText }}</text>
         </view>
       </view>
 
       <view v-if="!model.sequenceComplete" class="jd-warn">
-        ⚠ 分段序号不是从 1 连续递增，展示顺序按后端返回的 segments 数组，不自行重排。
+        路线分段信息不完整，建议重新查询。
       </view>
       <view v-if="model.missingGeometryCount > 0" class="jd-warn">
-        ⚠ 共 {{ model.missingGeometryCount }} 段无可用几何：文字详情仍然完整展示，地图不为这些段绘制轨迹。
+        部分路段未提供轨迹，地图只显示已有路线。
       </view>
 
       <view class="jd-foot">
         <text class="jd-foot-line">来源 {{ sourcesText }}</text>
         <text class="jd-foot-line jd-foot-note">
-          分段顺序与数字均来自后端 JourneyPlan；地图与详情使用同一个 planId，不按卡片序号或重新查询取详情。
+          步行和换乘时间为估算值，请留意车站指引。
         </text>
       </view>
     </template>
@@ -116,14 +111,7 @@
 </template>
 
 <script setup lang="ts">
-/**
- * W1-11 路线详情：按 `segments.sequence` 展示校园步行、出校、城市步行、公交/地铁、换乘与到达。
- *
- * - 输入只有页面当前 `selectedPlan`（可能为 null），组件不查询、不重算路线；
- * - 每段展示 mode、说明、站点/线路、已知距离与秒数、源坐标系；
- * - 几何缺失时文字详情照常展示，并明确标记“无轨迹”；
- * - plan 为 null（失败/空方案）时渲染清空状态，不保留上一次方案。
- */
+/** 所选行程的分段说明和汇总信息。 */
 
 import { computed } from 'vue';
 import type { JourneyPlan } from '@/types/journey';
@@ -149,10 +137,6 @@ const props = defineProps<JourneyDetailProps>();
 const model = computed(() => buildJourneyDetailModel(props.plan));
 
 const gateText = computed(() => (props.plan ? formatGateName(props.plan) : '未提供'));
-const gateIdText = computed(() => {
-  const gateId = props.plan?.gateId;
-  return gateId ? `gateId ${gateId}` : 'gateId 未提供';
-});
 const durationText = computed(() =>
   props.plan ? formatDurationMinutes(props.plan.totalDurationSeconds) : '未提供'
 );
@@ -216,13 +200,6 @@ const sourcesText = computed(() => (props.plan ? formatPlanSources(props.plan.so
   background: #eaf3fd;
   color: #1d6fbf;
   font-size: 19rpx;
-}
-
-.jd-plan-id {
-  color: #8a97a7;
-  font-size: 19rpx;
-  line-height: 1.5;
-  word-break: break-all;
 }
 
 .jd-empty {

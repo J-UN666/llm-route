@@ -1,16 +1,4 @@
-/**
- * 小程序 API 访问层。
- *
- * 地点接口：W1-04 `GET /api/places`（已可用）。
- * 行程接口：W1-08 目标契约 `POST /api/journeys`（当前基线尚未实现，前端按目标 DTO 接入，
- * W1-08 落地后以此文件为唯一适配点对齐真实响应）。
- *
- * 约定：
- * - 基址来自 `VITE_API_BASE_URL`，缺省回退到本机 8080，避免未配置时静默请求错误主机；
- * - 所有时间以 `Asia/Shanghai`（+08:00）生成与解析，不使用设备本地时区；
- * - 网络/HTTP 错误统一抛 `ApiRequestError`，页面用 `toJourneyUiError` 转成可理解提示；
- * - 不做全局 loading/自动重试，请求标识与防抖由调用方（PlacePicker/页面）控制。
- */
+/** 小程序 API 访问层。统一请求错误和北京时间处理；并发请求由调用方管理。 */
 
 import type {
   JourneyErrorBody,
@@ -34,9 +22,6 @@ const envBaseUrl = normalizeBaseUrl(import.meta.env.VITE_API_BASE_URL);
 
 /** 当前构建使用的 API 基址（已去除末尾斜杠）。 */
 export const API_BASE_URL = envBaseUrl || FALLBACK_API_BASE_URL;
-
-/** 基址来源：环境变量或回退默认值，页脚/README 排查配置时使用。 */
-export const API_BASE_URL_SOURCE: 'env' | 'default' = envBaseUrl ? 'env' : 'default';
 
 /** 后端错误 code 到可理解中文提示的映射；未知 code 回退服务端 message。 */
 const ERROR_HINTS: Record<string, string> = {
@@ -170,7 +155,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === 'object';
 }
 
-/** GET /api/places：关键词 + 范围查询地点候选（W1-04）。 */
+/** GET /api/places：关键词 + 范围查询地点候选。 */
 export async function searchPlaces(keyword: string, scope: PlaceScope): Promise<PlaceCandidate[]> {
   const trimmed = keyword.trim();
   if (!trimmed) return [];
@@ -192,7 +177,7 @@ export async function searchPlaces(keyword: string, scope: PlaceScope): Promise<
   });
 }
 
-/** POST /api/journeys：普通行程查询（W1-08 目标契约）。 */
+/** POST /api/journeys：普通行程查询。 */
 export async function planJourney(request: JourneyRequest): Promise<JourneyResponse> {
   const requestBody: Record<string, unknown> = {
     originId: request.originId,
@@ -391,7 +376,7 @@ export interface BeijingDateTimeParts {
 
 /**
  * 把后端 ISO 时间解析为北京时间展示片段；无法解析时返回 null，不猜测时区。
- * 页面（含 W1-10 方案卡）统一走这里，避免各组件重复实现 +08:00 换算。
+ * 页面（含 方案卡）统一走这里，避免各组件重复实现 +08:00 换算。
  */
 export function parseBeijingDateTime(iso: string | null | undefined): BeijingDateTimeParts | null {
   if (!iso) return null;

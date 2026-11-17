@@ -1060,9 +1060,28 @@
       renderTrace(res.steps);
       renderResult(res);
       drawPlans(res);
+      syncCityMap(res);
 
       setPlanBusy(false);
     }, 320);
+  }
+
+  var syncedGateId = null;
+  var syncedDestination = null;
+
+  function syncCityMap(result) {
+    var cityMap = window.ChengduMap;
+    if (!cityMap) return;
+    var gate = result.gate;
+    if (gate && gate.id !== syncedGateId) {
+      cityMap.setOrigin(gate.x, gate.y, gate.n, { source: 'synced' });
+      syncedGateId = gate.id;
+    }
+    var destination = result.destination;
+    if (destination && destination.type === 'city' && destination.name !== syncedDestination) {
+      cityMap.setSuggestedDestination(destination.name);
+      syncedDestination = destination.name;
+    }
   }
 
   function planFromFields() {

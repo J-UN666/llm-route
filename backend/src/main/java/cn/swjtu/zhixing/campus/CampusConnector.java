@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * 校园入口到实际出校点的固定步行接驳（W1-05 DTO）。
  *
- * <p>契约见 docs/contracts/campus-connector-api.md。约定：
+ * <p>契约见 docs/api.md。约定：
  * <ul>
  *   <li>接驳终点是实际出校点 {@code gateExitPoint}，不是校门中心；同一校门的不同方向
  *       物理点位保存在 {@code gatePoints}；</li>

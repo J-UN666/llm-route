@@ -1,15 +1,5 @@
-<script setup lang="ts">
-import { onLaunch, onShow, onHide } from "@dcloudio/uni-app";
-
-onLaunch(() => {
-  console.log("[交大智行] App Launch");
-});
-onShow(() => {
-  console.log("[交大智行] App Show");
-});
-onHide(() => {
-  console.log("[交大智行] App Hide");
-});
+<script lang="ts">
+export default {};
 </script>
 
 <style>

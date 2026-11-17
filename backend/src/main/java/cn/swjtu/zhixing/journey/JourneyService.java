@@ -46,7 +46,7 @@ import org.springframework.stereotype.Service;
  * <p>表单（W1-07）与后续模型（W1-11+）共用 {@link #plan(JourneyRequest)} 这一个入口，
  * 输入校验、请求标识、错误映射都放在这里，控制器只负责 HTTP 边界。</p>
  *
- * <p>组合口径（见 docs/contracts/journey-api.md 与 W1-08 任务卡）：</p>
+ * <p>组合口径（见 docs/api.md 与 W1-08 任务卡）：</p>
  * <ul>
  *   <li>城市段起点固定为接驳的实际出校点 {@code gateExitPoint}，与校园步行段终点同一点；</li>
  *   <li>{@code cityDepartureTime = 请求出发时刻 + 接驳 durationSeconds}；</li>

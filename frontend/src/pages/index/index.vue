@@ -15,7 +15,7 @@
         <text class="hero-campus">西南交通大学 · 犀浦校区</text>
         <view class="status-pill">
           <view class="status-dot"></view>
-          <text class="status-text">结构化行程服务</text>
+          <text class="status-text">校园出行</text>
         </view>
       </view>
     </view>
@@ -24,7 +24,7 @@
       <view class="notice">
         <text class="notice-ico">ⓘ</text>
         <text class="notice-text">
-          当前接入：地点搜索走 W1-04 Java 接口；行程查询按 W1-08 约定提交 POST /api/journeys，页面覆盖加载、成功、无方案与失败四种状态，成功结果以候选方案卡展示（最多三条，点击卡片切换当前方案）。
+          选择校园起点和成都目的地，查询公交、地铁路线。
         </text>
       </view>
 
@@ -35,7 +35,6 @@
             <text class="card-ico">◎</text>
             <text>规划路线</text>
           </view>
-          <text class="badge-soft">W1-07</text>
         </view>
 
         <view class="card-body">
@@ -57,7 +56,7 @@
           </view>
 
           <view class="scope-note">
-            <text class="scope-note-text">起点限定为校园内部地点；终点限定为成都市区目的地，不支持反向查询。</text>
+            <text class="scope-note-text">目前支持从犀浦校区前往成都市区。</text>
           </view>
 
           <!-- 终点：只允许城市目的地 -->
@@ -106,7 +105,7 @@
             </view>
             <text v-if="fieldErrors.departure" class="field-error">{{ fieldErrors.departure }}</text>
             <text v-else class="field-hint">
-              提交时生成带 +08:00 的 ISO 8601；“现在”填入北京时间下一分钟。
+              使用北京时间；点击“现在”可快速填写。
             </text>
           </view>
 
@@ -128,7 +127,6 @@
                 <text class="pref-hint">{{ option.hint }}</text>
               </view>
             </view>
-            <text class="field-hint">提交值：{{ preference }}（统一枚举，排序规则由 W1-09 后端实现）。</text>
           </view>
 
           <button class="btn-primary" :class="{ 'btn-loading': loading }" :disabled="loading" @tap="onSubmit">
@@ -152,14 +150,13 @@
           <text class="empty-ico">🧭</text>
           <text class="empty-title">尚未开始规划</text>
           <text class="empty-text">选择校园起点、城市终点并设置出发时间后，点击“查询路线”。</text>
-          <text class="empty-note">查询成功后这里将展示最多三条实际候选方案卡，可点击卡片切换当前方案。</text>
         </view>
 
         <!-- 加载中 -->
         <view v-else-if="journeyState.status === 'loading'" class="result-loading">
           <view class="loading-spinner"></view>
           <text class="loading-title">正在查询全程方案…</text>
-          <text class="loading-sub">请求 #{{ journeyState.requestToken }} 已在途，loading 期间按钮已禁用，重复点击不会重复提交。</text>
+          <text class="loading-sub">正在获取公共交通方案，请稍候。</text>
           <view v-if="submittedSummary" class="loading-summary">
             <text class="summary-line">{{ submittedSummary.originName }} → {{ submittedSummary.destinationName }}</text>
             <text class="summary-line">{{ submittedSummary.departureTime }} · {{ submittedSummary.preferenceLabel }}</text>
@@ -170,7 +167,6 @@
         <view v-else-if="journeyState.status === 'success'" class="result-success">
           <view class="result-banner result-banner-success">
             <text class="banner-title">已返回 {{ journeyState.plans.length }} 条方案</text>
-            <text class="banner-sub">requestId {{ journeyState.responseRequestId || '未提供' }}</text>
           </view>
           <view v-if="submittedSummary" class="query-summary-box">
             <text class="summary-label">本次查询条件</text>
@@ -182,8 +178,6 @@
           <view class="response-meta">
             <text class="meta-item">来源 {{ journeyState.response?.provider || '未提供' }}</text>
             <text class="meta-item">查询于 {{ formatBeijingDateTime(journeyState.response?.queriedAt) }}</text>
-            <text class="meta-item">地点数据版本 {{ journeyState.response?.campusDataVersion || '未提供' }}</text>
-            <text class="meta-item">后端状态 {{ journeyState.response?.status || '未提供' }}</text>
           </view>
 
           <view v-if="responseWarnings.length > 0" class="warning-box">
@@ -204,17 +198,14 @@
           <view class="selection-strip">
             <view class="selection-strip-main">
               <text class="selection-strip-label">当前选中</text>
-              <text class="selection-strip-id">{{ selectedPlan ? selectedPlan.planId : '未选中' }}</text>
+              <text class="selection-strip-id">{{ selectedPlan ? '方案 ' + (selectedPlanIndex + 1) : '未选中' }}</text>
             </view>
             <text v-if="selectedPlan" class="selection-strip-hint">
-              方案 {{ selectedPlanIndex + 1 }} · 卡片、分段明细与地图读取同一个 selectedPlan（W1-11）。
+              下方展示该方案的路线详情和地图。
             </text>
             <text v-else class="selection-strip-hint">点击上方方案卡切换选中项。</text>
           </view>
 
-          <text class="handoff-note">
-            W1-10 交接：本页维护 plans 与 selectedPlanId，selectedPlan 按 ID 从当前 plans 计算，成功默认第一条；点击卡片发出的 select(planId) 只更新选中项，不触发重查。
-          </text>
         </view>
 
         <!-- 无方案 -->
@@ -222,7 +213,7 @@
           <text class="empty-ico">🛣️</text>
           <text class="empty-title">当前条件下没有可用方案</text>
           <text class="empty-text">
-            后端返回 NO_ROUTE（requestId {{ journeyState.responseRequestId || '未提供' }}）。可尝试更换出发时间或终点后重新查询。
+            可尝试更换出发时间或目的地后重新查询。
           </text>
           <view v-if="submittedSummary" class="query-summary-box query-summary-box-flat">
             <text class="summary-line">{{ submittedSummary.originName }} → {{ submittedSummary.destinationName }}</text>
@@ -238,52 +229,29 @@
             <text class="banner-sub">{{ journeyState.error?.hint }}</text>
           </view>
           <view class="error-meta">
-            <text class="meta-item">code {{ journeyState.error?.code || 'UNKNOWN_ERROR' }}</text>
-            <text class="meta-item">HTTP {{ journeyState.error?.httpStatus ?? '未提供' }}</text>
-            <text class="meta-item">requestId {{ journeyState.error?.requestId || '未提供' }}</text>
-            <text class="meta-item">{{ journeyState.error?.retryable ? '标记为可重试' : '该错误通常需要调整条件后重试' }}</text>
+            <text v-if="journeyState.error?.requestId" class="meta-item">问题编号 {{ journeyState.error.requestId }}</text>
           </view>
           <text v-if="journeyState.error?.detail" class="error-detail">服务端信息：{{ journeyState.error?.detail }}</text>
           <text v-if="isResultStale" class="stale-note">查询条件已修改，点击重试会按当前表单条件重新查询。</text>
           <button class="retry-btn" @tap="onRetry">重试查询</button>
-          <text class="handoff-note">失败后按钮已恢复；错误码映射在 services/api.ts，未知 code 回退服务端 message。</text>
         </view>
 
-        <!-- 分段明细与地图（W1-11）：与方案卡共用同一个 selectedPlan；失败/无方案时 plan 为 null，图层清空 -->
+        <!-- 分段明细与地图：与方案卡共用同一个 selectedPlan；失败/无方案时 plan 为 null，图层清空 -->
         <view v-if="showJourneyArtifacts" class="journey-artifacts">
           <JourneyDetail :plan="selectedPlan" />
           <JourneyMap :plan="selectedPlan" />
         </view>
       </view>
 
-      <text class="foot-note">交大智行 · W1-10 方案卡 + W1-11 分段明细与地图 · 后端监听地址按测试环境配置</text>
-      <text class="foot-note">API 基址：{{ API_BASE_URL }}（{{ apiBaseUrlSourceLabel }}）</text>
-      <text class="foot-note foot-note-gap">交大智行 · 地点数据版本以接口返回为准</text>
+      <text class="foot-note">预计时间仅供参考，请留意实际运营情况。</text>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
-/**
- * 交大智行首页：普通行程查询表单（W1-07）+ 候选方案卡（W1-10）。
- *
- * 结果状态（见 `@/types/journey` 的 JourneyQueryState）：
- * - journeyState.status：idle/loading/success/noRoute/error；
- * - journeyState.plans：成功时后端已排序、去重、最多三条的 JourneyPlan[]；
- * - journeyState.selectedPlanId：成功后默认 plans[0].planId，点击卡片时写回；
- * - journeyState.requestToken / responseRequestId：客户端请求标识 / 后端 requestId；
- * - journeyState.error：失败时本地化错误（code/hint/detail/retryable/requestId）。
- *
- * 方案选中：selectedPlan 始终按 selectedPlanId 从当前 plans 计算（见
- * `@/services/journey-selection`），不缓存方案对象；失败/无方案时 plans 与
- * selectedPlanId 一起清空，W1-11 读取的 selectedPlan 自然变为 null。
- *
- * 过期响应处理：每个请求用 LatestRequestTracker 取令牌；条件修改时 invalidate()，
- * 响应到达后再用 isCurrent() 校验，过期响应直接丢弃，不覆盖当前显示。
- */
+/** 查询表单、异步状态和当前选中方案。条件变化时作废旧请求，避免旧响应覆盖新结果。 */
 
 import { computed, onBeforeUnmount, reactive, ref } from 'vue';
-import { onLoad } from '@dcloudio/uni-app';
 import PlacePicker from '@/components/PlacePicker.vue';
 import JourneyCard from '@/components/JourneyCard.vue';
 import JourneyDetail from '@/components/JourneyDetail.vue';
@@ -297,8 +265,6 @@ import type {
 } from '@/types/journey';
 import { JOURNEY_PREFERENCES, createIdleJourneyState, preferenceLabel } from '@/types/journey';
 import {
-  API_BASE_URL,
-  API_BASE_URL_SOURCE,
   LatestRequestTracker,
   buildDepartureTime,
   formatBeijingDateTime,
@@ -343,7 +309,7 @@ const fieldErrors = reactive({
 
 const todayText = computed(() => getBeijingNow().date);
 
-/* ------------------ 统一结果状态（W1-10 交接点） ------------------ */
+/* ------------------ 统一结果状态 ------------------ */
 
 const journeyState = reactive<JourneyQueryState>(createIdleJourneyState());
 const requestTracker = new LatestRequestTracker();
@@ -368,7 +334,7 @@ const selectedPlanIndex = computed(() =>
 );
 
 /**
- * 结果区是否展示分段明细与地图（W1-11）：
+ * 结果区是否展示分段明细与地图：
  * 成功、无方案、失败三种已查询状态都展示，且都读取同一个 selectedPlan；
  * 失败/无方案时 selectedPlan 为 null，组件渲染清空状态并清除上一次图层。
  */
@@ -389,10 +355,6 @@ const STATUS_BADGES: Record<JourneyQueryState['status'], { text: string; classNa
 
 const statusBadgeText = computed(() => STATUS_BADGES[journeyState.status].text);
 const statusBadgeClass = computed(() => STATUS_BADGES[journeyState.status].className);
-
-const apiBaseUrlSourceLabel = computed(() =>
-  API_BASE_URL_SOURCE === 'env' ? '来自环境变量 VITE_API_BASE_URL' : '未配置环境变量，使用默认地址'
-);
 
 /** 当前表单能生成的查询键；用于提示“结果对应旧条件”。 */
 const currentFormKey = computed(() => {
@@ -419,25 +381,23 @@ const isResultStale = computed(
 function onOriginSelect(place: PlaceCandidate): void {
   originPlace.value = place;
   fieldErrors.origin = '';
-  handleConditionsChanged('origin');
-  console.info('[W1-07] 已选起点', { id: place.id, name: place.name });
+  handleConditionsChanged();
 }
 
 function onOriginClear(): void {
   originPlace.value = null;
-  handleConditionsChanged('origin');
+  handleConditionsChanged();
 }
 
 function onDestinationSelect(place: PlaceCandidate): void {
   destinationPlace.value = place;
   fieldErrors.destination = '';
-  handleConditionsChanged('destination');
-  console.info('[W1-07] 已选终点', { id: place.id, name: place.name });
+  handleConditionsChanged();
 }
 
 function onDestinationClear(): void {
   destinationPlace.value = null;
-  handleConditionsChanged('destination');
+  handleConditionsChanged();
 }
 
 /* ------------------ 日期时间 / 偏好 ------------------ */
@@ -450,16 +410,14 @@ function onDateChange(event: PickerChangeEvent): void {
   const value = event && event.detail && typeof event.detail.value === 'string' ? event.detail.value : '';
   departureDate.value = value;
   fieldErrors.departure = '';
-  handleConditionsChanged('departureDate');
-  console.info('[W1-07] 已选出发日期', value);
+  handleConditionsChanged();
 }
 
 function onTimeChange(event: PickerChangeEvent): void {
   const value = event && event.detail && typeof event.detail.value === 'string' ? event.detail.value : '';
   departureTime.value = value;
   fieldErrors.departure = '';
-  handleConditionsChanged('departureTime');
-  console.info('[W1-07] 已选出发时间', value);
+  handleConditionsChanged();
 }
 
 function fillDepartureNow(): void {
@@ -467,29 +425,22 @@ function fillDepartureNow(): void {
   departureDate.value = now.date;
   departureTime.value = now.time;
   fieldErrors.departure = '';
-  handleConditionsChanged('fillNow');
-  console.info('[W1-07] 已填入北京时间下一分钟', now.iso);
+  handleConditionsChanged();
 }
 
 function onPreferenceChange(value: JourneyPreference): void {
   if (preference.value === value) return;
   preference.value = value;
-  handleConditionsChanged('preference');
-  console.info('[W1-07] 已切换偏好', { preference: value, label: preferenceLabel(value) });
+  handleConditionsChanged();
 }
 
 /**
  * 条件修改：作废在途请求，避免旧响应晚到后覆盖当前状态。
  * 已展示的结果不立即清空，仅通过 isResultStale 提示“结果对应上次条件”。
  */
-function handleConditionsChanged(source: string): void {
-  const newToken = requestTracker.invalidate();
+function handleConditionsChanged(): void {
+  requestTracker.invalidate();
   if (journeyState.status === 'loading') {
-    console.info('[W1-07] 条件已修改，作废在途请求', {
-      cancelledToken: journeyState.requestToken,
-      newToken,
-      source
-    });
     journeyState.status = 'idle';
     submittedSummary.value = null;
   }
@@ -533,7 +484,6 @@ function validateForm(): JourneyRequest | null {
       uni.pageScrollTo({ selector: '#field-departure', duration: 200 });
     }
     uni.showToast({ title: '请先补全查询条件', icon: 'none' });
-    console.info('[W1-07] 表单校验未通过，未发起请求', { firstInvalid, fieldErrors });
     return null;
   }
 
@@ -547,7 +497,6 @@ function validateForm(): JourneyRequest | null {
 
 function onSubmit(): void {
   if (loading.value) {
-    console.info('[W1-07] 查询进行中，忽略重复点击', { requestToken: journeyState.requestToken });
     return;
   }
   const request = validateForm();
@@ -577,30 +526,21 @@ async function executeQuery(request: JourneyRequest): Promise<void> {
   journeyState.selectedPlanId = null;
   journeyState.error = null;
 
-  console.info('[W1-07] 发起行程查询', { token, request, submittedAt });
-
   try {
     const response = await planJourney(request);
     if (!requestTracker.isCurrent(token)) {
-      console.info('[W1-07] 丢弃过期响应', {
-        token,
-        latest: requestTracker.current,
-        requestId: response.requestId,
-        status: response.status
-      });
       return;
     }
-    applyResponse(token, response);
+    applyResponse(response);
   } catch (error) {
     if (!requestTracker.isCurrent(token)) {
-      console.info('[W1-07] 丢弃过期错误', { token, latest: requestTracker.current });
       return;
     }
     applyFailure(token, error);
   }
 }
 
-function applyResponse(token: number, response: Awaited<ReturnType<typeof planJourney>>): void {
+function applyResponse(response: Awaited<ReturnType<typeof planJourney>>): void {
   journeyState.response = response;
   journeyState.responseRequestId = response.requestId;
 
@@ -608,20 +548,12 @@ function applyResponse(token: number, response: Awaited<ReturnType<typeof planJo
     journeyState.status = 'noRoute';
     journeyState.plans = [];
     journeyState.selectedPlanId = null;
-    console.info('[W1-07] 查询完成：无方案', { token, requestId: response.requestId });
     return;
   }
 
   journeyState.status = 'success';
   journeyState.plans = response.plans;
   journeyState.selectedPlanId = defaultSelectedPlanId(response.plans);
-  console.info('[W1-10] 查询成功，默认选中第一条方案', {
-    token,
-    requestId: response.requestId,
-    planCount: response.plans.length,
-    selectedPlanId: journeyState.selectedPlanId,
-    provider: response.provider
-  });
 }
 
 function applyFailure(token: number, error: unknown): void {
@@ -632,7 +564,7 @@ function applyFailure(token: number, error: unknown): void {
   journeyState.responseRequestId = uiError.requestId;
   journeyState.plans = [];
   journeyState.selectedPlanId = null;
-  console.warn('[W1-07] 查询失败', { token, error: uiError });
+  console.warn('[交大智行] 查询失败', { token, error: uiError });
 }
 
 function onRetry(): void {
@@ -642,7 +574,7 @@ function onRetry(): void {
   void executeQuery(request);
 }
 
-/* ------------------ 方案选中（W1-10） ------------------ */
+/* ------------------ 方案选中 ------------------ */
 
 /**
  * 卡片点击回调：只接受属于当前候选的 planId，选中项写回 journeyState；
@@ -652,29 +584,17 @@ function onRetry(): void {
 function selectPlan(planId: string): void {
   const nextPlanId = selectExistingPlanId(journeyState.plans, planId);
   if (!nextPlanId) {
-    console.warn('[W1-10] 忽略不属于当前候选的选中事件', { planId });
+    console.warn('[交大智行] 忽略不属于当前候选的选中事件', { planId });
     return;
   }
   if (journeyState.selectedPlanId === nextPlanId) return;
   journeyState.selectedPlanId = nextPlanId;
-  console.info('[W1-10] 已切换当前方案', {
-    planId: nextPlanId,
-    index: journeyState.plans.findIndex((plan) => plan.planId === nextPlanId),
-    planCount: journeyState.plans.length
-  });
 }
 
 onBeforeUnmount(() => {
   requestTracker.invalidate();
 });
 
-onLoad(() => {
-  console.info('[交大智行] 首页加载完成（W1-10 方案卡）', {
-    apiBaseUrl: API_BASE_URL,
-    apiBaseUrlSource: API_BASE_URL_SOURCE,
-    preferences: JOURNEY_PREFERENCES.map((item) => item.value)
-  });
-});
 </script>
 
 <style>
@@ -842,15 +762,6 @@ onLoad(() => {
   font-size: 26rpx;
 }
 
-.badge-soft {
-  font-size: 20rpx;
-  font-weight: 600;
-  color: #17518c;
-  background: #e6f1fb;
-  padding: 4rpx 16rpx;
-  border-radius: 40rpx;
-  line-height: 1.4;
-}
 
 .badge-idle {
   color: #5b6a7d;
@@ -1126,13 +1037,6 @@ onLoad(() => {
   text-align: center;
 }
 
-.empty-note {
-  margin-top: 12rpx;
-  font-size: 21rpx;
-  color: #a8b4c2;
-  line-height: 1.6;
-  text-align: center;
-}
 
 .result-loading {
   padding: 52rpx 34rpx 54rpx;
@@ -1298,7 +1202,7 @@ onLoad(() => {
   line-height: 1.55;
 }
 
-/* ---------- 候选方案卡与选中条（W1-10） ---------- */
+/* ---------- 候选方案卡与选中条 ---------- */
 .plan-list {
   display: flex;
   flex-direction: column;
@@ -1342,17 +1246,9 @@ onLoad(() => {
   line-height: 1.55;
 }
 
-/* ---------- 分段明细与地图（W1-11） ---------- */
+/* ---------- 分段明细与地图 ---------- */
 .journey-artifacts {
   margin-top: 6rpx;
-}
-
-.handoff-note {
-  display: block;
-  margin-top: 20rpx;
-  font-size: 20rpx;
-  color: #9aa8b8;
-  line-height: 1.65;
 }
 
 /* ---------- 失败 ---------- */
@@ -1406,7 +1302,4 @@ onLoad(() => {
   word-break: break-all;
 }
 
-.foot-note-gap {
-  padding-bottom: 24rpx;
-}
 </style>

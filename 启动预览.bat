@@ -1,68 +1,12 @@
 @echo off
-chcp 936 >nul 2>nul
-setlocal enabledelayedexpansion
-title ½»´óÖÇÐÐ - ±¾µØÔ¤ÀÀ
-
-echo ================================================
-echo   ½»´óÖÇÐÐ ¡¤ ±¾µØÔ¤ÀÀ·þÎñÆ÷
-echo ================================================
-echo.
-
-rem ---- ÕÒµ½ web Ä¿Â¼£¨Ö§³Ö·ÅÔÚÏîÄ¿¸ùÄ¿Â¼»ò web Ä¿Â¼Àï£©----
-set "WEBDIR="
-if exist "%~dp0web\index.html" set "WEBDIR=%~dp0web"
-if not defined WEBDIR if exist "%~dp0index.html" set "WEBDIR=%~dp0"
-if not defined WEBDIR (
-  echo [´íÎó] Ã»ÓÐÕÒµ½ index.html
-  echo Çë°ÑÕâ¸ö bat ·Åµ½ÏîÄ¿¸ùÄ¿Â¼£¨ºÍ web ÎÄ¼þ¼ÐÍ¬¼¶£©
-  pause
-  exit /b 1
-)
-echo ÍøÕ¾Ä¿Â¼: %WEBDIR%
-echo.
-
-set "PORT=5178"
-set "PYEXE="
-
-rem ---- ÓÅÏÈÓÃ py£¨Windows ×Ô´øµÄ Python Æô¶¯Æ÷£©----
-where py >nul 2>nul && set "PYEXE=py"
-if not defined PYEXE (
-  where python >nul 2>nul && set "PYEXE=python"
-)
-
-if defined PYEXE (
-  echo Ê¹ÓÃ Python Æô¶¯ ^(%PYEXE%^)
-  echo.
-  echo   µØÖ·: http://127.0.0.1:%PORT%
-  echo   ¹Ø±Õ: °´ Ctrl+C£¬»òÖ±½Ó¹ØµôÕâ¸ö´°¿Ú
-  echo.
-  start "" cmd /c "timeout /t 2 >nul & start "" http://127.0.0.1:%PORT%"
-  cd /d "%WEBDIR%"
-  %PYEXE% -m http.server %PORT% --bind 127.0.0.1
-  goto :done
-)
-
-rem ---- Ã»ÓÐ Python ¾ÍÊÔ Node ----
+chcp 65001 >nul
+cd /d "%~dp0"
 where node >nul 2>nul
 if errorlevel 1 (
-  echo [´íÎó] Ã»ÓÐÕÒµ½ Python£¬Ò²Ã»ÓÐÕÒµ½ Node.js
-  echo.
-  echo ¶þÑ¡Ò»°²×°¼´¿É£º
-  echo   1^) Python: https://www.python.org/downloads/  ^(°²×°Ê±¹´Ñ¡ Add to PATH^)
-  echo   2^) Node.js: https://nodejs.org/               ^(×°ÍêÖØ¿ª cmd^)
+  echo è¯·å…ˆå®‰è£… Node.js 24ï¼Œå†é‡æ–°è¿è¡Œã€‚
   pause
   exit /b 1
 )
-
-echo Ê¹ÓÃ Node.js Æô¶¯
-echo.
-echo   µØÖ·: http://127.0.0.1:%PORT%
-echo.
-start "" cmd /c "timeout /t 2 >nul & start "" http://127.0.0.1:%PORT%"
-cd /d "%WEBDIR%\.."
+start "" http://127.0.0.1:5178
 node tools\serve.js
-
-:done
-echo.
-echo ·þÎñÆ÷ÒÑÍ£Ö¹¡£
 pause

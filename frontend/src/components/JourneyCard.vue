@@ -46,8 +46,7 @@
     </view>
 
     <view class="jc-foot">
-      <text class="jc-foot-line">校门 {{ plan.gateId || '未提供' }} · 来源 {{ sourcesText }}</text>
-      <text class="jc-foot-line jc-plan-id">planId {{ plan.planId }}</text>
+      <text class="jc-foot-line">来源 {{ sourcesText }}</text>
     </view>
 
     <view v-if="!selected" class="jc-tap-hint">
@@ -57,13 +56,7 @@
 </template>
 
 <script setup lang="ts">
-/**
- * W1-10 全程方案卡：展示后端 JourneyPlan 的实际字段，点击发出 select(planId)。
- *
- * - 组件不持有选中状态，也不计算路线：selected 由页面按 selectedPlanId 传入；
- * - 所有数字直接读 plan 字段，单位换算只发生在展示层；
- * - 未知指标（null）显示“未提供”，不补 0；跨日到达附“M月D日”。
- */
+/** 行程摘要卡片；点击后由页面统一更新选中方案。 */
 
 import { computed } from 'vue';
 import type { JourneyPlan } from '@/types/journey';
@@ -79,7 +72,7 @@ import {
 } from '@/services/journey-format';
 
 interface JourneyCardProps {
-  /** 后端返回的实际候选方案，按 W1-09 排序后的数组顺序展示。 */
+  /** 后端返回的实际候选方案，按 排序后的数组顺序展示。 */
   plan: JourneyPlan;
   /** 在本次候选数组中的下标，仅用于“方案 N”标题。 */
   index: number;
@@ -278,10 +271,6 @@ function onSelect(): void {
   font-size: 18rpx;
   line-height: 1.5;
   word-break: break-all;
-}
-
-.jc-plan-id {
-  color: #9fb0c2;
 }
 
 .jc-tap-hint {

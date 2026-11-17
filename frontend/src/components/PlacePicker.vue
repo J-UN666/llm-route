@@ -40,9 +40,9 @@
         <text class="pp-selected-name">{{ selected.name }}</text>
         <text class="pp-selected-kind">{{ kindLabel(selected) }}</text>
       </view>
-      <text class="pp-selected-meta">ID {{ selected.id }} · {{ categoryLabel(selected.category) }}</text>
+      <text class="pp-selected-meta">{{ categoryLabel(selected.category) }}</text>
       <text class="pp-selected-meta">
-        核实：{{ verificationLabel(selected.verificationStatus) }} · 数据版本 {{ selected.dataVersion || '未提供' }}
+        {{ verificationLabel(selected.verificationStatus) }}
       </text>
       <text v-if="!selected.routingReady" class="pp-selected-warn">
         该地点待核实，不能提交：{{ selected.unavailableReason || '缺少可用性核实信息' }}
@@ -76,7 +76,7 @@
 
       <view v-else-if="items.length === 0" class="pp-panel-empty">
         <text class="pp-empty-text">没有找到“{{ inputText.trim() }}”相关地点。</text>
-        <text class="pp-empty-sub">可换用全称、别名或更短的关键词；也可以直接输入地点 ID。</text>
+        <text class="pp-empty-sub">可换用全称、别名或更短的关键词。</text>
       </view>
 
       <view v-else class="pp-list">
@@ -99,10 +99,10 @@
               </text>
             </view>
             <text class="pp-candidate-meta">
-              ID {{ item.id }} · {{ categoryLabel(item.category) }} · {{ verificationLabel(item.verificationStatus) }}
+              {{ categoryLabel(item.category) }} · {{ verificationLabel(item.verificationStatus) }}
             </text>
             <text class="pp-candidate-meta">
-              {{ positionBrief(item) }} · 数据版本 {{ item.dataVersion || '未提供' }}
+              {{ positionBrief(item) }}
             </text>
             <text v-if="!item.routingReady" class="pp-candidate-reason">
               不可用：{{ item.unavailableReason || '缺少经核实的入口与可走路段' }}
@@ -115,7 +115,7 @@
       </view>
 
       <text v-if="hasDuplicateName" class="pp-panel-note">
-        检测到同名候选：请核对 ID、类别和位置后确认。系统不会按名称自动合并，同名地点保留各自身份。
+        有多个同名地点，请核对类别和位置后确认。
       </text>
     </view>
 
@@ -131,8 +131,8 @@
             <text class="pp-k">名称</text>
             <text class="pp-v">{{ confirming.name }}</text>
           </view>
-          <view class="pp-row">
-            <text class="pp-k">ID</text>
+          <view v-if="duplicateCount(confirming.name) > 1" class="pp-row">
+            <text class="pp-k">地点编号</text>
             <text class="pp-v">{{ confirming.id }}</text>
           </view>
           <view class="pp-row">
@@ -151,13 +151,9 @@
             <text class="pp-k">算路位置</text>
             <text class="pp-v">{{ routingPositionBrief(confirming) }}</text>
           </view>
-          <view class="pp-row">
-            <text class="pp-k">数据版本</text>
-            <text class="pp-v">{{ confirming.dataVersion || '未提供' }}</text>
-          </view>
 
           <view v-if="duplicateCount(confirming.name) > 1" class="pp-dup-notice">
-            <text>同名候选共 {{ duplicateCount(confirming.name) }} 个，请核对 ID 与位置，避免选错对象。</text>
+            <text>同名候选共 {{ duplicateCount(confirming.name) }} 个，请核对编号与位置，避免选错对象。</text>
           </view>
 
           <view v-if="!confirming.routingReady" class="pp-block-box">
@@ -167,7 +163,7 @@
             </text>
           </view>
           <view v-else class="pp-confirm-hint">
-            <text>确认后按 ID {{ confirming.id }} 保存选择；再次修改输入文本会清除该选择。</text>
+            <text>修改搜索文字后，需要重新选择地点。</text>
           </view>
         </view>
         <view class="pp-sheet-actions">
@@ -188,16 +184,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import type { GeoPosition, PlaceCandidate, PlaceScope } from '@/types/journey';
 import { createDebouncedTask, searchPlaces, toJourneyUiError } from '@/services/api';
 
-/**
- * 地点选择器（W1-07）。
- *
- * 交互约定（交接给后续页面/任务）：
- * - v-model 绑定输入文本；输入一变化立即清除已选地点并 emit('clear')；
- * - 300ms 防抖搜索，旧响应用 searchVersion 丢弃；
- * - 点击候选先弹确认层；routingReady=false 只展示原因，绝不 emit('select')；
- * - emit('select', PlaceCandidate) 时页面保存其稳定 id 与显示名；
- * - defineExpose: applySelection(place|null) 用于交换起终点，focus() 用于校验定位，reset() 清空。
- */
+/** 地点输入与确认。防抖搜索并丢弃旧响应，修改文本时清除选择；待核实地点只能查看。 */
 
 const props = withDefaults(
   defineProps<{
