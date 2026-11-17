@@ -360,6 +360,31 @@ class JourneyApiIntegrationTests {
                 .isEqualTo(OffsetDateTime.parse("2026-11-16T09:11:04+08:00"));
     }
 
+    /**
+     * W1-13 验收 C：模型配置缺失时 assistant 接口返回 MODEL_NOT_CONFIGURED，
+     * 普通行程查询仍按原链路独立工作，不受模型失败影响。
+     */
+    @Test
+    void modelFailureDoesNotAffectJourneyQuery() throws Exception {
+        mockMvc.perform(post("/api/assistant/tool-check")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"message\":\"请调用工具查看当前服务信息\"}"))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(jsonPath("$.code").value("MODEL_NOT_CONFIGURED"));
+
+        JsonNode body = postJourney(requestBody(LIBRARY, TIENS, DEPARTURE, "RECOMMENDED"));
+
+        org.assertj.core.api.Assertions.assertThat(body.path("status").asText())
+                .isEqualTo("SUCCEEDED");
+        org.assertj.core.api.Assertions.assertThat(body.path("plans").size()).isEqualTo(1);
+        JsonNode segments = body.path("plans").get(0).path("segments");
+        org.assertj.core.api.Assertions.assertThat(segments.size()).isEqualTo(3);
+        org.assertj.core.api.Assertions.assertThat(segments.get(0).path("mode").asText())
+                .isEqualTo("CAMPUS_WALK");
+        org.assertj.core.api.Assertions.assertThat(segments.get(2).path("mode").asText())
+                .isEqualTo("METRO");
+    }
+
     private JsonNode postJourney(String requestJson) throws Exception {
         MvcResult result = mockMvc.perform(post("/api/journeys")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -36,6 +36,16 @@ amap:
   connect-timeout-millis: ${AMAP_CONNECT_TIMEOUT_MILLIS:3000}
   read-timeout-millis: ${AMAP_READ_TIMEOUT_MILLIS:10000}
 
+# 模型工具调用自检（W1-13）：凭证只从服务端环境变量读取，缺失时接口返回 MODEL_NOT_CONFIGURED。
+assistant:
+  llm:
+    base-url: "${LLM_BASE_URL:}"
+    api-key: "${LLM_API_KEY:}"
+    model: "${LLM_MODEL:}"
+    connect-timeout-millis: ${LLM_CONNECT_TIMEOUT_MILLIS:5000}
+    read-timeout-millis: ${LLM_READ_TIMEOUT_MILLIS:30000}
+    max-tool-rounds: ${LLM_MAX_TOOL_ROUNDS:3}
+
 server:
   port: ${SERVER_PORT:8080}
   address: ${SERVER_ADDRESS:127.0.0.1}
