@@ -207,7 +207,7 @@
               <text class="selection-strip-id">{{ selectedPlan ? selectedPlan.planId : '未选中' }}</text>
             </view>
             <text v-if="selectedPlan" class="selection-strip-hint">
-              方案 {{ selectedPlanIndex + 1 }} · 卡片数字来自该 plan；分段明细与地图由 W1-11 读取同一个 selectedPlan。
+              方案 {{ selectedPlanIndex + 1 }} · 卡片、分段明细与地图读取同一个 selectedPlan（W1-11）。
             </text>
             <text v-else class="selection-strip-hint">点击上方方案卡切换选中项。</text>
           </view>
@@ -248,9 +248,15 @@
           <button class="retry-btn" @tap="onRetry">重试查询</button>
           <text class="handoff-note">失败后按钮已恢复；错误码映射在 services/api.ts，未知 code 回退服务端 message。</text>
         </view>
+
+        <!-- 分段明细与地图（W1-11）：与方案卡共用同一个 selectedPlan；失败/无方案时 plan 为 null，图层清空 -->
+        <view v-if="showJourneyArtifacts" class="journey-artifacts">
+          <JourneyDetail :plan="selectedPlan" />
+          <JourneyMap :plan="selectedPlan" />
+        </view>
       </view>
 
-      <text class="foot-note">交大智行 · W1-10 全程方案卡 · 后端监听地址按测试环境配置</text>
+      <text class="foot-note">交大智行 · W1-10 方案卡 + W1-11 分段明细与地图 · 后端监听地址按测试环境配置</text>
       <text class="foot-note">API 基址：{{ API_BASE_URL }}（{{ apiBaseUrlSourceLabel }}）</text>
       <text class="foot-note foot-note-gap">交大智行 · 地点数据版本以接口返回为准</text>
     </view>
@@ -280,6 +286,8 @@ import { computed, onBeforeUnmount, reactive, ref } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
 import PlacePicker from '@/components/PlacePicker.vue';
 import JourneyCard from '@/components/JourneyCard.vue';
+import JourneyDetail from '@/components/JourneyDetail.vue';
+import JourneyMap from '@/components/JourneyMap.vue';
 import type {
   JourneyPlan,
   JourneyPreference,
@@ -357,6 +365,18 @@ const selectedPlan = computed<JourneyPlan | null>(() =>
 
 const selectedPlanIndex = computed(() =>
   journeyState.plans.findIndex((plan) => plan.planId === journeyState.selectedPlanId)
+);
+
+/**
+ * 结果区是否展示分段明细与地图（W1-11）：
+ * 成功、无方案、失败三种已查询状态都展示，且都读取同一个 selectedPlan；
+ * 失败/无方案时 selectedPlan 为 null，组件渲染清空状态并清除上一次图层。
+ */
+const showJourneyArtifacts = computed(
+  () =>
+    journeyState.status === 'success' ||
+    journeyState.status === 'noRoute' ||
+    journeyState.status === 'error'
 );
 
 const STATUS_BADGES: Record<JourneyQueryState['status'], { text: string; className: string }> = {
@@ -1320,6 +1340,11 @@ onLoad(() => {
   font-size: 19rpx;
   color: #7c8a9c;
   line-height: 1.55;
+}
+
+/* ---------- 分段明细与地图（W1-11） ---------- */
+.journey-artifacts {
+  margin-top: 6rpx;
 }
 
 .handoff-note {
