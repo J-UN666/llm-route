@@ -50,6 +50,8 @@
 
 组合口径：校园出发时刻 + 接驳耗时 = 城市段出发时刻；供应方需要分钟精度时向上取整，等待计入总耗时。城市段已包含的到站步行只累计一次。校园段止于所选出校点，城市段从同一点开始。未知费用、步行距离保留 `null`。
 
+从东门出校，高德首段步行轨迹命中已复核的接入点时，前面补上可通行的高德步行折线，首段 `fromPoint` 与 `gateExitPoint` 相同，`sources` 记录 `AMAP_WALKING_EAST_GATE_2026_11_19`。出发时刻、距离和耗时沿用原公交规划口径。
+
 `TransitProvider` 隔离高德 DTO、坐标转换、超时与错误解析。后续模型工具应复用 `JourneyService`，不要另写组合算法。
 
 ## 模型工具自检
@@ -110,6 +112,22 @@
 - `/actuator/health/chat`：检查校园数据、地图与模型配置，以及 V2 会话表。上游连通性另用冒烟命令验证。
 
 显式启用 Spring `demo` profile 时，行程响应中的 `provider` 为 `DEMO`，路线来源标记「示例路线」。演示城市段仅覆盖东门至天府广场和春熙路。实际服务部署使用独立运行配置。
+
+## 个人服务配置
+
+以下端点要求 HTTPS。新建会话返回 `ownerToken` 和 `expiresAt`，随后通过 `X-Service-Token` 授权。状态只返回到期时间、高德与模型是否验证通过、模型名。
+
+| 方法与端点 | 用途 |
+|---|---|
+| `GET /api/service-config/options` | 获取支持的提供方和模型列表 |
+| `POST /api/service-config/sessions` | 创建匿名配置会话（201） |
+| `GET /api/service-config` | 查询当前服务状态 |
+| `PUT /api/service-config/amap` | 验证并更新高德 Web 服务 `key` |
+| `PUT /api/service-config/model` | 验证并更新 `key` 和 `model` |
+| `DELETE /api/service-config/amap` 或 `/model` | 撤销对应 Key |
+| `DELETE /api/service-config` | 撤销整个配置会话（204） |
+
+`POST /api/journeys` 和 `POST /api/assistant/query` 可带同一个 `X-Service-Token`。聊天会话仍由原来的 `X-Conversation-Token` 授权。省略服务配置请求头会使用默认托管服务。个人配置失效时返回 `SERVICE_CONFIG_EXPIRED`，应重新验证或显式切换到默认服务。
 
 ## 数据库边界
 

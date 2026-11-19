@@ -1,7 +1,10 @@
 package cn.swjtu.zhixing.journey;
 
+import cn.swjtu.zhixing.serviceconfig.PersonalServices;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,13 +20,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class JourneyController {
 
     private final JourneyService journeyService;
+    private final PersonalServices personalServices;
 
-    public JourneyController(JourneyService journeyService) {
+    public JourneyController(JourneyService journeyService, PersonalServices personalServices) {
         this.journeyService = journeyService;
+        this.personalServices = personalServices;
     }
 
     @PostMapping
-    public JourneyResponse plan(@RequestBody(required = false) JourneyRequest request) {
-        return journeyService.plan(request);
+    public JourneyResponse plan(@RequestBody(required = false) JourneyRequest request,
+                                @RequestHeader(name = PersonalServices.OWNER_HEADER, required = false) String token,
+                                HttpServletRequest httpRequest) {
+        return token == null ? journeyService.plan(request)
+                : journeyService.plan(request, personalServices.forRequest(token, httpRequest));
     }
 }

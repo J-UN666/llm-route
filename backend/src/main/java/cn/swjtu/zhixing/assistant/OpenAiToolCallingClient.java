@@ -29,12 +29,12 @@ import org.springframework.web.client.RestClientResponseException;
  * OpenAI 兼容 Chat Completions 工具调用客户端。
  *
  * <p>请求体只声明 function tools，并解析 choices[0].message.tool_calls 或最终 content。
- * 凭证只从 {@link AssistantProperties}（对应环境变量 LLM_BASE_URL/LLM_API_KEY/LLM_MODEL）读取，
- * 不写入源码、日志或交接材料。
+ * 托管配置来自部署环境，个人凭据只会发送到固定的官方端点。
  */
 @Component
 @Profile("!demo")
 public class OpenAiToolCallingClient implements ToolCallingClient {
+    private static final String PERSONAL_ENDPOINT = "https://api.deepseek.com/chat/completions";
 
     private final RestClient restClient;
     private final AssistantProperties properties;
@@ -61,12 +61,32 @@ public class OpenAiToolCallingClient implements ToolCallingClient {
             throw new ToolCallingException(503, AssistantErrorCodes.MODEL_NOT_CONFIGURED,
                     "模型未配置（LLM_BASE_URL、LLM_API_KEY、LLM_MODEL）", false);
         }
-        String payload = buildPayload(request);
+        return complete(request, properties.chatCompletionsUrl(), properties.getApiKey(), false, false);
+    }
+
+    @Override
+    public ToolCallingResponse completeWithKey(ToolCallingRequest request, String key) {
+        return complete(request, PERSONAL_ENDPOINT, key, true, false);
+    }
+
+    @Override
+    public void verifyPersonalKey(String key, String model) {
+        var request = new ToolCallingRequest(model,
+                List.of(new ToolCallingMessage("user", "Reply OK.", null, null)), List.of(), true);
+        var response = complete(request, PERSONAL_ENDPOINT, key, true, true);
+        if (response.content() == null || response.content().isBlank()) {
+            throw upstreamError("模型验证未返回文本");
+        }
+    }
+
+    private ToolCallingResponse complete(ToolCallingRequest request, String endpoint, String key,
+                                         boolean personal, boolean probe) {
+        String payload = buildPayload(request, endpoint, probe);
         String raw;
         try {
             raw = restClient.post()
-                    .uri(properties.chatCompletionsUrl())
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + properties.getApiKey())
+                    .uri(endpoint)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + key)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
                     .body(payload)
@@ -78,6 +98,15 @@ public class OpenAiToolCallingClient implements ToolCallingClient {
             }
             throw new ToolCallingException(502, AssistantErrorCodes.MODEL_UPSTREAM_ERROR, "模型网络请求失败", true);
         } catch (RestClientResponseException exception) {
+            if (personal) {
+                throw switch (exception.getStatusCode().value()) {
+                    case 401, 403 -> new ToolCallingException(422, "MODEL_KEY_INVALID", "DeepSeek Key 无效或已失效", false);
+                    case 402 -> new ToolCallingException(402, "MODEL_QUOTA_EXHAUSTED", "DeepSeek 账户余额不足", false);
+                    case 429 -> new ToolCallingException(429, "MODEL_RATE_LIMITED", "DeepSeek 请求过于频繁，请稍后重试", true);
+                    case 408, 504 -> new ToolCallingException(504, AssistantErrorCodes.MODEL_TIMEOUT, "模型请求超时", true);
+                    default -> upstreamError("DeepSeek 服务请求失败");
+                };
+            }
             throw new ToolCallingException(502, AssistantErrorCodes.MODEL_UPSTREAM_ERROR,
                     "模型服务返回错误（HTTP " + exception.getStatusCode().value() + "）", true);
         } catch (RestClientException exception) {
@@ -86,7 +115,7 @@ public class OpenAiToolCallingClient implements ToolCallingClient {
         return parseResponse(raw, request.strictToolArguments());
     }
 
-    private String buildPayload(ToolCallingRequest request) {
+    private String buildPayload(ToolCallingRequest request, String endpoint, boolean probe) {
         ObjectNode body = objectMapper.createObjectNode();
         body.put("model", request.model());
         ArrayNode messages = body.putArray("messages");
@@ -123,10 +152,13 @@ public class OpenAiToolCallingClient implements ToolCallingClient {
                 function.put("description", tool.description());
                 function.set("parameters", objectMapper.valueToTree(tool.parameters()));
             }
+            body.put("tool_choice", "auto");
         }
-        body.put("tool_choice", "auto");
         body.put("temperature", 0);
-        if ("api.deepseek.com".equalsIgnoreCase(URI.create(properties.chatCompletionsUrl()).getHost())) {
+        if (probe) {
+            body.put("max_tokens", 8);
+        }
+        if ("api.deepseek.com".equalsIgnoreCase(URI.create(endpoint).getHost())) {
             body.putObject("thinking").put("type", "disabled");
         }
         try {

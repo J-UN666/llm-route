@@ -100,6 +100,8 @@
     },
     plans: null,
     activePlan: 0,
+    mapSection: 'campus',
+    cityMapPoints: null,
     origin: null,
     dest: null,
     mode: 'walk'
@@ -566,6 +568,11 @@
     id: 'route',
     z: 8,
     draw: function (ctx, m) {
+      if (state.cityMapPoints && state.mapSection !== 'campus') {
+        markerAt(ctx, m, state.cityMapPoints.exit, '门', '#d84315');
+        markerAt(ctx, m, state.cityMapPoints.destination, '终', '#d64545');
+      }
+      if (state.mapSection === 'city') return;
       if (!state.plans) return;
       var plan = state.plans[state.activePlan];
 
@@ -644,7 +651,8 @@
       /* 起点 / 终点标记 */
       if (plan.coords.length) {
         markerAt(ctx, m, plan.coords[0], '起', '#1f9d6b');
-        markerAt(ctx, m, plan.coords[plan.coords.length - 1], '终', '#d64545');
+        var cityExit = state.cityMapPoints !== null;
+        markerAt(ctx, m, plan.coords[plan.coords.length - 1], cityExit ? '门' : '终', cityExit ? '#d84315' : '#d64545');
       }
     }
   });
@@ -733,7 +741,12 @@
     resetView(true);
   };
   function resetView(animate) {
-    map.fitBounds(DATA.boundary[0].filter(function (_, i) { return i % 3 === 0; }), 50, animate);
+    var city = state.mapSection === 'campus' ? null : state.cityMapPoints;
+    var active = state.plans && state.plans[state.activePlan];
+    var points = state.mapSection !== 'city' && active ? active.coords.slice() : [];
+    if (city) points.push(city.exit, city.destination);
+    map.minZoom = city ? 9 : 14.2;
+    map.fitBounds(points.length > 1 ? points : DATA.boundary[0].filter(function (_, i) { return i % 3 === 0; }), 60, animate);
   }
 
   /* 图层开关 */
@@ -1060,27 +1073,27 @@
       renderTrace(res.steps);
       renderResult(res);
       drawPlans(res);
-      syncCityMap(res);
+      syncCityMap();
 
       setPlanBusy(false);
     }, 320);
   }
 
-  var syncedGateId = null;
+  var syncedExit = null;
   var syncedDestination = null;
 
-  function syncCityMap(result) {
+  function syncCityMap() {
     var cityMap = window.ChengduMap;
-    if (!cityMap) return;
-    var gate = result.gate;
-    if (gate && gate.id !== syncedGateId) {
-      cityMap.setOrigin(gate.x, gate.y, gate.n, { source: 'synced' });
-      syncedGateId = gate.id;
+    var points = state.cityMapPoints;
+    if (!cityMap || !points) return;
+    var exit = points.exit.join(',');
+    if (exit !== syncedExit) {
+      cityMap.setOrigin(points.exit[0], points.exit[1], points.gateName, { source: 'synced' });
+      syncedExit = exit;
     }
-    var destination = result.destination;
-    if (destination && destination.type === 'city' && destination.name !== syncedDestination) {
-      cityMap.setSuggestedDestination(destination.name);
-      syncedDestination = destination.name;
+    if (points.destinationName !== syncedDestination) {
+      cityMap.setSuggestedDestination(points.destinationName);
+      syncedDestination = points.destinationName;
     }
   }
 
@@ -1560,7 +1573,9 @@
         var metrics = resultBody.querySelectorAll('.plan-main .metric .m-value');
         if (metrics[0]) metrics[0].innerHTML = p.meters + '<small>m</small>';
         if (metrics[1]) metrics[1].innerHTML = Math.max(1, Math.round(p.meters / 78)) + '<small>分钟</small>';
-        map.invalidate();
+        updateMapResult(res);
+        syncCityMap();
+        resetView(true);
       });
     }
   }
@@ -1590,6 +1605,7 @@
     resultBody.innerHTML = h.join('');
     state.plans = null;
     state.activePlan = 0;
+    updateMapResult(null);
     map.invalidate();
   }
 
@@ -1619,19 +1635,51 @@
   }
 
   /* ---------- 画路线 ---------- */
-  function drawPlans(res) {
-    if (res.campus && res.campus.ok) {
-      state.plans = res.campus.plans;
-      state.activePlan = 0;
-      var pts = [];
-      res.campus.plans.forEach(function (p) {
-        p.coords.forEach(function (c) { pts.push(c); });
-      });
-      map.fitBounds(pts, 80, true);
-    } else {
-      state.plans = null;
-      map.invalidate();
+  var mapSections = document.getElementById('routeMapSections');
+  var mapNote = document.getElementById('routeMapNote');
+  function updateMapResult(result) {
+    var dest = result && result.destination;
+    var plan = state.plans && state.plans[state.activePlan];
+    var exit = plan && plan.coords[plan.coords.length - 1];
+    state.cityMapPoints = dest && (dest.kind === 'city' || dest.type === 'city')
+      && Number.isFinite(dest.lng) && Number.isFinite(dest.lat) && exit && result.gate ? {
+        exit: exit, destination: [dest.lng, dest.lat], gateName: result.gate.n, destinationName: dest.label || dest.name
+    } : null;
+    mapSections.hidden = !state.cityMapPoints;
+    if (!state.cityMapPoints) state.mapSection = 'campus';
+    updateMapSection();
+  }
+
+  function updateMapSection() {
+    var points = state.cityMapPoints;
+    mapNote.hidden = !points || state.mapSection === 'campus';
+    if (points) {
+      document.getElementById('routeMapEndpoints').textContent =
+        points.gateName + ' → ' + points.destinationName + ' · 城市段轨迹需另查';
     }
+    mapSections.querySelectorAll('button').forEach(function (button) {
+      button.setAttribute('aria-pressed', String(button.dataset.section === state.mapSection));
+    });
+  }
+
+  mapSections.addEventListener('click', function (event) {
+    var button = event.target.closest('button[data-section]');
+    if (!button || !state.cityMapPoints) return;
+    state.mapSection = button.dataset.section;
+    updateMapSection();
+    resetView(true);
+  });
+  document.getElementById('routeOpenCityMap').onclick = function () {
+    if (state.cityMapPoints && window.ChengduMap) window.ChengduMap.open();
+  };
+
+  function drawPlans(res) {
+    state.plans = res.campus && res.campus.ok ? res.campus.plans : null;
+    state.activePlan = 0;
+    state.mapSection = 'campus';
+    updateMapResult(res);
+    if (state.plans) resetView(true);
+    else map.invalidate();
   }
 
   /* ================= 事件绑定 ================= */
@@ -1644,6 +1692,7 @@
     traceEl.innerHTML = '';
     traceCount.textContent = '0 步';
     state.plans = null;
+    updateMapResult(null);
     map.invalidate();
   };
 

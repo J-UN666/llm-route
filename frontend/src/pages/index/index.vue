@@ -17,6 +17,7 @@
           <view class="status-dot"></view>
           <text class="status-text">校园出行</text>
         </view>
+        <navigator url="/pages/settings/index" class="settings-link">设置</navigator>
       </view>
     </view>
 
@@ -610,6 +611,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style>
+.settings-link { color: #e8f1ff; font-size: 25rpx; padding: 10rpx 4rpx; }
 .page {
   min-height: 100vh;
   background: #f5f7fa;

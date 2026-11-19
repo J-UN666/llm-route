@@ -103,7 +103,8 @@ export function isCrossDayArrival(
 }
 
 const SOURCE_LABELS: Record<string, string> = {
-  AMAP_V3_TRANSIT_INTEGRATED: '高德地图'
+  AMAP_V3_TRANSIT_INTEGRATED: '高德地图',
+  AMAP_WALKING_EAST_GATE_2026_11_19: '高德步行 · 东门接驳'
 };
 
 /** 来源展示：campus_connector:<id> → 校园接驳数据；已知城市来源用中文名，其余保留原值。 */

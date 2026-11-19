@@ -38,10 +38,11 @@ public class AmapTransitProvider implements TransitProvider {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
+    private static final String PERSONAL_ENDPOINT = "https://restapi.amap.com/v3/direction/transit/integrated";
     private static final Set<String> AUTH_CODES = Set.of(
-            "10001", "10002", "10005", "10007", "10008", "10009", "10012", "10041");
+            "10001", "10002", "10005", "10006", "10007", "10008", "10012", "10041");
     private static final Set<String> QUOTA_CODES = Set.of(
-            "10003", "10004", "10010", "10014", "10015", "10019", "10020", "10021", "10044");
+            "10003", "10004", "10010", "10014", "10015", "10019", "10020", "10021", "10044", "40000");
     private static final Set<String> PARAMETER_CODES = Set.of("20000", "20001", "20002");
     private static final Set<String> RAILWAY_PLACEHOLDER_FIELDS = Set.of("via_stops", "alters", "spaces");
 
@@ -89,6 +90,15 @@ public class AmapTransitProvider implements TransitProvider {
 
     @Override
     public TransitSearchResult search(TransitSearchRequest request) {
+        return search(request, properties.getWebServiceKey(), false);
+    }
+
+    @Override
+    public TransitSearchResult searchWithKey(TransitSearchRequest request, String key) {
+        return search(request, key, true);
+    }
+
+    private TransitSearchResult search(TransitSearchRequest request, String key, boolean personal) {
         OffsetDateTime queriedAt = now();
         if (request == null) {
             return error(queriedAt, null, null, 0, TransitErrorCode.INVALID_PARAMETER, "请求不能为空");
@@ -106,11 +116,11 @@ public class AmapTransitProvider implements TransitProvider {
         try {
             TransitPoint origin = CoordinateConverter.toGcj02(request.originPoint());
             TransitPoint destination = CoordinateConverter.toGcj02(request.destinationPoint());
-            if (properties.getWebServiceKey() == null || properties.getWebServiceKey().isBlank()) {
+            if (key == null || key.isBlank()) {
                 return error(queriedAt, requested, providerDeparture, roundingWaitSeconds,
                         TransitErrorCode.PROVIDER_NOT_CONFIGURED, "高德 Web 服务未配置");
             }
-            String body = callAmap(origin, destination, rounded, request.preference());
+            String body = callAmap(origin, destination, rounded, request.preference(), key, personal);
             return mapResponse(body, queriedAt, requested, providerDeparture, roundingWaitSeconds);
         } catch (CoordinateSystemUnsupportedException ex) {
             return error(queriedAt, requested, providerDeparture, roundingWaitSeconds,
@@ -132,12 +142,12 @@ public class AmapTransitProvider implements TransitProvider {
     }
 
     private String callAmap(TransitPoint origin, TransitPoint destination,
-                            ZonedDateTime departure, TransitPreference preference) {
+                            ZonedDateTime departure, TransitPreference preference, String key, boolean personal) {
         String originValue = formatCoordinate(origin);
         String destinationValue = formatCoordinate(destination);
         return restClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .queryParam("key", properties.getWebServiceKey())
+                .uri(personal ? PERSONAL_ENDPOINT : "", uriBuilder -> uriBuilder
+                        .queryParam("key", key)
                         .queryParam("origin", originValue)
                         .queryParam("destination", destinationValue)
                         .queryParam("city", "成都")
@@ -523,6 +533,9 @@ public class AmapTransitProvider implements TransitProvider {
         if (infoCode == null || !infoCode.matches("[0-9]{5}")) {
             return TransitErrorCode.RESPONSE_STRUCTURE_ERROR;
         }
+        if ("10009".equals(infoCode)) {
+            return TransitErrorCode.AMAP_KEY_PLATFORM_MISMATCH;
+        }
         if (AUTH_CODES.contains(infoCode)) {
             return TransitErrorCode.AMAP_AUTHORIZATION_ERROR;
         }
@@ -538,6 +551,7 @@ public class AmapTransitProvider implements TransitProvider {
     private static String providerErrorMessage(TransitErrorCode code, String infoCode) {
         String suffix = infoCode == null || infoCode.isBlank() ? "" : "（infocode=" + infoCode + "）";
         return switch (code) {
+            case AMAP_KEY_PLATFORM_MISMATCH -> "请使用高德 Web 服务 Key，当前 Key 平台不符";
             case AMAP_AUTHORIZATION_ERROR -> "高德服务权限错误" + suffix;
             case AMAP_QUOTA_ERROR -> "高德服务额度或频率限制" + suffix;
             case INVALID_PARAMETER -> "高德服务拒绝了查询参数" + suffix;

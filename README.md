@@ -48,6 +48,8 @@ cp backend/application-local.example.properties backend/application-local.proper
 
 本地配置已被 Git 忽略。密钥只放在后端。模板也支持从环境变量读取。
 
+要在小程序界面演示个人 Key，在本机启动受信 HTTPS 后端，重新构建并导入，再打开「设置 → 服务配置 → 个人配置」。[本机操作步骤](docs/release.md#本机演示个人-key)
+
 ### 2. 为聊天初始化数据库
 
 启动 MySQL，由管理员创建独立的 `llmroute` 库。建库及账号授权示例见 [数据库部署](docs/release.md#数据库)。通过当前终端的环境变量设置 `MIGRATION_DB_URL`、`MIGRATION_DB_USER`、`MIGRATION_DB_PASSWORD`，再执行：

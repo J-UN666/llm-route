@@ -44,6 +44,11 @@ server:
   port: ${SERVER_PORT:8080}
   address: ${SERVER_ADDRESS:127.0.0.1}
   shutdown: graceful
+  forward-headers-strategy: native
+  tomcat:
+    remoteip:
+      internal-proxies: '127\.0\.0\.1|::1|0:0:0:0:0:0:0:1'
+      protocol-header: X-Forwarded-Proto
 
 management:
   endpoints:

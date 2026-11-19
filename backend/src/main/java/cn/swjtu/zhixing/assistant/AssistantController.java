@@ -5,6 +5,8 @@ import static cn.swjtu.zhixing.assistant.AssistantConversation.*;
 import cn.swjtu.zhixing.assistant.AssistantConversationStore.Owner;
 import cn.swjtu.zhixing.assistant.AssistantConversationStore.Start;
 import cn.swjtu.zhixing.journey.JourneyResponse;
+import cn.swjtu.zhixing.serviceconfig.PersonalServices;
+import jakarta.servlet.http.HttpServletRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.util.Set;
@@ -32,20 +34,27 @@ class AssistantController {
     private final AssistantPlanner planner;
     private final AssistantConversationStore conversations;
     private final AssistantTools tools;
+    private final PersonalServices personalServices;
 
-    AssistantController(AssistantPlanner planner, AssistantConversationStore conversations, AssistantTools tools) {
+    AssistantController(AssistantPlanner planner, AssistantConversationStore conversations, AssistantTools tools,
+                        PersonalServices personalServices) {
         this.planner = planner;
         this.conversations = conversations;
         this.tools = tools;
+        this.personalServices = personalServices;
     }
 
     @PostMapping(path = "/query", consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Reply> query(@RequestBody String raw, @RequestHeader(name = OWNER_HEADER, required = false) String token) {
+    ResponseEntity<Reply> query(@RequestBody String raw,
+            @RequestHeader(name = OWNER_HEADER, required = false) String token,
+            @RequestHeader(name = PersonalServices.OWNER_HEADER, required = false) String serviceToken,
+            HttpServletRequest request) {
         long startedAt = System.nanoTime();
         String requestId = AssistantIds.requestId();
         Query query = parseQuery(raw, requestId);
+        var credentials = personalServices.forRequest(serviceToken, request);
         if (query.conversationId() == null) {
-            return uncached(planner.run(query, State.EMPTY, requestId).reply());
+            return uncached(planner.run(query, State.EMPTY, requestId, AssistantPlanner.BUDGET_MILLIS, credentials).reply());
         }
         Owner owner = Owner.from(query.conversationId(), token, requestId);
         Start started = conversations.start(owner, query, requestId);
@@ -55,7 +64,7 @@ class AssistantController {
         long elapsed = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startedAt);
         long remaining = AssistantPlanner.BUDGET_MILLIS - elapsed
                 - TimeUnit.SECONDS.toMillis(AssistantConversationStore.TRANSACTION_SECONDS);
-        AssistantPlanner.Result result = planner.run(query, started.state(), requestId, remaining);
+        AssistantPlanner.Result result = planner.run(query, started.state(), requestId, remaining, credentials);
         return uncached(conversations.accept(owner, query, started, result));
     }
 

@@ -46,7 +46,8 @@ export interface JourneyMapDrawSegment {
   traceMissingReason: string | null;
 }
 
-export type JourneyMapMarkerRole = 'origin' | 'gate' | 'boarding' | 'alighting' | 'destination';
+export type JourneyMapMarkerRole = 'origin' | 'gate' | 'boarding' | 'alighting' | 'destination' | 'walk';
+export type JourneyMapSection = 'campus' | 'city' | 'all';
 
 export interface JourneyMapMarker {
   role: JourneyMapMarkerRole;
@@ -194,10 +195,9 @@ const MARKER_STYLES: Record<JourneyMapMarkerRole, { color: string; prefix: strin
   gate: { color: '#d84315', prefix: '出校点' },
   boarding: { color: '#1565c0', prefix: '上车站' },
   alighting: { color: '#00838f', prefix: '下车站' },
+  walk: { color: '#a75d10', prefix: '步行接驳' },
   destination: { color: '#b71c1c', prefix: '终点' }
 };
-
-const MARKER_ORDER: JourneyMapMarkerRole[] = ['boarding', 'alighting', 'origin', 'gate', 'destination'];
 
 interface ParsedSourcePoint {
   longitude: number;
@@ -338,9 +338,12 @@ const MARKER_MISSING_NOTES: Array<{ role: JourneyMapMarkerRole; text: string }> 
   { role: 'destination', text: '终点坐标未提供' }
 ];
 
-function buildMissingMarkerNotes(markers: JourneyMapMarker[]): string[] {
+function buildMissingMarkerNotes(markers: JourneyMapMarker[], section: JourneyMapSection): string[] {
   const roles = new Set(markers.map((marker) => marker.role));
-  return MARKER_MISSING_NOTES.filter((item) => !roles.has(item.role)).map((item) => item.text);
+  return MARKER_MISSING_NOTES.filter((item) =>
+    !roles.has(item.role) && !(section === 'campus' && item.role === 'destination')
+      && !(section === 'city' && item.role === 'origin')
+  ).map((item) => item.text);
 }
 
 function buildMarker(
@@ -384,7 +387,9 @@ function pushMarker(markers: JourneyMapMarker[], marker: JourneyMapMarker | null
 }
 
 /** 从方案构造地图模型；plan 为 null 或 undefined 时返回明确空模型。 */
-export function buildJourneyMapModel(plan: JourneyPlan | null | undefined): JourneyMapModel {
+export function buildJourneyMapModel(
+  plan: JourneyPlan | null | undefined, section: JourneyMapSection = 'all'
+): JourneyMapModel {
   if (!plan) {
     return {
       planId: null,
@@ -405,12 +410,14 @@ export function buildJourneyMapModel(plan: JourneyPlan | null | undefined): Jour
     };
   }
 
-  const rawSegments = Array.isArray(plan.segments) ? plan.segments : [];
+  const rawSegments = Array.isArray(plan.segments) ? [...plan.segments].sort((a, b) => a.sequence - b.sequence) : [];
   const segments = rawSegments.map(buildDrawSegment);
   const markers: JourneyMapMarker[] = [];
 
-  const firstSegment = rawSegments[0] || null;
-  const lastSegment = rawSegments[rawSegments.length - 1] || null;
+  const campusIndex = segments.findIndex((segment) => segment.category === 'campus');
+  const firstSegment = rawSegments[campusIndex] || null;
+  const lastIndex = segments.length - 1;
+  const lastSegment = segments[lastIndex]?.category !== 'campus' ? rawSegments[lastIndex] : null;
 
   // 起点：校园段 fromPoint；只有首段（校园接驳段）几何可作兜底。
   // 首段坐标也缺失时不要拿后续城市段的首点冒充校园起点，宁可不画并提示“起点坐标未提供”。
@@ -421,8 +428,8 @@ export function buildJourneyMapModel(plan: JourneyPlan | null | undefined): Jour
     firstSegment ? firstSegment.fromPoint : null,
     firstSegment ? segmentSourceCoordinateSystem(firstSegment) : null
   );
-  if (!originMarker && segments[0]) {
-    const fallback = pointFromGeometry(segments[0], true);
+  if (!originMarker && segments[campusIndex]) {
+    const fallback = pointFromGeometry(segments[campusIndex], true);
     if (fallback) {
       originMarker = {
         role: 'origin',
@@ -430,12 +437,12 @@ export function buildJourneyMapModel(plan: JourneyPlan | null | undefined): Jour
         label: '起点·校园起点',
         sequence: 1,
         color: MARKER_STYLES.origin.color,
-        sourceCoordinateSystem: segments[0].sourceCoordinateSystem,
+        sourceCoordinateSystem: segments[campusIndex].sourceCoordinateSystem,
         points: fallback
       };
     }
   }
-  pushMarker(markers, originMarker);
+  if (section !== 'city') pushMarker(markers, originMarker);
 
   // 出校点：plan.gateExitPoint；缺失时退回校园段 toPoint。
   const gatePoint = plan.gateExitPoint || (firstSegment ? firstSegment.toPoint : null);
@@ -446,8 +453,18 @@ export function buildJourneyMapModel(plan: JourneyPlan | null | undefined): Jour
   );
 
   // 上下车站：只取实际乘车段；点名优先 segment 字段，坐标优先 fromPoint/toPoint。
+  let previousRide = false;
   for (const [index, segment] of rawSegments.entries()) {
+    if (section === 'campus') break;
     const drawSegment = segments[index];
+    if (drawSegment.category === 'city-walk' && !drawSegment.hasGeometry) {
+      for (const point of [segment.fromPoint, segment.toPoint]) {
+        if (point) {
+          pushMarker(markers, buildMarker('walk', point.name || '已知步行端点', segment.sequence,
+            point, segmentSourceCoordinateSystem(segment)));
+        }
+      }
+    }
     if (drawSegment.category !== 'ride') continue;
     const fromName =
       segment.boardingStation ||
@@ -486,8 +503,12 @@ export function buildJourneyMapModel(plan: JourneyPlan | null | undefined): Jour
         };
       }
     }
+    if (boarding && previousRide) {
+      boarding.label = `换乘·${fromName}`;
+    }
     pushMarker(markers, boarding);
     pushMarker(markers, alighting);
+    previousRide = true;
   }
 
   // 终点：只使用最后一段 toPoint 的已知坐标。没有坐标时不绘制终点标记，
@@ -499,24 +520,25 @@ export function buildJourneyMapModel(plan: JourneyPlan | null | undefined): Jour
     lastSegment ? lastSegment.toPoint : null,
     lastSegment ? segmentSourceCoordinateSystem(lastSegment) : null
   );
-  pushMarker(markers, destinationMarker);
+  if (section !== 'campus') pushMarker(markers, destinationMarker);
 
-  markers.sort((a, b) => MARKER_ORDER.indexOf(a.role) - MARKER_ORDER.indexOf(b.role));
-
-  const drawableSegmentCount = segments.filter((segment) => segment.hasGeometry).length;
-  const missingGeometryCount = segments.filter((segment) => !segment.hasGeometry).length;
+  const visibleSegments = section === 'all' ? segments : segments.filter((segment) =>
+    (segment.category === 'campus') === (section === 'campus')
+  );
+  const drawableSegmentCount = visibleSegments.filter((segment) => segment.hasGeometry).length;
+  const missingGeometryCount = visibleSegments.length - drawableSegmentCount;
   const hasDrawableGeometry = drawableSegmentCount > 0;
 
   return {
     planId: plan.planId || null,
     hasPlan: true,
     state: hasDrawableGeometry ? 'ready' : 'noGeometry',
-    segments,
+    segments: visibleSegments,
     markers,
     hasDrawableGeometry,
     drawableSegmentCount,
     missingGeometryCount,
-    missingMarkerNotes: buildMissingMarkerNotes(markers),
+    missingMarkerNotes: buildMissingMarkerNotes(markers, section),
     gateText: gateName,
     sources: Array.isArray(plan.sources) ? plan.sources.slice() : [],
     queriedAt: plan.queriedAt || null,

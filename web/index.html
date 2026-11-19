@@ -125,34 +125,7 @@
     </section>
   </aside>
 
-  <!-- ---------- 中间：地图 ---------- -->
-  <section class="map-wrap">
-    <div id="map" class="map"></div>
-
-    <div class="map-toolbar">
-      <button class="map-btn" id="zoomIn" title="放大" type="button">+</button>
-      <button class="map-btn" id="zoomOut" title="缩小" type="button">−</button>
-      <button class="map-btn" id="btnReset" title="回到校园全景" type="button">
-        <svg viewBox="0 0 16 16" width="15" height="15"><path d="M2 6V3.5A1.5 1.5 0 0 1 3.5 2H6M10 2h2.5A1.5 1.5 0 0 1 14 3.5V6M14 10v2.5a1.5 1.5 0 0 1-1.5 1.5H10M6 14H3.5A1.5 1.5 0 0 1 2 12.5V10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-
-    <div class="map-legend" id="mapLegend">
-      <div class="legend-title">图例</div>
-      <div class="legend-row"><i class="lg-line lg-route"></i>推荐路线</div>
-      <div class="legend-row"><i class="lg-line lg-alt"></i>备选路线</div>
-      <div class="legend-row"><i class="lg-dot lg-gate"></i>校门（待核实）</div>
-      <div class="legend-row"><i class="lg-dot lg-place"></i>校园地点</div>
-      <div class="legend-row"><i class="lg-dot lg-transit"></i>地铁 / 公交</div>
-    </div>
-
-    <div class="map-scale" id="mapScale"><span class="scale-bar"></span><span class="scale-text">100 m</span></div>
-    <div class="map-attrib">底图数据 © OpenStreetMap contributors · ODbL 1.0 · 数据版本 2026-11-03</div>
-
-    <div class="map-toast" id="mapToast"></div>
-  </section>
-
-  <!-- ---------- 右侧：结果 + Agent 轨迹 ---------- -->
+  <!-- ---------- 规划结果 + Agent 轨迹 ---------- -->
   <aside class="panel panel-right">
     <div class="result-head">
       <h2>规划结果</h2>
@@ -172,6 +145,43 @@
     </div>
     <div class="trace" id="trace"></div>
   </aside>
+
+  <!-- ---------- 路线地图 ---------- -->
+  <section class="map-wrap">
+    <div id="map" class="map"></div>
+    <div id="routeMapSections" class="route-map-sections" role="group" aria-label="路线地图范围" hidden>
+      <button type="button" data-section="campus" aria-pressed="true">① 校内到校门</button>
+      <button type="button" data-section="city" aria-pressed="false">② 校门到目的地</button>
+      <button type="button" data-section="all" aria-pressed="false">全程</button>
+    </div>
+    <div class="route-map-note" id="routeMapNote" hidden>
+      <span id="routeMapEndpoints"></span>
+      <button id="routeOpenCityMap" type="button">打开成都地图</button>
+    </div>
+
+    <div class="map-toolbar">
+      <button class="map-btn" id="zoomIn" title="放大" type="button">+</button>
+      <button class="map-btn" id="zoomOut" title="缩小" type="button">−</button>
+      <button class="map-btn" id="btnReset" title="重置地图视野" type="button">
+        <svg viewBox="0 0 16 16" width="15" height="15"><path d="M2 6V3.5A1.5 1.5 0 0 1 3.5 2H6M10 2h2.5A1.5 1.5 0 0 1 14 3.5V6M14 10v2.5a1.5 1.5 0 0 1-1.5 1.5H10M6 14H3.5A1.5 1.5 0 0 1 2 12.5V10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="map-legend" id="mapLegend">
+      <div class="legend-title">图例</div>
+      <div class="legend-row"><i class="lg-line lg-route"></i>推荐路线</div>
+      <div class="legend-row"><i class="lg-line lg-alt"></i>备选路线</div>
+      <div class="legend-row"><i class="lg-dot lg-gate"></i>校门（待核实）</div>
+      <div class="legend-row"><i class="lg-dot lg-place"></i>校园地点</div>
+      <div class="legend-row"><i class="lg-dot lg-transit"></i>地铁 / 公交</div>
+    </div>
+
+    <div class="map-scale" id="mapScale"><span class="scale-bar"></span><span class="scale-text">100 m</span></div>
+    <div class="map-attrib">底图数据 © OpenStreetMap contributors · ODbL 1.0 · 数据版本 2026-11-03</div>
+
+    <div class="map-toast" id="mapToast"></div>
+  </section>
+
 </main>
 
 <!-- ============ 数据可信度视图 ============ -->

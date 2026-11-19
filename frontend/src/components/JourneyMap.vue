@@ -27,7 +27,25 @@
     </view>
 
     <template v-else>
-      <view class="jm-canvas-wrap">
+      <view class="jm-sections">
+        <button v-for="tab in sections" :key="tab.id" :class="{ 'jm-active': section === tab.id }"
+          @tap="section = tab.id">{{ tab.label }}</button>
+      </view>
+      <template v-if="showNative">
+        <map :id="mapId" :key="mapId" class="jm-map"
+          :longitude="center.longitude" :latitude="center.latitude" :scale="scale"
+          :include-points="fitPoints" :polyline="polylines" :markers="nativeMarkers"
+          :enable-scroll="gestures" :enable-zoom="gestures" :show-location="false"
+          @updated="mapRendered" @error="fallback('底图加载失败')" />
+        <view class="jm-controls">
+          <button aria-label="放大地图" @tap="zoom(1)">＋</button>
+          <button aria-label="缩小地图" @tap="zoom(-1)">−</button>
+          <button @tap="recenter">回到本段</button>
+          <button @tap="gestures = !gestures">{{ gestures ? '退出地图手势' : '开启地图手势' }}</button>
+          <button @tap="fallback('轨迹示意图')">示意图</button>
+        </view>
+      </template>
+      <view v-else class="jm-canvas-wrap">
         <canvas id="journey-map-canvas" type="2d" class="jm-canvas"></canvas>
         <view v-if="model.state === 'noGeometry'" class="jm-overlay-badge">
           <text class="jm-overlay-text">无轨迹 · 仅显示已知端点</text>
@@ -36,11 +54,15 @@
           <text class="jm-overlay-text">{{ drawError }}</text>
         </view>
       </view>
+      <view v-if="nativeAvailable && !showNative && fallbackReason" class="jm-controls">
+        <text class="jm-meta-line">{{ fallbackReason }} · 正在显示轨迹示意</text>
+        <button v-if="online && fitPoints.length" @tap="retryMap">打开底图</button>
+      </view>
 
       <view class="jm-legend">
-        <view v-for="item in legendItems" :key="item.category" class="jm-legend-item">
+        <view v-for="item in legendItems" :key="item.categoryLabel" class="jm-legend-item">
           <view class="jm-legend-line" :style="legendLineStyle(item)"></view>
-          <text class="jm-legend-label">{{ item.label }}</text>
+          <text class="jm-legend-label">{{ item.categoryLabel }}</text>
         </view>
       </view>
 
@@ -57,10 +79,10 @@
           轨迹 {{ model.drawableSegmentCount }}/{{ model.segments.length }} 段 · 标记 {{ model.markers.length }} 个
         </text>
         <text v-else class="jm-meta-line jm-meta-warn">
-          该方案 {{ model.segments.length }} 段均无可用轨迹 · 标记 {{ model.markers.length }} 个
+          当前视图无可用轨迹，显示已知点位。
         </text>
         <text v-if="model.missingGeometryCount > 0" class="jm-meta-line jm-meta-warn">
-          其中 {{ model.missingGeometryCount }} 段缺轨迹：文字详情仍完整，地图不为这些段连线。
+          {{ model.missingGeometryCount }} 段缺少轨迹，可继续查看分段说明。
         </text>
       </view>
 
@@ -73,15 +95,17 @@
 
 import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import type { JourneyPlan } from '@/types/journey';
-import { formatBeijingDateTime } from '@/services/api';
+import { DEMO_MODE, formatBeijingDateTime } from '@/services/api';
 import { formatPlanSources } from '@/services/journey-format';
 import {
   drawJourneyMap,
   fitJourneyMapViewport,
   buildJourneyMapModel,
-  type JourneyMapDrawReport
+  type JourneyMapDrawReport,
+  type JourneyMapSection,
+  type LonLat
 } from '@/services/journey-map';
-import type { SegmentCategory } from '@/services/journey-segment-meta';
+import { segmentStyle } from '@/services/journey-segment-meta';
 
 interface JourneyMapProps {
   /** 页面当前选中的方案；失败或无方案时为 null，此时清空图层。 */
@@ -91,7 +115,128 @@ interface JourneyMapProps {
 const props = defineProps<JourneyMapProps>();
 
 const instance = getCurrentInstance();
-const model = computed(() => buildJourneyMapModel(props.plan));
+const sections: Array<{ id: JourneyMapSection; label: string }> = [
+  { id: 'campus', label: '① 校内到校门' },
+  { id: 'city', label: '② 校门到目的地' },
+  { id: 'all', label: '全程' }
+];
+const section = ref<JourneyMapSection>('campus');
+const model = computed(() => buildJourneyMapModel(props.plan, section.value));
+let nativeAvailable = false;
+// #ifdef MP-WEIXIN
+nativeAvailable = !DEMO_MODE;
+// #endif
+const online = ref(true);
+const fallbackReason = ref('');
+const gestures = ref(false);
+const scale = ref(16);
+const revision = ref(0);
+const mapId = computed(() => `journey-native-map-${revision.value}`);
+let renderTimer: ReturnType<typeof setTimeout> | undefined;
+
+const polylines = computed(() => model.value.segments.filter((segment) => segment.hasGeometry).map((segment) => ({
+  points: segment.points, color: segment.color, width: segment.lineWidth, dottedLine: segment.dashed
+})));
+
+const fitPoints = computed<LonLat[]>(() => {
+  const points = [...model.value.markers.map((marker) => marker.points),
+    ...polylines.value.flatMap((line) => line.points)];
+  if (points.length < 2) return points;
+  let west = Infinity, south = Infinity, east = -Infinity, north = -Infinity;
+  for (const point of points) {
+    west = Math.min(west, point.longitude);
+    east = Math.max(east, point.longitude);
+    south = Math.min(south, point.latitude);
+    north = Math.max(north, point.latitude);
+  }
+  const southwest = { longitude: west, latitude: south };
+  return west === east && south === north ? [southwest] : [southwest, { longitude: east, latitude: north }];
+});
+
+const center = computed(() => {
+  const a = fitPoints.value[0] || { longitude: 103.987, latitude: 30.766 };
+  const b = fitPoints.value[1] || a;
+  return { longitude: (a.longitude + b.longitude) / 2, latitude: (a.latitude + b.latitude) / 2 };
+});
+
+const nativeMarkers = computed(() => {
+  const grouped = new Map<string, typeof model.value.markers>();
+  for (const marker of model.value.markers) {
+    const { longitude, latitude } = marker.points;
+    const position = `${longitude.toFixed(5)},${latitude.toFixed(5)}`;
+    const previous = grouped.get(position) || [];
+    grouped.set(position, [...previous, marker]);
+  }
+  return Array.from(grouped.values(), (group, id) => ({
+    ...group[0].points, id: id + 1, iconPath: '/static/route-pin.png', width: 16, height: 16,
+    anchor: { x: 0.5, y: 0.5 },
+    callout: {
+      content: group.map((marker) => marker.label).join('\n'), color: group[0].color,
+      bgColor: '#ffffff', borderRadius: 5, padding: 5, fontSize: 11,
+      display: group.some((marker) => ['origin', 'gate', 'destination'].includes(marker.role)) ? 'ALWAYS' : 'BYCLICK'
+    }
+  }));
+});
+
+const showNative = computed(() => nativeAvailable && online.value && !fallbackReason.value && fitPoints.value.length > 0);
+
+function clearRenderTimer(): void {
+  clearTimeout(renderTimer);
+  renderTimer = undefined;
+}
+
+function mapRendered(event: { target?: { id?: string } }): void {
+  if (!event.target?.id || event.target.id === mapId.value) clearRenderTimer();
+}
+
+function fallback(reason: string): void {
+  gestures.value = false;
+  fallbackReason.value = reason;
+}
+
+function networkChanged(status: { isConnected: boolean }): void {
+  online.value = status.isConnected;
+  if (!status.isConnected) fallback('网络已断开');
+}
+
+function resetView(): void {
+  scale.value = 16;
+  revision.value += 1;
+}
+
+function recenter(): void {
+  const points = fitPoints.value;
+  const context = uni.createMapContext(mapId.value, instance?.proxy);
+  if (points.length > 1) {
+    context.includePoints({ points, padding: [28, 28, 28, 28] });
+  } else if (points[0]) {
+    scale.value = 16;
+    context.moveToLocation(points[0]);
+  }
+}
+
+function retryMap(): void {
+  fallbackReason.value = '';
+  resetView();
+}
+
+function zoom(delta: number): void {
+  const id = mapId.value;
+  uni.createMapContext(id, instance?.proxy).getScale({
+    success: async ({ scale: current }) => {
+      if (!showNative.value || id !== mapId.value) return;
+      const next = Math.max(5, Math.min(20, Math.round(current) + delta));
+      if (next === scale.value && current !== next) {
+        scale.value = current;
+        await nextTick();
+      }
+      if (showNative.value && id === mapId.value) scale.value = next;
+    },
+    fail: () => {
+      if (id === mapId.value) fallback('无法操作底图');
+    }
+  });
+}
 
 const canvasCssText = ref('—');
 const canvasBufferText = ref('—');
@@ -106,21 +251,14 @@ const queriedAtText = computed(() =>
   model.value.queriedAt ? formatBeijingDateTime(model.value.queriedAt) : '未提供'
 );
 
-const legendItems = computed(() => {
-  const present = new Set<SegmentCategory>(model.value.segments.map((segment) => segment.category));
-  const items: Array<{ category: SegmentCategory; label: string; color: string; dashed: boolean }> = [
-    { category: 'campus', label: '校园步行', color: '#2e7d32', dashed: false },
-    { category: 'city-walk', label: '城市步行', color: '#f57f17', dashed: true },
-    { category: 'ride', label: '公交·地铁', color: '#1d6fbf', dashed: false },
-    { category: 'other', label: '其他交通', color: '#6d4c41', dashed: true }
-  ];
-  return items.filter((item) => present.has(item.category));
-});
+const legendItems = computed(() => Array.from(new Map(model.value.segments.map((segment) => {
+  const style = segmentStyle(segment.mode);
+  return [style.categoryLabel, style];
+})).values()));
 
 function legendLineStyle(item: { color: string; dashed: boolean }): Record<string, string> {
   return {
-    backgroundColor: item.color,
-    borderStyle: item.dashed ? 'dashed' : 'solid'
+    borderTop: `4rpx ${item.dashed ? 'dashed' : 'solid'} ${item.color}`
   };
 }
 
@@ -222,7 +360,7 @@ function paintCanvas(currentModel: ReturnType<typeof buildJourneyMapModel>, fiel
 async function drawCurrentPlan(): Promise<void> {
   const token = ++drawToken;
   const currentModel = model.value;
-  if (!currentModel.hasPlan) {
+  if (showNative.value || !currentModel.hasPlan) {
     resetDrawState();
     return;
   }
@@ -244,33 +382,38 @@ async function drawCurrentPlan(): Promise<void> {
   drawError.value = '未取到 Canvas 节点，无法绘制轨迹';
 }
 
-function scheduleDraw(): void {
+function renderMap(): void {
+  clearRenderTimer();
   void drawCurrentPlan();
+  if (showNative.value) {
+    renderTimer = setTimeout(() => fallback('底图加载超时'), 8000);
+  }
 }
 
-watch(
-  () => props.plan,
-  (plan) => {
-    if (!plan) {
-      drawToken += 1;
-      resetDrawState();
-      return;
-    }
-    scheduleDraw();
-  },
-  { flush: 'post' }
-);
+watch(() => props.plan, () => { section.value = 'campus'; gestures.value = false; });
+watch([() => props.plan, section], resetView);
+watch([model, showNative, mapId], renderMap, { flush: 'post' });
 
 onMounted(() => {
-  scheduleDraw();
+  renderMap();
+  if (nativeAvailable) {
+    uni.getNetworkType({ success: (result) => networkChanged({ isConnected: result.networkType !== 'none' }) });
+    uni.onNetworkStatusChange(networkChanged);
+  }
 });
 
 onBeforeUnmount(() => {
   drawToken += 1;
+  clearRenderTimer();
+  if (nativeAvailable) uni.offNetworkStatusChange?.(networkChanged);
 });
 </script>
 
 <style scoped>
+.jm-sections, .jm-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8rpx; margin: 14rpx 0; }
+.jm-sections button, .jm-controls button { margin: 0; padding: 4rpx 12rpx; font-size: 23rpx; color: #153c65; }
+.jm-sections .jm-active { background: #17395c; color: #fff; }
+.jm-map { display: block; width: 100%; height: 430rpx; border-radius: 12rpx; }
 .journey-map {
   margin-top: 22rpx;
   padding: 22rpx 24rpx;

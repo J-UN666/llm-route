@@ -1,5 +1,7 @@
 package cn.swjtu.zhixing.journey;
 
+import cn.swjtu.zhixing.serviceconfig.PersonalServices.Credentials;
+import cn.swjtu.zhixing.transit.TransitSearchRequest;
 import cn.swjtu.zhixing.campus.CampusConnector;
 import cn.swjtu.zhixing.campus.CampusConnectorDataLoadException;
 import cn.swjtu.zhixing.campus.CampusConnectorGeometry;
@@ -102,9 +104,17 @@ public class JourneyService {
      * 有效但无候选返回 HTTP 200 语义的 {@link JourneyStatus#NO_ROUTE} 空方案列表。
      */
     public JourneyResponse plan(JourneyRequest request) {
+        return plan(request, (Credentials) null);
+    }
+
+    public JourneyResponse plan(JourneyRequest request, Credentials credentials) {
         String requestId = JourneyIds.requestId();
         try {
-            JourneyResponse response = plan(request, requestId);
+            if (credentials != null && credentials.amapKey() == null) {
+                throw new JourneyApiException(HttpStatus.UNPROCESSABLE_ENTITY, "PERSONAL_AMAP_REQUIRED",
+                        "请先验证个人高德 Web 服务 Key，或在设置中选择默认服务", false, requestId);
+            }
+            JourneyResponse response = plan(request, requestId, credentials);
             log.info("journey requestId={} status={} provider={}", requestId, response.status(), response.provider());
             return response;
         } catch (JourneyApiException ex) {
@@ -113,7 +123,7 @@ public class JourneyService {
         }
     }
 
-    private JourneyResponse plan(JourneyRequest request, String requestId) {
+    private JourneyResponse plan(JourneyRequest request, String requestId, Credentials credentials) {
         OffsetDateTime queriedAt = now();
         if (request == null) {
             throw new JourneyApiException(HttpStatus.BAD_REQUEST, "INVALID_PARAMETER",
@@ -168,7 +178,11 @@ public class JourneyService {
 
             TransitSearchResult result;
             try {
-                result = transitProvider.search(gateExit, destinationPoint, cityDeparture, preference);
+                result = credentials == null
+                        ? transitProvider.search(gateExit, destinationPoint, cityDeparture, preference)
+                        : transitProvider.searchWithKey(
+                                new TransitSearchRequest(gateExit, destinationPoint, cityDeparture, preference),
+                                credentials.amapKey());
             } catch (RuntimeException ex) {
                 log.warn("城市段查询异常 requestId={} connector={} gate={} type={}",
                         requestId, connector.id(), connector.gateId(), ex.getClass().getSimpleName());
@@ -206,7 +220,7 @@ public class JourneyService {
                     campusDataVersion, providerName, warnings);
         }
         if (!anySearchCompleted && !failures.isEmpty()) {
-            throw mapAllFailures(failures, requestId);
+            throw mapAllFailures(failures, requestId, credentials != null);
         }
         return new JourneyResponse(requestId, JourneyStatus.NO_ROUTE, List.of(), queriedAt,
                 campusDataVersion, providerName, successWarnings(failures));
@@ -232,15 +246,24 @@ public class JourneyService {
                 : Math.toIntExact(Duration.between(departure, arrival).getSeconds());
         BigDecimal totalWalking = sumWalking(connector.walkMeters(), transitPlan.walkingMeters());
 
+        JourneyPoint exitPoint = gateExitPoint(connector);
+        List<String> sources = new ArrayList<>(sources(connector, transitPlan));
         List<JourneySegment> segments = new ArrayList<>();
         segments.add(campusSegment(origin, connector));
         int sequence = 2;
         for (TransitSegment segment : transitPlan.segments()) {
-            segments.add(citySegment(segment, sequence));
+            TransitGeometry geometry = segment.geometry();
+            if (sequence == 2 && "AMAP".equals(result.provider()) && "WALK".equals(normalizeMode(segment.mode()))) {
+                geometry = EastGateWalkLink.extend(exitPoint, geometry);
+            }
+            boolean linkedAtGate = geometry != segment.geometry();
+            if (linkedAtGate) {
+                sources.add(EastGateWalkLink.SOURCE);
+            }
+            segments.add(citySegment(segment, sequence, geometry, linkedAtGate ? exitPoint : null));
             sequence++;
         }
 
-        JourneyPoint exitPoint = gateExitPoint(connector);
         String planId = JourneyIds.planId(
                 origin.id(),
                 destination.id(),
@@ -264,7 +287,7 @@ public class JourneyService {
                 transitPlan.transferCount(),
                 transitPlan.costYuan(),
                 segments,
-                sources(connector, transitPlan),
+                List.copyOf(sources),
                 queriedAt,
                 campusDataVersion);
     }
@@ -315,7 +338,8 @@ public class JourneyService {
         return new JourneyGeometry(JourneyGeometry.LINE_STRING, merged, CAMPUS_COORDINATE_SYSTEM);
     }
 
-    private JourneySegment citySegment(TransitSegment segment, int sequence) {
+    private JourneySegment citySegment(TransitSegment segment, int sequence, TransitGeometry geometry,
+                                       JourneyPoint connectedExit) {
         String mode = normalizeMode(segment.mode());
         TransitLine line = segment.lines() == null || segment.lines().isEmpty()
                 ? null
@@ -324,17 +348,17 @@ public class JourneyService {
                 line == null ? null : line.boardingStation());
         String alighting = firstNonBlank(segment.alightingStation(),
                 line == null ? null : line.alightingStation());
-        TransitGeometry geometry = segment.geometry();
         JourneyGeometry journeyGeometry = geometry == null
                 ? null
                 : new JourneyGeometry(JourneyGeometry.LINE_STRING, geometry.points(),
                         geometry.coordinateSystem());
-        JourneyPoint fromPoint = stationPoint(boarding, geometry, true);
+        JourneyPoint fromPoint = connectedExit == null ? stationPoint(boarding, geometry, true) : connectedExit;
         JourneyPoint toPoint = stationPoint(alighting, geometry, false);
         Integer distanceMeters = "WALK".equals(mode) && segment.walkingMeters() != null
                 ? segment.walkingMeters()
                 : null;
-        String description = describeCitySegment(mode, line, boarding, alighting);
+        String description = connectedExit == null ? describeCitySegment(mode, line, boarding, alighting)
+                : "从" + connectedExit.name() + "出校点步行接入城市步道";
         return new JourneySegment(sequence, mode, description, fromPoint, toPoint,
                 line == null ? null : line.lineId(),
                 line == null ? null : line.name(),
@@ -430,7 +454,7 @@ public class JourneyService {
         return warnings;
     }
 
-    private JourneyApiException mapAllFailures(List<ProviderFailure> failures, String requestId) {
+    private JourneyApiException mapAllFailures(List<ProviderFailure> failures, String requestId, boolean personal) {
         ProviderFailure primary = failures.get(0);
         boolean timeout = failures.stream().anyMatch(f -> f.code() == TransitErrorCode.NETWORK_TIMEOUT);
         boolean rateLimited = failures.stream().anyMatch(
@@ -452,6 +476,11 @@ public class JourneyService {
         if (rateLimited) {
             return new JourneyApiException(HttpStatus.BAD_GATEWAY, "PROVIDER_RATE_LIMITED",
                     message, true, requestId);
+        }
+        if (personal && (primary.code() == TransitErrorCode.AMAP_AUTHORIZATION_ERROR
+                || primary.code() == TransitErrorCode.AMAP_KEY_PLATFORM_MISMATCH)) {
+            return new JourneyApiException(HttpStatus.UNPROCESSABLE_ENTITY, "PERSONAL_AMAP_INVALID",
+                    "个人高德 Key 无效或无公交规划权限，请在设置中更新", false, requestId);
         }
         if (primary.code() == TransitErrorCode.PROVIDER_NOT_CONFIGURED) {
             return new JourneyApiException(HttpStatus.BAD_GATEWAY, "PROVIDER_ERROR",

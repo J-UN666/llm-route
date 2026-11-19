@@ -12,4 +12,12 @@ public interface ToolCallingClient {
      * @throws ToolCallingException 配置缺失、超时或上游响应异常
      */
     ToolCallingResponse complete(ToolCallingRequest request);
+
+    default ToolCallingResponse completeWithKey(ToolCallingRequest request, String key) {
+        throw new ToolCallingException(503, "MODEL_NOT_CONFIGURED", "当前模型服务不支持个人配置", false);
+    }
+
+    default void verifyPersonalKey(String key, String model) {
+        throw new ToolCallingException(503, "MODEL_NOT_CONFIGURED", "当前模型服务不支持个人配置", false);
+    }
 }

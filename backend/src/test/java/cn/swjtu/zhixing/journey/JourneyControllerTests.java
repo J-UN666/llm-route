@@ -1,5 +1,7 @@
 package cn.swjtu.zhixing.journey;
 
+import cn.swjtu.zhixing.serviceconfig.PersonalServices;
+import org.springframework.context.annotation.Import;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 /** HTTP 边界与错误体契约：请求/响应字段名、200 NO_ROUTE、400/404/422/502/504 与 retryable。 */
 @WebMvcTest(JourneyController.class)
+@Import(PersonalServices.class)
 class JourneyControllerTests {
 
     private static final String REQUEST_JSON = """

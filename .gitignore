@@ -5,6 +5,7 @@
 .env.*
 !.env.example
 /deploy/runtime.env
+/.local-https/
 
 # Team notes and local acceptance evidence
 /AGENT.md

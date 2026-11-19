@@ -14,6 +14,13 @@
         "navigationBarTitleText": "自然语言问路",
         "backgroundColor": "#f5f7fa"
       }
+    },
+    {
+      "path": "pages/settings/index",
+      "style": {
+        "navigationBarTitleText": "设置",
+        "backgroundColor": "#f5f7fa"
+      }
     }
   ],
   "globalStyle": {

@@ -13,6 +13,7 @@ import cn.swjtu.zhixing.journey.JourneyPlan;
 import cn.swjtu.zhixing.journey.JourneyRequest;
 import cn.swjtu.zhixing.journey.JourneyResponse;
 import cn.swjtu.zhixing.journey.JourneyStatus;
+import cn.swjtu.zhixing.serviceconfig.PersonalServices.Credentials;
 import cn.swjtu.zhixing.transit.TransitPreference;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -103,12 +104,16 @@ class AssistantPlanner {
     }
 
     Result run(Query query, State initial, String requestId, long budgetMillis) {
+        return run(query, initial, requestId, budgetMillis, null);
+    }
+
+    Result run(Query query, State initial, String requestId, long budgetMillis, Credentials credentials) {
         if (budgetMillis <= 0) {
             throw timeout(requestId);
         }
         Future<Result> work;
         try {
-            work = workers.submit(() -> new Turn(query, initial, requestId).run());
+            work = workers.submit(() -> new Turn(query, initial, requestId, credentials).run());
         } catch (RejectedExecutionException ex) {
             throw failure(HttpStatus.SERVICE_UNAVAILABLE, "ASSISTANT_BUSY", "问路服务繁忙，请稍后重试", true, requestId);
         }
@@ -131,6 +136,7 @@ class AssistantPlanner {
 
     private final class Turn {
         private final Query query;
+        private final Credentials credentials;
         private final String requestId;
         private final Long acceptedVersion;
         private final Map<Field, Clarification> pending = new EnumMap<>(Field.class);
@@ -146,8 +152,9 @@ class AssistantPlanner {
         private OffsetDateTime startedAt;
         private String campusDataVersion;
 
-        Turn(Query query, State initial, String requestId) {
+        Turn(Query query, State initial, String requestId, Credentials credentials) {
             this.query = query;
+            this.credentials = credentials;
             this.requestId = requestId;
             this.acceptedVersion = query.conversationId() == null ? null : initial.version() + 1;
             Conditions conditions = initial.conditions();
@@ -176,7 +183,11 @@ class AssistantPlanner {
         }
 
         private void converse() {
-            if (!properties.isConfigured()) {
+            if (credentials != null && credentials.modelKey() == null) {
+                throw failure(HttpStatus.UNPROCESSABLE_ENTITY, "PERSONAL_MODEL_REQUIRED",
+                        "请先验证个人模型 Key，或在设置中选择默认服务。普通表单可只使用高德 Key。", false, requestId);
+            }
+            if (credentials == null && !properties.isConfigured()) {
                 throw failure(HttpStatus.SERVICE_UNAVAILABLE, AssistantErrorCodes.MODEL_NOT_CONFIGURED,
                         "问路模型暂未配置，请使用普通表单", false, requestId);
             }
@@ -191,8 +202,10 @@ class AssistantPlanner {
                 checkInterrupted();
                 ToolCallingResponse completion;
                 try {
-                    completion = model.complete(new ToolCallingRequest(
-                            properties.getModel(), List.copyOf(messages), AssistantTools.DEFINITIONS, true));
+                    var request = new ToolCallingRequest(credentials == null ? properties.getModel() : credentials.model(),
+                            List.copyOf(messages), AssistantTools.DEFINITIONS, true);
+                    completion = credentials == null ? model.complete(request)
+                            : model.completeWithKey(request, credentials.modelKey());
                 } catch (ToolCallingException ex) {
                     throw failure(HttpStatus.valueOf(ex.status()), ex.code(), ex.getMessage(), ex.retryable(), requestId);
                 }
@@ -374,7 +387,8 @@ class AssistantPlanner {
             checkInterrupted();
             startedAt = now();
             try {
-                journey = tools.plan(conditions().journeyRequest());
+                journey = credentials == null ? tools.plan(conditions().journeyRequest())
+                        : tools.plan(conditions().journeyRequest(), credentials);
                 campusDataVersion = journey.campusDataVersion();
             } catch (JourneyApiException ex) {
                 String code = ex.causeCode();

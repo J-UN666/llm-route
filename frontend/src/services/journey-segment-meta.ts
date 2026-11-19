@@ -71,7 +71,12 @@ export function modeLabel(mode: string | null | undefined): string {
 
 export function segmentStyle(mode: string | null | undefined): SegmentDisplayStyle {
   const category = modeCategory(mode);
-  return { ...STYLES[category], modeLabel: modeLabel(mode) };
+  const label = modeLabel(mode);
+  if (category === 'ride') {
+    const color = label === '公交' ? '#1d6fbf' : label === '地铁' ? '#6741a5' : '#645049';
+    return { ...STYLES.ride, color, categoryLabel: label, modeLabel: label };
+  }
+  return { ...STYLES[category], modeLabel: label };
 }
 
 /** 已知距离按米展示，保留后端小数（879.07 米），null 明确显示未提供。 */

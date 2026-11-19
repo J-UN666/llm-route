@@ -15,6 +15,39 @@ python3 tools/package_release.py wechat --api-base https://api.example.com --app
 
 局域网包填写后端电脑的 IPv4。体验包填写团队的 AppID 和公开 HTTPS 域名。小程序后台登记同一合法请求域名，由有权限的开发者上传体验版，并给测试成员开通权限。
 
+小程序可在「设置 → 服务配置」选择默认托管或个人服务。个人 Key 需要 HTTPS，匿名配置会话创建后有效 30 分钟，服务端重启后失效。只验证高德 Web 服务 Key 即可查普通路线。模型由应用列出的 DeepSeek 官方模型中选择。应用关闭后需要重新验证。局域网 HTTP 和离线演示继续使用各自的默认服务。
+
+体验环境使用随包 Nginx 模板在 HTTPS 入口终止 TLS，并由本机反代设置 `X-Forwarded-Proto`。Java 服务监听回环地址。个人 Key 与网页原型的高德 JS API 配置各自独立。
+
+## 本机演示个人 Key
+
+以下命令在 macOS 的仓库根目录执行，用微信开发者工具模拟器访问本机 HTTPS。已安装 `mkcert` 时可跳过安装命令。`mkcert -install` 会在本机安装开发 CA，证书文件保存在已忽略的 `.local-https/`。
+
+```bash
+brew install mkcert
+mkcert -install
+mkdir -p .local-https
+mkcert -cert-file .local-https/localhost.pem -key-file .local-https/localhost-key.pem localhost 127.0.0.1
+openssl pkcs12 -export -in .local-https/localhost.pem -inkey .local-https/localhost-key.pem \
+  -out .local-https/localhost.p12 -passout pass:local-demo
+```
+
+启动后端。普通路线可直接在应用内填高德 Key。演示聊天前按下节初始化 MySQL，并为运行服务提供数据库连接。
+
+```bash
+SERVER_PORT=8443 SERVER_ADDRESS=127.0.0.1 SERVER_SSL_ENABLED=true \
+SERVER_SSL_KEY_STORE="file:$PWD/.local-https/localhost.p12" \
+SERVER_SSL_KEY_STORE_TYPE=PKCS12 SERVER_SSL_KEY_STORE_PASSWORD=local-demo \
+./backend/mvnw -f backend/pom.xml spring-boot:run
+```
+
+另开终端构建并在微信开发者工具导入 `frontend/dist/build/mp-weixin`，使用测试号和「不使用云服务」。进入首页「设置 → 服务配置 → 个人配置」，填高德 Web 服务 Key 并点「验证并启用」，返回首页查询「图书馆 → 天府广场」。如果要问路，再选择支持的 DeepSeek 模型并验证模型 Key。
+
+```bash
+npm --prefix frontend ci
+VITE_DEMO_MODE=0 VITE_API_BASE_URL=https://127.0.0.1:8443 npm --prefix frontend run build:mp-weixin
+```
+
 ## 数据库
 
 由 MySQL 管理员创建专用库和两个账号。示例使用本机 TCP，远端数据库应按实际来源地址调整账号的主机部分。更换下面两处密码后再执行。
@@ -44,3 +77,5 @@ GRANT SELECT, INSERT, UPDATE ON llmroute.* TO 'llmroute_app'@'127.0.0.1';
 ## 数据验收
 
 `2026-11-19.2` 已核对图书馆、天佑斋 1 号楼经东门的接驳。两条高德步行复核分别为 894 米和 1,830 米，普通行程各查得 3 条城市段方案（`jr-534c98a2b8a34d06a077`、`jr-bbbee25ea61c47c59d6d`）。应用的校内步行仍按 OSM 接驳估算。已定位 D2 口，高德步行至西门为 318 米，西门暂未启用出校接驳。其余匹配依据和限制随 [地点数据](../backend/src/main/resources/data/application-places.json)及[接驳数据](../backend/src/main/resources/data/campus-connectors.json)保存。
+
+东门出校点到公交规划的首段步行接入点经团队确认可通行。2026-11-19 高德步行接口返回约 30 米的轨迹，首末点约为 GCJ-02 `103.993568,30.769141`、`103.993264,30.769058`。应用只在首段轨迹命中该接入点时补这一段几何，原公交方案汇总沿用供应方数值。

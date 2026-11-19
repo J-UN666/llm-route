@@ -6,6 +6,10 @@ import java.time.OffsetDateTime;
 public interface TransitProvider {
     TransitSearchResult search(TransitSearchRequest request);
 
+    default TransitSearchResult searchWithKey(TransitSearchRequest request, String key) {
+        throw new UnsupportedOperationException("当前地图服务不支持个人配置");
+    }
+
     /** 便于业务层直接以两个稳定点位调用；等价于构造 TransitSearchRequest。 */
     default TransitSearchResult search(TransitPoint originPoint,
                                        TransitPoint destinationPoint,

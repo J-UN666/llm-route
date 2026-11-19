@@ -28,6 +28,19 @@ export const API_BASE_URL = import.meta.env.VITE_RELEASE_CHANNEL === 'wechat'
   ? envBaseUrl
   : envBaseUrl || FALLBACK_API_BASE_URL;
 
+export const PERSONAL_CONFIG_ENABLED = !DEMO_MODE && /^https:\/\//i.test(API_BASE_URL);
+export type ServiceMode = 'default' | 'personal';
+export type PersonalService = 'amap' | 'model';
+export interface ServiceConfigStatus {
+  expiresAt: string;
+  amapVerified: boolean;
+  modelVerified: boolean;
+  model: string | null;
+}
+
+let serviceMode: ServiceMode = 'default';
+let serviceToken: string | null = null;
+
 /** 后端错误 code 到可理解中文提示的映射；未知 code 回退服务端 message。 */
 const ERROR_HINTS: Record<string, string> = {
   NETWORK_ERROR: '无法连接行程服务，请确认后端已启动、手机与电脑在同一网络，并检查 API 地址配置。',
@@ -131,7 +144,7 @@ interface RawResponse {
 
 interface RequestConfig {
   path: string;
-  method: 'GET' | 'POST';
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   data?: string | Record<string, unknown> | ArrayBuffer;
   header?: Record<string, string>;
   timeout?: number;
@@ -151,7 +164,7 @@ function requestRaw(config: RequestConfig): Promise<RawResponse> {
         reject(createNetworkError((error && error.errMsg) || 'request:fail'));
       }
     };
-    if (config.method === 'POST') {
+    if (config.method === 'POST' || config.method === 'PUT') {
       requestOptions.header = { 'Content-Type': 'application/json', ...config.header };
       requestOptions.data = config.data;
     }
@@ -196,7 +209,8 @@ export async function planJourney(request: JourneyRequest): Promise<JourneyRespo
   const response = await requestRaw({
     path: '/api/journeys',
     method: 'POST',
-    data: requestBody
+    data: requestBody,
+    header: personalHeaders()
   });
   if (response.statusCode !== 200) {
     throw createHttpError(response.statusCode, response.data);
@@ -227,6 +241,68 @@ async function assistantRequest<T>(config: RequestConfig, expectedStatus = 200):
     throw createHttpError(response.statusCode, response.data);
   }
   return response.data as T;
+}
+
+export function getServiceMode(): ServiceMode {
+  return serviceMode;
+}
+
+export function setServiceMode(mode: ServiceMode): void {
+  serviceMode = mode;
+}
+
+function personalHeaders(): Record<string, string> {
+  if (serviceMode === 'default') return {};
+  if (PERSONAL_CONFIG_ENABLED && serviceToken) return { 'X-Service-Token': serviceToken };
+  throw new ApiRequestError({
+    code: 'SERVICE_CONFIG_EXPIRED',
+    message: '请先在设置中验证个人 Key，或选择默认服务。'
+  });
+}
+
+async function configRequest<T>(
+  method: RequestConfig['method'], suffix = '', data?: Record<string, unknown>, expectedStatus?: number
+): Promise<T> {
+  if (!PERSONAL_CONFIG_ENABLED) {
+    throw new ApiRequestError({ code: 'SERVICE_CONFIG_HTTPS_REQUIRED', message: '个人配置需要 HTTPS。' });
+  }
+  const token = serviceToken;
+  try {
+    return await assistantRequest<T>({
+      path: `/api/service-config${suffix}`, method, data, timeout: ASSISTANT_TIMEOUT_MS,
+      header: token ? { 'X-Service-Token': token } : undefined
+    }, expectedStatus);
+  } catch (error) {
+    if (error instanceof ApiRequestError && error.code === 'SERVICE_CONFIG_EXPIRED' && serviceToken === token) {
+      serviceToken = null;
+    }
+    throw error;
+  }
+}
+
+export function getModelOptions(): Promise<{ provider: string; models: string[] }> {
+  return configRequest('GET', '/options');
+}
+
+export function getServiceConfig(): Promise<ServiceConfigStatus | null> {
+  return serviceToken ? configRequest('GET') : Promise.resolve(null);
+}
+
+export async function verifyServiceKey(service: PersonalService, key: string, model?: string): Promise<ServiceConfigStatus> {
+  if (!serviceToken) {
+    const session = await configRequest<{ ownerToken: string }>('POST', '/sessions', undefined, 201);
+    serviceToken = session.ownerToken;
+  }
+  return configRequest('PUT', `/${service}`, service === 'model' ? { key, model } : { key });
+}
+
+export function revokeServiceKey(service: PersonalService): Promise<ServiceConfigStatus> {
+  return configRequest('DELETE', `/${service}`);
+}
+
+export async function revokePersonalConfig(): Promise<void> {
+  await configRequest('DELETE', '', undefined, 204);
+  serviceToken = null;
 }
 
 function sessionPath(session: AssistantSession): string {
@@ -261,7 +337,7 @@ export function sendAssistantTurn(session: AssistantSession, submission: Assista
   return assistantRequest({
     path: '/api/assistant/query',
     method: 'POST',
-    header: ownerHeader(session),
+    header: { ...ownerHeader(session), ...personalHeaders() },
     timeout: ASSISTANT_TIMEOUT_MS,
     data: {
       ...submission.input,

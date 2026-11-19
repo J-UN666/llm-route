@@ -5,11 +5,13 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cn.swjtu.zhixing.transit.TransitGeometry;
+import cn.swjtu.zhixing.transit.CoordinateConverter;
 import cn.swjtu.zhixing.transit.TransitLine;
 import cn.swjtu.zhixing.transit.TransitPlan;
 import cn.swjtu.zhixing.transit.TransitPoint;
@@ -140,6 +142,7 @@ class JourneyApiIntegrationTests {
 
         org.assertj.core.api.Assertions.assertThat(plan.path("segments").get(1).path("mode").asText())
                 .isEqualTo("WALK");
+        assertThat(plan.path("segments").get(1).path("geometry").path("coordinates").size()).isEqualTo(2);
         JsonNode metro = plan.path("segments").get(2);
         org.assertj.core.api.Assertions.assertThat(metro.path("mode").asText()).isEqualTo("METRO");
         org.assertj.core.api.Assertions.assertThat(metro.path("lineName").asText())
@@ -153,6 +156,30 @@ class JourneyApiIntegrationTests {
                 .isEqualTo(plan.path("planId").asText());
         org.assertj.core.api.Assertions.assertThat(plan.path("planId").asText())
                 .matches("plan_[0-9a-f]{16}");
+    }
+
+    @Test
+    void eastGateLinkJoinsKnownAmapStartWithoutChangingReportedTotals() throws Exception {
+        stubProviderPlans(List.of(recordedPlan(List.of(103.993263, 30.769054))));
+        JsonNode plan = postJourney(requestBody(LIBRARY, TIENS, DEPARTURE, "RECOMMENDED"))
+                .path("plans").get(0);
+        JsonNode exit = plan.path("gateExitPoint");
+        JsonNode cityWalk = plan.path("segments").get(1);
+        assertThat(cityWalk.path("fromPoint")).isEqualTo(exit);
+        var gcj = CoordinateConverter.toGcj02(new TransitPoint(EXIT_POINT, exit.path("longitude").asDouble(),
+                exit.path("latitude").asDouble(), exit.path("coordinateSystem").asText()));
+        JsonNode coordinates = cityWalk.path("geometry").path("coordinates");
+        assertThat(coordinates).isEqualTo(objectMapper.valueToTree(List.of(
+                List.of(gcj.longitude(), gcj.latitude()),
+                List.of(103.993268, 30.769058),
+                List.of(103.993264, 30.769058),
+                List.of(103.993263, 30.769054),
+                List.of(103.9945, 30.7561))));
+        assertThat(plan.path("sources").toString()).contains(EastGateWalkLink.SOURCE);
+        assertThat(cityWalk.path("distanceMeters").asDouble()).isEqualTo(250);
+        assertThat(cityWalk.path("durationSeconds").asInt()).isEqualTo(180);
+        assertThat(plan.path("totalWalkingMeters").asDouble()).isEqualTo(3127.07);
+        assertThat(plan.path("totalDurationSeconds").asInt()).isEqualTo(4976);
     }
 
     @Test
@@ -455,8 +482,12 @@ class JourneyApiIntegrationTests {
 
     /** W1-06 真实高德调用记录中的第一方案：4256 秒 / 2248 米 / 换乘 1 次 / 5 元。 */
     private static TransitPlan recordedPlan() {
+        return recordedPlan(List.of(103.9931, 30.7558));
+    }
+
+    private static TransitPlan recordedPlan(List<Double> walkStart) {
         TransitGeometry walkGeometry = new TransitGeometry("GCJ-02", List.of(
-                List.of(103.9931, 30.7558), List.of(103.9945, 30.7561)));
+                walkStart, List.of(103.9945, 30.7561)));
         TransitSegment walk = new TransitSegment("WALK", 180, 250, null, null, List.of(),
                 walkGeometry, "AMAP_V3_TRANSIT_INTEGRATED");
         TransitGeometry metroGeometry = new TransitGeometry("GCJ-02", List.of(

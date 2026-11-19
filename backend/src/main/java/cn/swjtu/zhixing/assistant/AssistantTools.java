@@ -1,5 +1,6 @@
 package cn.swjtu.zhixing.assistant;
 
+import cn.swjtu.zhixing.serviceconfig.PersonalServices.Credentials;
 import cn.swjtu.zhixing.campus.CampusConnectorService;
 import cn.swjtu.zhixing.campus.PlaceCandidate;
 import cn.swjtu.zhixing.campus.PlaceKind;
@@ -118,6 +119,10 @@ class AssistantTools {
 
     JourneyResponse plan(JourneyRequest request) {
         return journeys.plan(request);
+    }
+
+    JourneyResponse plan(JourneyRequest request, Credentials credentials) {
+        return journeys.plan(request, credentials);
     }
 
     PlaceCandidate place(String id) {
