@@ -37,7 +37,7 @@ class CampusConnectorControllerTests {
         mockMvc.perform(get("/api/campus/connectors")
                         .param("originId", LIBRARY).param("departureTime", DEPARTURE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.dataVersion").value("2026-11-15.4"))
+                .andExpect(jsonPath("$.dataVersion").value("2026-11-19.2"))
                 .andExpect(jsonPath("$.connectors", hasSize(1)))
                 .andExpect(jsonPath("$.connectors[0].id").value("connector_library_east_gate"))
                 .andExpect(jsonPath("$.connectors[0].verificationStatus").value("APPLICATION_VERIFIED"))

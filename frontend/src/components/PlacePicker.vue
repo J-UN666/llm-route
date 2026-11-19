@@ -528,6 +528,7 @@ const KIND_LABELS: Record<string, string> = {
 
 const VERIFICATION_LABELS: Record<string, string> = {
   APPLICATION_VERIFIED: '应用已核实',
+  DISPLAY_POSITION_VERIFIED: '展示位置已核实',
   SOURCE_VERIFIED: '来源已核实',
   UNVERIFIED: '来源未核验',
   PARTIALLY_VERIFIED: '部分核实'

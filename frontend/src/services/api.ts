@@ -22,8 +22,11 @@ function normalizeBaseUrl(value: unknown): string {
 
 const envBaseUrl = normalizeBaseUrl(import.meta.env.VITE_API_BASE_URL);
 
-/** 当前构建使用的 API 基址（已去除末尾斜杠）。 */
-export const API_BASE_URL = envBaseUrl || FALLBACK_API_BASE_URL;
+export const DEMO_MODE = import.meta.env.VITE_DEMO_MODE === '1';
+
+export const API_BASE_URL = import.meta.env.VITE_RELEASE_CHANNEL === 'wechat'
+  ? envBaseUrl
+  : envBaseUrl || FALLBACK_API_BASE_URL;
 
 /** 后端错误 code 到可理解中文提示的映射；未知 code 回退服务端 message。 */
 const ERROR_HINTS: Record<string, string> = {

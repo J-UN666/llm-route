@@ -97,7 +97,7 @@ class JourneyApiIntegrationTests {
         org.assertj.core.api.Assertions.assertThat(body.path("status").asText()).isEqualTo("SUCCEEDED");
         org.assertj.core.api.Assertions.assertThat(body.path("plans").size()).isEqualTo(1);
         org.assertj.core.api.Assertions.assertThat(body.path("campusDataVersion").asText())
-                .isEqualTo("places=2026-11-15.2;connectors=2026-11-15.4");
+                .isEqualTo("places=2026-11-19.2;connectors=2026-11-19.2");
         org.assertj.core.api.Assertions.assertThat(body.path("provider").asText()).isEqualTo("AMAP");
         JsonNode plan = body.path("plans").get(0);
         org.assertj.core.api.Assertions.assertThat(plan.path("gateId").asText()).isEqualTo("campus_gate_east");

@@ -125,7 +125,7 @@ class CampusDataLoaderTests {
         assertThat(loader.loadErrorMessage()).isNull();
         List<PlaceCandidate> candidates = loader.candidates();
         assertThat(candidates).hasSize(220);
-        assertThat(loader.dataVersion()).isEqualTo("2026-11-15.2");
+        assertThat(loader.dataVersion()).isEqualTo("2026-11-19.2");
 
         Map<PlaceKind, Long> counts = candidates.stream()
                 .collect(Collectors.groupingBy(PlaceCandidate::kind, Collectors.counting()));
@@ -137,7 +137,7 @@ class CampusDataLoaderTests {
         assertThat(loader.findById("campus_gate_east")).isPresent();
         assertThat(loader.findById("C01")).isPresent();
 
-        PlaceCandidate official = loader.findById("swjtu_org_342").orElseThrow();
+        PlaceCandidate official = loader.findById("swjtu_org_88").orElseThrow();
         assertThat(official.kind()).isEqualTo(PlaceKind.CAMPUS);
         assertThat(official.displayPosition().coordinateSystem()).isEqualTo("UNDECLARED");
         assertThat(official.displayPosition().positionRole()).isEqualTo("source_marker_not_verified_entrance");
@@ -150,6 +150,10 @@ class CampusDataLoaderTests {
         assertThat(eastGate.aliases()).contains("东大门");
         assertThat(eastGate.routingReady()).isTrue();
         assertThat(eastGate.routingPosition().pointId()).isEqualTo("osm_node_13469658219");
+        assertThat(eastGate.displayPosition().coordinateSystem()).isEqualTo("GCJ-02");
+        assertThat(eastGate.displayPosition().positionRole()).isEqualTo("amap_walk_endpoint");
+        assertThat(eastGate.displayPosition().longitude()).isEqualTo(103.993572);
+        assertThat(eastGate.displayPosition().latitude()).isEqualTo(30.769141);
     }
 
     @Test

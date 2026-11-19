@@ -21,6 +21,9 @@
     </view>
 
     <view class="content">
+      <view v-if="DEMO_MODE || journeyState.response?.provider === 'DEMO'" class="notice">
+        <text class="notice-text">离线演示 · 示例路线，仅供体验</text>
+      </view>
       <view class="notice">
         <text class="notice-ico">ⓘ</text>
         <text class="notice-text">
@@ -273,6 +276,7 @@ import type {
 } from '@/types/journey';
 import { JOURNEY_PREFERENCES, createIdleJourneyState, preferenceLabel } from '@/types/journey';
 import {
+  DEMO_MODE,
   LatestRequestTracker,
   buildDepartureTime,
   formatBeijingDateTime,

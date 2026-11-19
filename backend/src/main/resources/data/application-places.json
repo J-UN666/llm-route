@@ -1,6 +1,6 @@
 {
-  "dataVersion": "2026-11-15.2",
-  "description": "W1-04 首批应用层地点补充：经核对的校门出校点、校园起点候选入口状态与城市目的地候选。基础地点/别名/校门来自 source-data/校园数据 与 web/data/campus.json，不在此重复；本文件只记录应用层核实结论、证据与缺失证据。",
+  "dataVersion": "2026-11-19.2",
+  "description": "应用地点补充：高德地点搜索返回的 POI 使用 GCJ-02；高德步行端点和轨迹交叉核对另记来源。校园算路接入点、校门方向及其证据单独记录。",
   "places": [
     {
       "id": "osm_way_1098786977",
@@ -12,7 +12,13 @@
       ],
       "verificationStatus": "APPLICATION_VERIFIED",
       "verifiedAt": "2026-11-15",
-      "displayPosition": null,
+      "displayPosition": {
+        "pointId": "amap_poi_B001C8P5UM",
+        "longitude": 103.985516,
+        "latitude": 30.766122,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_building_poi"
+      },
       "routingPosition": {
         "pointId": "osm_node_5167087319",
         "longitude": 103.9832456,
@@ -37,15 +43,48 @@
             "TEAM_CONFIRMATION_2026_11_15",
             "DEMO_WALKWAY_DEFAULT_OPEN"
           ]
+        },
+        {
+          "kind": "application_policy",
+          "detail": "2026-11-19 用户指定已启用的东门接驳不设门禁时段。",
+          "sourceRefs": [
+            "PROJECT_GATE_HOURS_UNRESTRICTED_2026_11_19"
+          ]
+        },
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“西南交通大学犀浦校区图书馆”，位于成都市郫都区，采用楼宇展示点。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B001C8P5UM",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        },
+        {
+          "kind": "amap_navigation_entrance",
+          "detail": "2026-11-19 高德图书馆 POI 返回导航入口坐标，供核对。校园步行起点沿用已验证的 OSM 楼外接入点。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B001C8P5UM",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ],
+          "position": {
+            "pointId": "amap_navi_B001C8P5UM",
+            "longitude": 103.986079,
+            "latitude": 30.766489,
+            "coordinateSystem": "GCJ-02",
+            "positionRole": "amap_navigation_entrance"
+          }
         }
       ],
       "missingEvidence": [],
-      "conditions": "演示采用楼外路网接入点；人行道默认开放，东门按团队确认可步行通过，不按时段限制。具体接驳以campus-connectors.json为准。",
+      "conditions": "楼外接入点按现有 OSM 路网估算，东门接驳按项目规则不设门禁时段。",
       "sourceRefs": [
         "S04",
         "web/data/campus.json",
         "TEAM_CONFIRMATION_2026_11_15",
-        "DEMO_WALKWAY_DEFAULT_OPEN"
+        "DEMO_WALKWAY_DEFAULT_OPEN",
+        "PROJECT_GATE_HOURS_UNRESTRICTED_2026_11_19",
+        "https://www.amap.com/place/B001C8P5UM",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
       ]
     },
     {
@@ -81,15 +120,40 @@
             "TEAM_CONFIRMATION_2026_11_15",
             "DEMO_WALKWAY_DEFAULT_OPEN"
           ]
+        },
+        {
+          "kind": "application_policy",
+          "detail": "2026-11-19 用户指定已启用的东门接驳不设门禁时段。",
+          "sourceRefs": [
+            "PROJECT_GATE_HOURS_UNRESTRICTED_2026_11_19"
+          ]
+        },
+        {
+          "kind": "amap_address_reference",
+          "detail": "2026-11-19 高德库迪咖啡 POI 地址写明在天佑斋1号楼，保留商户坐标供核对楼栋位置。楼栋代表点和步行起点使用既有 OSM 数据。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B0L23D4NH6",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ],
+          "position": {
+            "pointId": "amap_poi_B0L23D4NH6",
+            "longitude": 103.985825,
+            "latitude": 30.759375,
+            "coordinateSystem": "GCJ-02",
+            "positionRole": "amap_site_reference_poi"
+          }
         }
       ],
       "missingEvidence": [],
-      "conditions": "演示采用楼外路网接入点；人行道默认开放，东门按团队确认可步行通过，不按时段限制。具体接驳以campus-connectors.json为准。",
+      "conditions": "楼外接入点按现有 OSM 路网估算，东门接驳按项目规则不设门禁时段。",
       "sourceRefs": [
         "S04",
         "web/data/campus.json",
         "TEAM_CONFIRMATION_2026_11_15",
-        "DEMO_WALKWAY_DEFAULT_OPEN"
+        "DEMO_WALKWAY_DEFAULT_OPEN",
+        "PROJECT_GATE_HOURS_UNRESTRICTED_2026_11_19",
+        "https://www.amap.com/place/B0L23D4NH6",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
       ]
     },
     {
@@ -97,7 +161,13 @@
       "kind": "GATE",
       "verificationStatus": "APPLICATION_VERIFIED",
       "verifiedAt": "2026-11-15",
-      "displayPosition": null,
+      "displayPosition": {
+        "pointId": "amap_walk_osm_node_13469658219",
+        "longitude": 103.993572,
+        "latitude": 30.769141,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_walk_endpoint"
+      },
       "routingPosition": {
         "pointId": "osm_node_13469658219",
         "longitude": 103.991294,
@@ -130,26 +200,50 @@
             "TEAM_CONFIRMATION_2026_11_15",
             "DEMO_WALKWAY_DEFAULT_OPEN"
           ]
+        },
+        {
+          "kind": "application_policy",
+          "detail": "2026-11-19 用户指定已启用的东门接驳不设门禁时段。",
+          "sourceRefs": [
+            "PROJECT_GATE_HOURS_UNRESTRICTED_2026_11_19"
+          ]
+        },
+        {
+          "kind": "amap_walking_endpoint",
+          "detail": "2026-11-19 高德步行规划对传入的东门 OSM 出校点返回相同端点，分别从图书馆和天佑斋1号楼外接入点返回 894 米和 1830 米。东门详情来源为步行端点复核。",
+          "sourceRefs": [
+            "AMAP_WALKING_2026_11_19",
+            "https://lbs.amap.com/api/webservice/guide/api/direction/"
+          ]
         }
       ],
       "missingEvidence": [],
-      "conditions": "东门出校方向按团队确认可步行通过；演示默认开放，入口坐标与接驳终点通过pointId关联。",
+      "conditions": "东门接驳按项目规则不设门禁时段。使用现有 OSM 出校方向节点。",
       "sourceRefs": [
         "S01",
         "S04",
         "web/data/campus.json",
         "TEAM_CONFIRMATION_2026_11_15",
-        "DEMO_WALKWAY_DEFAULT_OPEN"
+        "DEMO_WALKWAY_DEFAULT_OPEN",
+        "PROJECT_GATE_HOURS_UNRESTRICTED_2026_11_19",
+        "AMAP_WALKING_2026_11_19",
+        "https://lbs.amap.com/api/webservice/guide/api/direction/"
       ]
     },
     {
       "id": "campus_gate_west",
       "kind": "GATE",
-      "verificationStatus": "APPLICATION_VERIFIED",
-      "verifiedAt": "2026-11-15",
-      "displayPosition": null,
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "displayPosition": {
+        "pointId": "amap_poi_B001C80PYA",
+        "longitude": 103.981417,
+        "latitude": 30.761769,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_gate_poi"
+      },
       "routingPosition": null,
-      "unavailableReason": "原型应用数据把西门标记为 campusOnly（只用于校园接驳，不作为城市出行校门）；来源可对应出校节点 osm_node_11668769188，但在 W1-05 审核城市接驳并取消 campusOnly 限制前不提供 routingPosition。",
+      "unavailableReason": "西门为 campusOnly；已核对地图展示点，城市接驳所用出校方向及步行路径待核对。",
       "evidence": [
         {
           "kind": "cross_source_correspondence",
@@ -168,19 +262,38 @@
             "web/js/agent.js",
             "web/data/campus.json"
           ]
+        },
+        {
+          "kind": "amap_poi",
+          "detail": "高德临街院门西南交通大学犀浦校区(西门)。统一坐标系后，该展示点距两个 OSM 候选门节点约 13–15 米。",
+          "sourceRefs": [
+            "https://ditu.amap.com/place/B001C80PYA"
+          ]
+        },
+        {
+          "kind": "amap_walking_reference",
+          "detail": "2026-11-19 已验证 D2 口至西门展示点可取得高德步行路线，318 米、254 秒。校内出校车道与接驳仍按应用核对状态。",
+          "sourceRefs": [
+            "https://www.amap.com/place/BX10030840",
+            "AMAP_WALKING_2026_11_19",
+            "https://lbs.amap.com/api/webservice/guide/api/direction/"
+          ]
         }
       ],
       "missingEvidence": [
-        "西门是否允许日常城市出行（产品与现场核实）",
-        "开放时段与人行/车行通行规则"
+        "可接入城市查询的出校方向节点及步行路径"
       ],
-      "conditions": "仅用于校园接驳方向；作为城市段起点前，需要 W1-05 核对取消限制并更新本文件的 verificationStatus/routingPosition。",
+      "conditions": "项目保留西门的既有 campusOnly 使用范围；高德标记用于展示。",
       "sourceRefs": [
         "S01",
         "S04",
         "web/data/campus.json",
         "tools/build_campus_data.py",
-        "web/js/agent.js"
+        "web/js/agent.js",
+        "https://ditu.amap.com/place/B001C80PYA",
+        "https://www.amap.com/place/BX10030840",
+        "AMAP_WALKING_2026_11_19",
+        "https://lbs.amap.com/api/webservice/guide/api/direction/"
       ]
     },
     {
@@ -426,6 +539,621 @@
       "sourceRefs": [
         "web/data/city.json",
         "OSM_NOMINATIM_2026-11-15"
+      ]
+    },
+    {
+      "id": "osm_node_2178309445",
+      "kind": "GATE",
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "displayPosition": {
+        "pointId": "amap_poi_B0FFG092LP",
+        "longitude": 103.992159,
+        "latitude": 30.760431,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_gate_poi"
+      },
+      "routingPosition": null,
+      "unavailableReason": "已核对南门地图展示点，当前应用尚无经该门的城市接驳。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "高德临街院正门西南交通大学犀浦校区(南门)。统一坐标系后，与 OSM 南门节点相距约 10 米。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B0FFG092LP"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B0FFG092LP"
+      ]
+    },
+    {
+      "id": "swjtu_org_99",
+      "kind": "CAMPUS",
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "displayPosition": {
+        "pointId": "amap_poi_B0FFFZSZYO",
+        "longitude": 103.987475,
+        "latitude": 30.767981,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_building_poi"
+      },
+      "routingPosition": null,
+      "unavailableReason": "已核对综合楼展示点，楼外步行接入点与城市接驳待核对。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "高德楼栋 POI 西南交通大学犀浦校区综合楼，地址为犀安路999号，按楼栋展示。",
+          "sourceRefs": [
+            "https://ditu.amap.com/place/B0FFFZSZYO"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://ditu.amap.com/place/B0FFFZSZYO"
+      ]
+    },
+    {
+      "id": "osm_way_207570532",
+      "kind": "CAMPUS",
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "displayPosition": {
+        "pointId": "amap_poi_B001C0A25F",
+        "longitude": 103.983288,
+        "latitude": 30.764028,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_building_poi"
+      },
+      "routingPosition": null,
+      "unavailableReason": "已核对体育馆展示点，楼外步行接入点与城市接驳待核对。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "高德综合体育馆 POI 与既有犀浦校区体育馆条目对应；保留 OSM 和学校目录的独立记录 ID。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B001C0A25F"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B001C0A25F"
+      ]
+    },
+    {
+      "id": "swjtu_org_345",
+      "kind": "CAMPUS",
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "displayPosition": {
+        "pointId": "amap_poi_B001C0A25F",
+        "longitude": 103.983288,
+        "latitude": 30.764028,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_building_poi"
+      },
+      "routingPosition": null,
+      "unavailableReason": "已核对体育馆展示点，楼外步行接入点与城市接驳待核对。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "高德综合体育馆 POI 与既有犀浦校区体育馆条目对应；保留 OSM 和学校目录的独立记录 ID。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B001C0A25F"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B001C0A25F"
+      ]
+    },
+    {
+      "id": "swjtu_org_109",
+      "kind": "CAMPUS",
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "displayPosition": {
+        "pointId": "amap_poi_B0FFH9BSNO",
+        "longitude": 103.985234,
+        "latitude": 30.76257,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_dormitory_group_poi"
+      },
+      "routingPosition": null,
+      "unavailableReason": "已核对鸿哲斋南区组团展示点，1/2/3号楼各自入口与步行接驳待核对。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "高德鸿哲斋宿舍 POI 位于南区组团，和北区组团位置不同；坐标对应宿舍组团粒度。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B0FFH9BSNO"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B0FFH9BSNO"
+      ]
+    },
+    {
+      "id": "swjtu_point_1018",
+      "kind": "CAMPUS",
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "displayPosition": {
+        "pointId": "amap_poi_BV09337820",
+        "longitude": 103.983315,
+        "latitude": 30.7587,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_transit_station_poi"
+      },
+      "routingPosition": null,
+      "unavailableReason": "已核对地铁站和 D2 口位置信息；当前地点项只用于展示。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "高德交大兴业北街(地铁站)，成都地铁6号线、成都市郫都区。坐标对应地铁站 POI 粒度。",
+          "sourceRefs": [
+            "https://www.amap.com/place/BV09337820"
+          ]
+        },
+        {
+          "kind": "amap_station_exit",
+          "detail": "2026-11-19 从高德地铁站子 POI 和 D2 口周边搜索交叉核对，D2 口有独立坐标。该点至西门展示点的高德步行规划为 318 米、254 秒。",
+          "sourceRefs": [
+            "https://www.amap.com/place/BV09337820",
+            "https://www.amap.com/place/BX10030840",
+            "AMAP_WALKING_2026_11_19"
+          ],
+          "position": {
+            "pointId": "amap_poi_BX10030840",
+            "longitude": 103.982912,
+            "latitude": 30.759478,
+            "coordinateSystem": "GCJ-02",
+            "positionRole": "amap_transit_entrance_poi"
+          }
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/BV09337820",
+        "https://www.amap.com/place/BX10030840",
+        "AMAP_WALKING_2026_11_19"
+      ]
+    },
+    {
+      "id": "swjtu_org_100",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_B001C8N5I4",
+        "longitude": 103.983688,
+        "latitude": 30.770473,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_building_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“西南交通大学犀浦校区材料学院实验教学中心”，位于成都市郫都区，采用楼宇展示点。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B001C8N5I4",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B001C8N5I4",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "swjtu_org_101",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_B0FFFCQM6W",
+        "longitude": 103.983391,
+        "latitude": 30.770877,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_building_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“西南交通大学犀浦校区风洞实验室”，位于成都市郫都区，采用楼宇展示点。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B0FFFCQM6W",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B0FFFCQM6W",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "swjtu_org_102",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_B0FFI5QSK2",
+        "longitude": 103.990075,
+        "latitude": 30.769225,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_building_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“西南交通大学犀浦校区工程训练中心”，位于成都市郫都区，采用楼宇展示点。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B0FFI5QSK2",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B0FFI5QSK2",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "swjtu_org_343",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_B001C8UB8L",
+        "longitude": 103.982824,
+        "latitude": 30.76344,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_building_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“西南交通大学犀浦校区游泳馆”，位于成都市郫都区，采用楼宇展示点。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B001C8UB8L",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B001C8UB8L",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "swjtu_org_96",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_B0FFI7QOLK",
+        "longitude": 103.988914,
+        "latitude": 30.768994,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_building_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“西南交通大学犀浦校区电气馆”，位于成都市郫都区，采用楼宇展示点。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B0FFI7QOLK",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B0FFI7QOLK",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "swjtu_point_1019",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_BV11315293",
+        "longitude": 103.976368,
+        "latitude": 30.767534,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_transit_station_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“犀方路(有轨电车站)”，位于成都市郫都区，采用站点代表位置。",
+          "sourceRefs": [
+            "https://www.amap.com/place/BV11315293",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/BV11315293",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "swjtu_point_1020",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_BV10492462",
+        "longitude": 103.977257,
+        "latitude": 30.766285,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_transit_station_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“校园路犀方路口(公交站)”，位于成都市郫都区，采用站点代表位置。",
+          "sourceRefs": [
+            "https://www.amap.com/place/BV10492462",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/BV10492462",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "swjtu_point_236",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_B0JBNMZF3F",
+        "longitude": 103.989077,
+        "latitude": 30.760306,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_facility_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“西南交通大学犀浦校区南区网球场”，位于成都市郫都区，采用设施展示点。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B0JBNMZF3F",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B0JBNMZF3F",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "swjtu_point_71",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_B0FFFGYALC",
+        "longitude": 103.987509,
+        "latitude": 30.762868,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_facility_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“西南交通大学犀浦校区教材服务中心”，位于成都市郫都区，采用设施展示点。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B0FFFGYALC",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B0FFFGYALC",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "osm_way_413859294",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_B001C8MEK5",
+        "longitude": 103.984271,
+        "latitude": 30.769936,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_building_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“西南交通大学犀浦校区土木工程实验教学中心”，位于成都市郫都区，采用楼宇展示点。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B001C8MEK5",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B001C8MEK5",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "swjtu_org_107",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_B001C8MEK5",
+        "longitude": 103.984271,
+        "latitude": 30.769936,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_building_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“西南交通大学犀浦校区土木工程实验教学中心”，位于成都市郫都区，采用楼宇展示点。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B001C8MEK5",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B001C8MEK5",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "swjtu_org_342",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_B001C8P5UM",
+        "longitude": 103.985516,
+        "latitude": 30.766122,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_building_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“西南交通大学犀浦校区图书馆”，位于成都市郫都区，采用楼宇展示点。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B001C8P5UM",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B001C8P5UM",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "swjtu_org_110",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_B0L276ILYV",
+        "longitude": 103.985345,
+        "latitude": 30.76121,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_dormitory_group_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“天佑斋南区”，位于成都市郫都区，采用宿舍组团代表点。跨来源位置按南区/北区组团识别，组团标记位置允许落在不同建筑附近。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B0L276ILYV",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B0L276ILYV",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "swjtu_org_112",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_B001C8RHHM",
+        "longitude": 103.980069,
+        "latitude": 30.76612,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_dormitory_group_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“天佑斋北区”，位于成都市郫都区，采用宿舍组团代表点。跨来源位置按南区/北区组团识别，组团标记位置允许落在不同建筑附近。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B001C8RHHM",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B001C8RHHM",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "osm_way_413859292",
+      "kind": "CAMPUS",
+      "displayPosition": {
+        "pointId": "amap_poi_B001C8N5HT",
+        "longitude": 103.979128,
+        "latitude": 30.766231,
+        "coordinateSystem": "GCJ-02",
+        "positionRole": "amap_building_poi"
+      },
+      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verifiedAt": "2026-11-19",
+      "routingPosition": null,
+      "unavailableReason": "已核对高德展示位置，步行接入点和校园接驳待核对，暂不可算路。",
+      "evidence": [
+        {
+          "kind": "amap_poi",
+          "detail": "2026-11-19 高德地点搜索返回“西南交通大学犀浦校区四食堂”，位于成都市郫都区，采用楼宇展示点。高德四食堂与来源记录四食堂(馨园)对应。",
+          "sourceRefs": [
+            "https://www.amap.com/place/B001C8N5HT",
+            "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+          ]
+        }
+      ],
+      "sourceRefs": [
+        "https://www.amap.com/place/B001C8N5HT",
+        "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
       ]
     }
   ]

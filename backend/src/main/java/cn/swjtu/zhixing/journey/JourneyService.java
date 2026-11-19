@@ -103,6 +103,17 @@ public class JourneyService {
      */
     public JourneyResponse plan(JourneyRequest request) {
         String requestId = JourneyIds.requestId();
+        try {
+            JourneyResponse response = plan(request, requestId);
+            log.info("journey requestId={} status={} provider={}", requestId, response.status(), response.provider());
+            return response;
+        } catch (JourneyApiException ex) {
+            log.info("journey requestId={} status=FAILED code={}", requestId, ex.causeCode());
+            throw ex;
+        }
+    }
+
+    private JourneyResponse plan(JourneyRequest request, String requestId) {
         OffsetDateTime queriedAt = now();
         if (request == null) {
             throw new JourneyApiException(HttpStatus.BAD_REQUEST, "INVALID_PARAMETER",
@@ -159,8 +170,8 @@ public class JourneyService {
             try {
                 result = transitProvider.search(gateExit, destinationPoint, cityDeparture, preference);
             } catch (RuntimeException ex) {
-                log.warn("城市段查询异常 requestId={} connector={} gate={}",
-                        requestId, connector.id(), connector.gateId(), ex);
+                log.warn("城市段查询异常 requestId={} connector={} gate={} type={}",
+                        requestId, connector.id(), connector.gateId(), ex.getClass().getSimpleName());
                 failures.add(new ProviderFailure(connector.gateId(), TransitErrorCode.PROVIDER_ERROR,
                         "城市段服务调用异常"));
                 continue;

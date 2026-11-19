@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -83,7 +84,7 @@ class PlaceServiceTests {
     }
 
     @Test
-    void officialOnlyPlaceKeepsIdAndUnavailableReason() {
+    void officialPlaceWithAmapPositionKeepsIdAndUnavailableReason() {
         PlaceCandidate place = placeService.getById("swjtu_org_100");
 
         assertThat(place.name()).isEqualTo("材料学院实验教学中心");
@@ -93,17 +94,17 @@ class PlaceServiceTests {
         assertThat(place.routingPosition()).isNull();
         assertThat(place.unavailableReason()).contains("暂不可算路");
         assertThat(place.displayPosition()).isNotNull();
-        assertThat(place.displayPosition().coordinateSystem()).isEqualTo("UNDECLARED");
-        assertThat(place.displayPosition().positionRole()).isEqualTo("source_marker_not_verified_entrance");
-        assertThat(place.displayPosition().longitude()).isEqualTo(103.98177825584031);
-        assertThat(place.displayPosition().latitude()).isEqualTo(30.772986547859006);
-        assertThat(place.verificationStatus()).isEqualTo("UNVERIFIED");
+        assertThat(place.displayPosition().coordinateSystem()).isEqualTo("GCJ-02");
+        assertThat(place.displayPosition().positionRole()).isEqualTo("amap_building_poi");
+        assertThat(place.displayPosition().longitude()).isEqualTo(103.983688);
+        assertThat(place.displayPosition().latitude()).isEqualTo(30.770473);
+        assertThat(place.verificationStatus()).isEqualTo("DISPLAY_POSITION_VERIFIED");
         assertThat(place.sourceRefs()).contains("S03");
         assertThat(place.dataVersion()).isEqualTo(loader.dataVersion());
     }
 
     @Test
-    void teamConfirmedOriginKeepsDisplayCentroidSeparateFromRoutingPoint() {
+    void teamConfirmedOriginKeepsAmapDisplaySeparateFromRoutingPoint() {
         PlaceCandidate seed = placeService.getById("osm_way_1098786977");
         assertThat(seed.kind()).isEqualTo(PlaceKind.CAMPUS);
         assertThat(seed.aliases()).contains("图书馆");
@@ -114,8 +115,9 @@ class PlaceServiceTests {
         assertThat(seed.unavailableReason()).isNull();
         assertThat(seed.verificationStatus()).isEqualTo("APPLICATION_VERIFIED");
         assertThat(seed.sourceRefs()).contains("TEAM_CONFIRMATION_2026_11_15", "DEMO_WALKWAY_DEFAULT_OPEN");
-        assertThat(seed.displayPosition().positionRole()).isEqualTo("footprint_centroid_not_entrance");
-        assertThat(seed.displayPosition().coordinateSystem()).isEqualTo("WGS84");
+        assertThat(seed.displayPosition().pointId()).isEqualTo("amap_poi_B001C8P5UM");
+        assertThat(seed.displayPosition().positionRole()).isEqualTo("amap_building_poi");
+        assertThat(seed.displayPosition().coordinateSystem()).isEqualTo("GCJ-02");
     }
 
     @Test
@@ -125,6 +127,33 @@ class PlaceServiceTests {
         assertThat(west.routingReady()).isFalse();
         assertThat(west.routingPosition()).isNull();
         assertThat(west.unavailableReason()).contains("campusOnly");
+    }
+
+    @Test
+    void amapLocationsFillOnlyTheDisplayPositionOfExistingPlaces() {
+        Map<String, String> poiIds = Map.of(
+                "campus_gate_west", "B001C80PYA",
+                "osm_node_2178309445", "B0FFG092LP",
+                "swjtu_org_99", "B0FFFZSZYO",
+                "osm_way_207570532", "B001C0A25F",
+                "swjtu_org_345", "B001C0A25F",
+                "swjtu_org_109", "B0FFH9BSNO",
+                "swjtu_point_1018", "BV09337820",
+                "swjtu_org_342", "B001C8P5UM",
+                "swjtu_org_100", "B001C8N5I4",
+                "osm_way_413859294", "B001C8MEK5");
+        poiIds.forEach((placeId, poiId) -> {
+            PlaceCandidate place = placeService.getById(placeId);
+            assertThat(place.verificationStatus()).isEqualTo("DISPLAY_POSITION_VERIFIED");
+            assertThat(place.displayPosition().coordinateSystem()).isEqualTo("GCJ-02");
+            assertThat(place.displayPosition().pointId()).isEqualTo("amap_poi_" + poiId);
+            assertThat(place.sourceRefs()).anyMatch(ref -> ref.endsWith("/place/" + poiId));
+            assertThat(place.routingPosition()).isNull();
+            assertThat(place.routingReady()).isFalse();
+        });
+        GeoPosition west = placeService.getById("campus_gate_west").displayPosition();
+        assertThat(west.longitude()).isEqualTo(103.981417);
+        assertThat(west.latitude()).isEqualTo(30.761769);
     }
 
     @Test

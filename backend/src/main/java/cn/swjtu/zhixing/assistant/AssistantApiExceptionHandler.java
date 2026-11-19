@@ -24,6 +24,7 @@ public class AssistantApiExceptionHandler {
 
     @ExceptionHandler(AssistantApiException.class)
     public ResponseEntity<AssistantError> handleAssistantApiException(AssistantApiException ex) {
+        log.info("assistant requestId={} status={} code={}", ex.requestId(), ex.status().value(), ex.code());
         return ResponseEntity.status(ex.status()).cacheControl(CacheControl.noStore())
                 .body(new AssistantError(ex.requestId(), ex.code(), ex.getMessage(), ex.retryable()));
     }

@@ -5,6 +5,10 @@
       <button v-if="session || pending" class="plain-button" @tap="newConversation">新会话</button>
     </view>
 
+    <view v-if="DEMO_MODE || visibleJourney?.provider === 'DEMO'" class="notice">
+      <text>离线演示 · 示例路线，仅供体验</text>
+    </view>
+
     <view v-if="!messages.length && !pending && !restoring" class="welcome">
       <text>从犀浦校区出发，想去成都哪里？</text>
       <text class="muted">可以补充地点、出发时间或换乘偏好。</text>
@@ -94,7 +98,7 @@ import JourneyCard from '@/components/JourneyCard.vue';
 import JourneyDetail from '@/components/JourneyDetail.vue';
 import JourneyMap from '@/components/JourneyMap.vue';
 import {
-  ApiRequestError, createAssistantSession, closeAssistantSession, formatBeijingDateTime,
+  ApiRequestError, DEMO_MODE, createAssistantSession, closeAssistantSession, formatBeijingDateTime,
   getAssistantJourney, getAssistantSession, LatestRequestTracker, sendAssistantTurn
 } from '@/services/api';
 import { defaultSelectedPlanId, resolveSelectedPlan, selectExistingPlanId } from '@/services/journey-selection';

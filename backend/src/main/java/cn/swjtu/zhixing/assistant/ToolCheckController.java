@@ -1,5 +1,6 @@
 package cn.swjtu.zhixing.assistant;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 本接口与普通行程查询的失败处理完全独立。</p>
  */
 @RestController
+@ConditionalOnProperty(name = "assistant.tool-check.enabled", havingValue = "true", matchIfMissing = true)
 @RequestMapping("/api/assistant")
 public class ToolCheckController {
 

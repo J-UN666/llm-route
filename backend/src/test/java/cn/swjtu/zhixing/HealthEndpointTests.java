@@ -9,14 +9,11 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-/**
- * 健康检查验证：数据库不可用时存活检查仍为 UP，数据库就绪检查为 DOWN（HTTP 503）。
- *
- * <p>指向本机未监听端口模拟数据库不可达，保证测试不依赖真实云库。</p>
- */
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "DB_URL=jdbc:mysql://127.0.0.1:1/llmroute")
@@ -25,6 +22,9 @@ class HealthEndpointTests {
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(5))
             .build();
+
+    @Autowired
+    private BuildProperties buildProperties;
 
     @LocalServerPort
     private int port;
@@ -43,6 +43,12 @@ class HealthEndpointTests {
 
         assertThat(response.statusCode()).isEqualTo(503);
         assertThat(response.body()).contains("\"status\":\"DOWN\"");
+    }
+
+    @Test
+    void packagedBuildInfoIsAvailable() {
+        assertThat(buildProperties.getArtifact()).isEqualTo("llm-route-backend");
+        assertThat(buildProperties.getVersion()).isNotBlank();
     }
 
     private HttpResponse<String> get(String path) throws Exception {

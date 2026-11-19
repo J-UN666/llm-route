@@ -1,0 +1,26 @@
+[Unit]
+Description=Jiaoda Zhixing backend
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=zhixing
+Group=zhixing
+WorkingDirectory=/srv/zhixing/current
+EnvironmentFile=/etc/zhixing/runtime.env
+Environment=CAMPUS_DATA_ROOT=/srv/zhixing/current/data
+Environment=SERVER_ADDRESS=127.0.0.1
+Environment=SERVER_PORT=8080
+Environment=ASSISTANT_TOOL_CHECK_ENABLED=false
+ExecStart=/usr/bin/java -jar /srv/zhixing/current/backend.jar --spring.profiles.active=production
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=40
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+
+[Install]
+WantedBy=multi-user.target

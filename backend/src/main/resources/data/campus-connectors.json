@@ -1,6 +1,6 @@
 {
-  "dataVersion": "2026-11-15.4",
-  "description": "W1-05 演示接驳：用户于2026-11-15确认东门可步行通过，并指定校内人行道默认开放。图书馆、天佑斋1号楼使用楼外路网接入点，两条东门路线按团队确认审核可用；几何与距离来自S04 OSM WGS84路网，耗时按1.33 m/s估算，精度与演示规则写入各条审核依据。西门仍待核实，西南门仍驳回；来源数据不修改，明确禁行边继续排除。",
+  "dataVersion": "2026-11-19.2",
+  "description": "校园接驳：图书馆、天佑斋1号楼使用楼外路网接入点，经东门衔接城市段。已启用的东门接驳按2026-11-19项目规则不设门禁时段。几何与距离来自S04 OSM WGS84路网，耗时按1.33 m/s估算。西门有高德展示点，城市接驳待核实；西南门仍为拒绝，明确禁行边继续排除。",
   "connectors": [
     {
       "id": "connector_library_east_gate",
@@ -336,30 +336,34 @@
       "durationBasis": "按 1.33 m/s（约 4.8 km/h）平地步行速度估算；每段 durationSeconds=ceil(段长度/1.33)，总秒数=各段之和；未计入楼梯、坡道、闸机等待、校门排队与现场绕行，现场实测前为估算值。",
       "verificationStatus": "APPLICATION_VERIFIED",
       "verifiedAt": "2026-11-15",
-      "verificationMethod": "团队确认通行＋地图路网估算。2026-11-15 用户确认东门可步行通过，指定演示中人行道默认开放；起点采用楼外接入点，不要求精确到楼门，距离与耗时未做现场实测。",
+      "verificationMethod": "团队确认通行＋地图路网估算。2026-11-15 用户确认东门可步行通过，指定人行道默认开放。2026-11-19 用户确认已启用接驳按无门禁时段处理；起点为楼外接入点，距离与耗时为地图估算。",
       "verificationBasis": [
         "S04 OSM WGS84：图书馆楼外接入点 osm_node_5167087319，经步行区、校园道路与知行路连接东门。",
         "S01/S02 总平面图对照建筑与周边路径；演示起点使用楼外路网点，不要求精确门位。",
         "东门出校点与 W1-04 campus_gate_east 对齐：osm_node_13469658219。",
+        "AMAP_WALKING_2026_11_19：对转换后的楼外接入点和东门出校点复查，返回 894 米、715 秒，终点接近传入出校点。",
         "TEAM_CONFIRMATION_2026_11_15：用户在项目会话中明确确认“可步行”，适用于东门出校方向。",
-        "DEMO_WALKWAY_DEFAULT_OPEN：用户指定演示人行道默认开放，楼外接入点即可，不要求精确门位。"
+        "DEMO_WALKWAY_DEFAULT_OPEN：用户指定演示人行道默认开放，楼外接入点即可，不要求精确门位。",
+        "PROJECT_GATE_HOURS_UNRESTRICTED_2026_11_19：用户指定已启用的东门接驳不设门禁时段，作为本版项目规则。"
       ],
       "missingEvidence": [],
       "accessRules": {
         "direction": "OUTBOUND",
         "pedestrianAccess": "PERMITTED",
         "pedestrianAccessBasis": "2026-11-15 团队确认东门可步行通过，演示沿现有东门出校点衔接城市段；OSM 出校方向及几何保留，来源机动车道标签不作为团队确认的人行禁行依据。",
-        "gateOpenHours": "演示默认开放，不按时段限制",
-        "gateOpenHoursStatus": "DEMO_DEFAULT_OPEN",
+        "gateOpenHours": "项目按全天可通行处理",
+        "gateOpenHoursStatus": "PROJECT_ASSUMED_UNRESTRICTED",
         "timeRestrictions": [],
-        "timeRestrictionBasis": "用户指定的演示简化规则：人行道默认开放，本阶段不按时段限制；后续明确限制按规则过滤。"
+        "timeRestrictionBasis": "2026-11-19 用户指定已启用的东门接驳不设门禁时段，作为项目算路规则。"
       },
       "sourceRefs": [
         "S01",
         "S02",
         "S04",
         "TEAM_CONFIRMATION_2026_11_15",
-        "DEMO_WALKWAY_DEFAULT_OPEN"
+        "DEMO_WALKWAY_DEFAULT_OPEN",
+        "PROJECT_GATE_HOURS_UNRESTRICTED_2026_11_19",
+        "AMAP_WALKING_2026_11_19"
       ],
       "unavailableReasonCode": null,
       "unavailableReason": null
@@ -1134,30 +1138,34 @@
       "durationBasis": "按 1.33 m/s（约 4.8 km/h）平地步行速度估算；每段 durationSeconds=ceil(段长度/1.33)，总秒数=各段之和；未计入楼梯、坡道、闸机等待、校门排队与现场绕行，现场实测前为估算值。",
       "verificationStatus": "APPLICATION_VERIFIED",
       "verifiedAt": "2026-11-15",
-      "verificationMethod": "团队确认通行＋地图路网估算。2026-11-15 用户确认东门可步行通过，指定演示中人行道默认开放；起点采用楼外接入点，不要求精确到楼门，距离与耗时未做现场实测。",
+      "verificationMethod": "团队确认通行＋地图路网估算。2026-11-15 用户确认东门可步行通过，指定人行道默认开放。2026-11-19 用户确认已启用接驳按无门禁时段处理；起点为楼外接入点，距离与耗时为地图估算。",
       "verificationBasis": [
         "S04 OSM WGS84：天佑斋1号楼外接入点 osm_node_9893299669，经宿舍区通道与知行路连接东门。",
         "S01/S02 总平面图对照建筑与周边路径；演示起点使用楼外路网点，不要求精确门位。",
         "东门出校点与 W1-04 campus_gate_east 对齐：osm_node_13469658219。",
+        "AMAP_WALKING_2026_11_19：对转换后的楼外接入点和东门出校点复查，返回 1830 米、1464 秒，终点接近传入出校点。",
         "TEAM_CONFIRMATION_2026_11_15：用户在项目会话中明确确认“可步行”，适用于东门出校方向。",
-        "DEMO_WALKWAY_DEFAULT_OPEN：用户指定演示人行道默认开放，楼外接入点即可，不要求精确门位。"
+        "DEMO_WALKWAY_DEFAULT_OPEN：用户指定演示人行道默认开放，楼外接入点即可，不要求精确门位。",
+        "PROJECT_GATE_HOURS_UNRESTRICTED_2026_11_19：用户指定已启用的东门接驳不设门禁时段，作为本版项目规则。"
       ],
       "missingEvidence": [],
       "accessRules": {
         "direction": "OUTBOUND",
         "pedestrianAccess": "PERMITTED",
         "pedestrianAccessBasis": "2026-11-15 团队确认东门可步行通过，演示沿现有东门出校点衔接城市段；OSM 出校方向及几何保留，来源机动车道标签不作为团队确认的人行禁行依据。",
-        "gateOpenHours": "演示默认开放，不按时段限制",
-        "gateOpenHoursStatus": "DEMO_DEFAULT_OPEN",
+        "gateOpenHours": "项目按全天可通行处理",
+        "gateOpenHoursStatus": "PROJECT_ASSUMED_UNRESTRICTED",
         "timeRestrictions": [],
-        "timeRestrictionBasis": "用户指定的演示简化规则：人行道默认开放，本阶段不按时段限制；后续明确限制按规则过滤。"
+        "timeRestrictionBasis": "2026-11-19 用户指定已启用的东门接驳不设门禁时段，作为项目算路规则。"
       },
       "sourceRefs": [
         "S01",
         "S02",
         "S04",
         "TEAM_CONFIRMATION_2026_11_15",
-        "DEMO_WALKWAY_DEFAULT_OPEN"
+        "DEMO_WALKWAY_DEFAULT_OPEN",
+        "PROJECT_GATE_HOURS_UNRESTRICTED_2026_11_19",
+        "AMAP_WALKING_2026_11_19"
       ],
       "unavailableReasonCode": null,
       "unavailableReason": null
@@ -1209,16 +1217,17 @@
       "durationBasis": null,
       "verificationStatus": "PENDING_VERIFICATION",
       "verifiedAt": null,
-      "verificationMethod": "OSM 门节点与官方图名称对应；出校方向、人行/车行规则与是否允许日常城市出行未核实。",
+      "verificationMethod": "高德西门 POI 与官方图和 OSM 门节点位置相符；城市接驳所用出校方向与步行权限待核对。",
       "verificationBasis": [
         "S04 OSM 西侧门两个候选节点 osm_node_11668769187 / osm_node_11668769188（barrier=gate、motor_vehicle=permit）",
         "S01 官方图标签“西门”（LABEL_016）仅作名称线索，官方图无门洞与通行方向符号",
-        "数据待核实 Q03/Q04：校门名与 OSM 未逐一对齐，东/西两个 MVP 校门的开放时段与人行规则未现场核实"
+        "https://ditu.amap.com/place/B001C80PYA：2026-11-19 核对西门高德展示点；该点距两个 OSM 候选节点均很近，方向信息由接驳另行核对。",
+        "AMAP_WALKING_2026_11_19：交大兴业北街站 D2 口至西门展示点的高德步行规划为 318 米、254 秒。"
       ],
       "missingEvidence": [
         "西门出校方向的物理点位（两个 OSM 门节点中哪一个是出校侧）",
         "西门是否允许日常城市出行（W1-04 应用地点将 campus_gate_west 标为 campusOnly 且 routingPosition 为空）",
-        "西门开放时段、人行/车行通行规则与现场门位"
+        "西门行人可用的出校路径"
       ],
       "accessRules": {
         "direction": "UNVERIFIED",
@@ -1227,14 +1236,16 @@
         "gateOpenHours": null,
         "gateOpenHoursStatus": "EVIDENCE_UNAVAILABLE",
         "timeRestrictions": [],
-        "timeRestrictionBasis": "无西门开放时段证据，不能假设全天开放。"
+        "timeRestrictionBasis": "西门尚未启用为城市接驳，项目已启用接驳的时段规则不改变西门的待核对状态。"
       },
       "sourceRefs": [
         "S01",
-        "S04"
+        "S04",
+        "https://ditu.amap.com/place/B001C80PYA",
+        "AMAP_WALKING_2026_11_19"
       ],
       "unavailableReasonCode": "GATE_EXIT_POINT_UNVERIFIED",
-      "unavailableReason": "西门两个 OSM 门节点（osm_node_11668769187 / osm_node_11668769188）的进出方向未确认，W1-04 应用地点将 campus_gate_west 标为 campusOnly 且 routingPosition 为空；W1-05 未取得日常城市出行与通行规则证据，不修改 W1-04 的 application-places.json，保持待核实。"
+      "unavailableReason": "西门两个 OSM 门节点（osm_node_11668769187 / osm_node_11668769188）的进出方向未确认，应用地点将 campus_gate_west 标为 campusOnly 且 routingPosition 为空；高德已补充展示位置，城市接驳等待出校点和步行路径核对。"
     },
     {
       "id": "connector_dorm1_southwest_gate",

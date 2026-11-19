@@ -88,13 +88,18 @@ class CampusConnectorServiceTests {
     }
 
     @Test
-    void demoDefaultOpenRuleAppliesWithoutInventingOpeningHoursEvidence() {
-        CampusConnector connector = connectorService.getAvailableConnectors("osm_way_1098786977",
-                OffsetDateTime.parse("2026-11-15T23:30:00+08:00")).get(0);
-        assertThat(connector.accessRules().gateOpenHoursStatus()).isEqualTo("DEMO_DEFAULT_OPEN");
-        assertThat(connector.accessRules().pedestrianAccess()).isEqualTo("PERMITTED");
-        assertThat(connector.accessRules().timeRestrictions()).isEmpty();
-        assertThat(connector.accessRules().timeRestrictionBasis()).contains("演示", "用户");
+    void approvedEastGateConnectorsAreUnrestrictedByTime() {
+        for (String origin : List.of("osm_way_1098786977", "osm_way_1099340057")) {
+            for (String time : List.of("2026-11-19T23:55:00+08:00", "2026-11-20T00:05:00+08:00")) {
+                List<CampusConnector> connectors = connectorService.getAvailableConnectors(origin, OffsetDateTime.parse(time));
+                assertThat(connectors).singleElement().satisfies(connector -> {
+                    assertThat(connector.gateExitPoint().pointId()).isEqualTo("osm_node_13469658219");
+                    assertThat(connector.accessRules().gateOpenHoursStatus()).isEqualTo("PROJECT_ASSUMED_UNRESTRICTED");
+                    assertThat(connector.accessRules().pedestrianAccess()).isEqualTo("PERMITTED");
+                    assertThat(connector.accessRules().timeRestrictions()).isEmpty();
+                });
+            }
+        }
     }
 
     @Test
@@ -102,7 +107,7 @@ class CampusConnectorServiceTests {
         CampusConnectorService.Resolution resolution = connectorService.resolve("osm_way_1098786977", DEPARTURE);
         assertThat(resolution.originId()).isEqualTo("osm_way_1098786977");
         assertThat(resolution.originKind()).isEqualTo("CAMPUS");
-        assertThat(resolution.dataVersion()).isEqualTo("2026-11-15.4");
+        assertThat(resolution.dataVersion()).isEqualTo("2026-11-19.2");
         assertThat(resolution.available()).hasSize(1);
         assertThat(connectorService.getAvailableConnectors("osm_way_1098786977", DEPARTURE))
                 .isEqualTo(resolution.available());
@@ -112,9 +117,9 @@ class CampusConnectorServiceTests {
     void serviceReloadsSameVersionAndIdsAsPlaceDataBuild() {
         assertThat(connectorService.isLoaded()).isTrue();
         assertThat(connectorService.loadErrorMessage()).isNull();
-        assertThat(connectorService.dataVersion()).isEqualTo("2026-11-15.4");
+        assertThat(connectorService.dataVersion()).isEqualTo("2026-11-19.2");
         // 与地点数据版本独立：接驳数据升级不应隐式改变地点数据版本。
-        assertThat(placeService.dataVersion()).isEqualTo("2026-11-15.2");
+        assertThat(placeService.dataVersion()).isEqualTo("2026-11-19.2");
     }
 
     private List<String> idsAt(String departure) {
@@ -131,7 +136,7 @@ class CampusConnectorServiceTests {
             assertThat(place.routingPosition().pointId()).isEqualTo(connector.originPoint().pointId());
             assertThat(place.routingPosition().longitude()).isEqualTo(connector.originPoint().longitude());
             assertThat(place.routingPosition().latitude()).isEqualTo(connector.originPoint().latitude());
-            assertThat(place.displayPosition().positionRole()).isEqualTo("footprint_centroid_not_entrance");
+            assertThat(place.displayPosition().pointId()).isNotEqualTo(connector.originPoint().pointId());
         }
     }
 

@@ -64,7 +64,7 @@ class CampusConnectorDataTests {
 
     @Test
     void topLevelDataVersionAndConnectorIdsAreStable() {
-        assertThat(root.get("dataVersion").asText()).isEqualTo("2026-11-15.4");
+        assertThat(root.get("dataVersion").asText()).isEqualTo("2026-11-19.2");
         assertThat(connectorsById.keySet()).containsExactlyElementsOf(EXPECTED_CONNECTOR_IDS);
         // 重启读取同版 JSON 得到相同 ID 与版本：直接重读一次比较。
         assertThat(connectorsById.keySet()).containsExactlyElementsOf(loadConnectorIdsAgain());
@@ -234,9 +234,9 @@ class CampusConnectorDataTests {
             assertThat(connector.get("durationBasis").asText()).contains("估算", "现场");
             JsonNode rules = connector.get("accessRules");
             assertThat(rules.get("pedestrianAccess").asText()).isEqualTo("PERMITTED");
-            assertThat(rules.get("gateOpenHoursStatus").asText()).isEqualTo("DEMO_DEFAULT_OPEN");
+            assertThat(rules.get("gateOpenHoursStatus").asText()).isEqualTo("PROJECT_ASSUMED_UNRESTRICTED");
             assertThat(rules.get("timeRestrictions")).isEmpty();
-            assertThat(rules.get("timeRestrictionBasis").asText()).contains("演示", "用户");
+            assertThat(rules.get("timeRestrictionBasis").asText()).contains("项目", "用户");
             for (JsonNode segment : connector.get("segments")) {
                 assertThat(segment.get("passabilityStatus").asText()).isEqualTo("OPEN");
                 assertThat(segment.get("passabilityNote").asText()).contains("OSM", "团队确认", "估算");

@@ -10,9 +10,9 @@
 
 `scope` 支持 `CAMPUS/GATE/CITY`，省略则不限类别。空关键词列出相应范围，未命中返回空数组。查询参数中的 `+08:00` 应编码为 `%2B08:00`。
 
-地点字段：`id/name/kind/category/aliases/routingReady/unavailableReason/verificationStatus/displayPosition/routingPosition/dataVersion/sourceRefs`。位置包含 `pointId/longitude/latitude/coordinateSystem/positionRole`。展示位置可能只是建筑代表点；`routingReady=true` 不代表该点到所有校门都有接驳。
+地点字段：`id/name/kind/category/aliases/routingReady/unavailableReason/verificationStatus/displayPosition/routingPosition/dataVersion/sourceRefs`。位置包含 `pointId/longitude/latitude/coordinateSystem/positionRole`。高德展示点使用 `GCJ-02`，`DISPLAY_POSITION_VERIFIED` 表示已匹配公开 POI。东门的 `amap_walk_endpoint` 是高德返回的步行末端，出校衔接使用 `routingPosition` 中的 WGS84 出校方向点。是否可规划路线以 `routingReady` 和具体接驳为准。
 
-接驳保留起点、校门、出校点、轨迹、坐标系、米/秒指标、估算方法与核实依据。当前仅两个起点经东门可用。无审核连接返回 422 `NO_APPROVED_CONNECTOR` 并附原因；西门和西南方向记录保留不可用状态。
+接驳保留起点、校门、出校点、轨迹、坐标系、米/秒指标、估算方法与核实依据。图书馆、天佑斋 1 号楼经东门可用，`gateOpenHoursStatus=PROJECT_ASSUMED_UNRESTRICTED` 表示项目按无门禁时段计算。无审核连接返回 422 `NO_APPROVED_CONNECTOR` 并附原因。
 
 | 名称 | 稳定 ID |
 |---|---|
@@ -106,6 +106,10 @@
 
 - `/actuator/health/liveness`：进程存活，不包含数据库。
 - `/actuator/health/readiness`：包含数据库检查；数据库不可用时 503。
+- `/actuator/health/journeys`：检查校园数据和地图配置，可独立于 MySQL 和模型验收普通查询。
+- `/actuator/health/chat`：检查校园数据、地图与模型配置，以及 V2 会话表。上游连通性另用冒烟命令验证。
+
+显式启用 Spring `demo` profile 时，行程响应中的 `provider` 为 `DEMO`，路线来源标记「示例路线」。演示城市段仅覆盖东门至天府广场和春熙路。实际服务部署使用独立运行配置。
 
 ## 数据库边界
 

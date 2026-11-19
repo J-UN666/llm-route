@@ -1,32 +1,35 @@
-# Local credentials and configuration
+# Local configuration
 /web/key.local.js
 /backend/application-local.properties
 .env
 .env.*
 !.env.example
+/deploy/runtime.env
 
-# Local agent instructions, task cards and acceptance output
+# Team notes and local acceptance evidence
 /AGENT.md
 /AGENTS.md
 /docs/tasks.md
 /docs/acceptance/
 
-# Maven build output, test reports and temporary logs
-**/target/
-*.log
-*.tmp
-
-# macOS and IDE metadata
-.DS_Store
-.idea/
-.vscode/
-*.iml
-
-# Frontend（uni-app 小程序）依赖与构建产物
+# Build output, caches, logs
+/target/
+/backend/target/
 /frontend/node_modules/
 /frontend/dist/
 /frontend/unpackage/
 /frontend/logs/
 /frontend/*.local
-**/project.private.config.json
+/release/
+__pycache__/
+*.py[cod]
 *.tsbuildinfo
+*.log
+*.tmp
+
+# IDE and OS metadata
+.DS_Store
+.idea/
+.vscode/
+*.iml
+project.private.config.json

@@ -1,0 +1,85 @@
+name: Verify delivery
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-smoke:
+    runs-on: ubuntu-24.04
+    services:
+      mysql:
+        image: mysql:8.4.13
+        env:
+          MYSQL_ROOT_PASSWORD: ephemeral-ci-root
+          MYSQL_DATABASE: zhixingdemo
+          MYSQL_USER: demo_migration
+          MYSQL_PASSWORD: ephemeral-ci-migration
+        ports:
+          - 13386:3306
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version-file: .java-version
+          cache: maven
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: frontend/.nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Pin npm
+        run: npm install -g "$(node -p "require('./frontend/package.json').packageManager")"
+      - name: Backend tests
+        run: ./backend/mvnw -B -f backend/pom.xml verify
+      - name: Build offline delivery
+        run: python3 tools/package_release.py demo --jar backend/target/llm-route-backend.jar
+      - name: Frontend and prototype checks
+        run: |
+          npm --prefix frontend run type-check
+          node tools/test.js
+      - name: Migrate and smoke test packaged demo
+        env:
+          DB_URL: jdbc:mysql://127.0.0.1:13386/zhixingdemo?connectionTimeZone=UTC&sslMode=DISABLED&allowPublicKeyRetrieval=true
+          DB_USER: demo_app
+          DB_PASSWORD: ephemeral-ci-app
+          MIGRATION_DB_USER: demo_migration
+          MIGRATION_DB_PASSWORD: ephemeral-ci-migration
+          MYSQL_CONTAINER: ${{ job.services.mysql.id }}
+        run: |
+          docker exec -i -e MYSQL_PWD=ephemeral-ci-root "$MYSQL_CONTAINER" mysql -uroot <<'SQL'
+          CREATE USER 'demo_app'@'%' IDENTIFIED BY 'ephemeral-ci-app';
+          GRANT SELECT, INSERT, UPDATE ON zhixingdemo.* TO 'demo_app'@'%';
+          SQL
+          tar -xzf release/demo.tar.gz -C "$RUNNER_TEMP"
+          bundle="$RUNNER_TEMP/demo"
+          export CAMPUS_DATA_ROOT="$bundle/data"
+          export MIGRATION_DB_URL="$DB_URL"
+          java -jar "$bundle/backend.jar" --migrate
+          java -jar "$bundle/backend.jar" --migrate
+          cd "$RUNNER_TEMP"
+          java -jar "$bundle/backend.jar" --spring.profiles.active=demo > demo.log 2>&1 &
+          demo_pid=$!
+          trap 'kill "$demo_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..60}; do
+            if curl --fail --silent http://127.0.0.1:8080/actuator/health/chat; then break; fi
+            if ! kill -0 "$demo_pid"; then cat demo.log; exit 1; fi
+            sleep 1
+          done
+          python3 "$bundle/smoke_delivery.py"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: zhixing-offline-demo
+          path: release/demo.tar.gz
+          if-no-files-found: error

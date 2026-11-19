@@ -20,8 +20,8 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeoutException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
@@ -30,7 +30,7 @@ import org.springframework.web.client.RestClientResponseException;
 
 /** 高德 v3 公交/地铁综合查询适配器。 */
 @Component
-@EnableConfigurationProperties(AmapProperties.class)
+@Profile("!demo")
 public class AmapTransitProvider implements TransitProvider {
     public static final String PROVIDER = "AMAP";
     public static final String SOURCE = "AMAP_V3_TRANSIT_INTEGRATED";

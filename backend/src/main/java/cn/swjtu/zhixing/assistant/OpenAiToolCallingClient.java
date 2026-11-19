@@ -18,12 +18,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 /**
  * OpenAI 兼容 Chat Completions 工具调用客户端。
@@ -33,7 +33,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
  * 不写入源码、日志或交接材料。
  */
 @Component
-@EnableConfigurationProperties(AssistantProperties.class)
+@Profile("!demo")
 public class OpenAiToolCallingClient implements ToolCallingClient {
 
     private final RestClient restClient;

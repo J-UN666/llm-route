@@ -1,0 +1,8 @@
+assistant:
+  tool-check:
+    enabled: false
+  llm:
+    # Enable planner readiness with a local-only fixture identity. The demo bean makes no HTTP calls.
+    base-url: "http://127.0.0.1"
+    api-key: offline-demo
+    model: offline-demo
