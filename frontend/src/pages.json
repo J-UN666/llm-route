@@ -7,6 +7,13 @@
         "navigationBarTitleText": "交大智行",
         "backgroundColor": "#f5f7fa"
       }
+    },
+    {
+      "path": "pages/assistant/index",
+      "style": {
+        "navigationBarTitleText": "自然语言问路",
+        "backgroundColor": "#f5f7fa"
+      }
     }
   ],
   "globalStyle": {

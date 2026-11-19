@@ -4,16 +4,16 @@
 
 ## 当前进度
 
-截至 2026-11-17：
+截至 2026-11-19：
 
 | 模块 | 状态 |
 |---|---|
 | 地点搜索 | 已实现名称、别名搜索和可用性区分，共 220 个候选；候选不等于可导航地点 |
 | 校园接驳 | 可用起点为图书馆、天佑斋1号楼，均经东门出校；距离、耗时采用地图估算，通行依据为团队的演示范围确认 |
 | 城市公共交通 | 已接入真实高德服务，支持推荐、少步行、少换乘；合并校园段，去重后最多返回 3 条方案 |
-| 小程序 | 已实现选点、时间与偏好、方案卡片、分段详情、Canvas 路线；已有开发者工具联调记录，完整手机链路待验收 |
-| LLM | 真实模型调用 `get_service_info` 已验证；地点/行程业务工具、问路接口、多轮会话和聊天界面尚未实现 |
-| 数据库 | 已有 MySQL/Flyway 配置和三张会话相关表的迁移；当前地点、接驳从 JSON 读取，会话持久化尚未接入 |
+| 小程序 | 普通表单和自然语言问路均可显示方案卡片、分段和 Canvas 路线，聊天支持会话恢复和重试 |
+| LLM | 已接入地点搜索、校园接驳、行程工具和聊天问路。支持补条件、选候选、改终点和改偏好 |
+| 数据库 | 匿名会话、消息、行程快照和幂等重试保存在 MySQL。地点和接驳从本地 JSON 读取 |
 | 交付 | 真机、正式部署、演示视频、OPC 报告和参赛材料待完成 |
 
 应用层有坐标的城市目的地为天府广场、春熙路、成都东客站、成都站和宽窄巷子。已有真实高德验收覆盖图书馆→前三处、天佑斋1号楼→前两处，共五组查询；并非所有地点组合均已实测。历史校车和施工通知仅作参考，不参与实时算路。
@@ -108,21 +108,42 @@ npm --prefix frontend run build:mp-weixin
 
 ### 模型
 
-在后端本地配置中设置 `assistant.llm.base-url`、`assistant.llm.api-key`、`assistant.llm.model`，使用支持 Chat Completions 工具调用的服务。基址以 `/v1` 为例，具体取值以提供方为准。目前只开放工具自检接口，见 [接口说明](docs/api.md)。
+在后端本地配置中设置 `assistant.llm.base-url`、`assistant.llm.api-key`、`assistant.llm.model`，使用支持 Chat Completions 工具调用的服务。基址以 `/v1` 为例，具体取值以提供方为准。例如 DeepSeek 可使用 `https://api.deepseek.com` 与 `deepseek-flash`。聊天入口位于小程序主页，也可以调用 `POST /api/assistant/query`。见 [接口说明](docs/api.md)和 [DeepSeek API](https://api-docs.deepseek.com/api/create-chat-completion/)。
 
 也可以通过环境变量配置 `AMAP_WEB_SERVICE_KEY`、`LLM_BASE_URL`、`LLM_API_KEY`、`LLM_MODEL`、`DB_URL`、`DB_USER`、`DB_PASSWORD`、`SERVER_ADDRESS`、`SERVER_PORT`、`CAMPUS_DATA_ROOT`。模板保留环境变量占位符；也可在本地文件中直接填写。
 
 ### MySQL
 
-仅运行现有地点与行程查询时可跳过。后续会话功能使用 MySQL 8.4，迁移文件唯一入口为 `backend/src/main/resources/db/migration/`。三张业务表为 `conversation`、`conversation_message`、`journey_query`；Flyway 另维护版本表。运行服务不会自动建表。
+地点、普通行程和单轮问路可独立运行。小程序聊天使用 MySQL 8.4 保存会话，需先迁移到 V2。迁移入口为 `backend/src/main/resources/db/migration/`。四张业务表为 `conversation`、`conversation_message`、`journey_query`、`conversation_turn`。服务启动不会自动建表。
 
-先由数据库管理员创建 `llmroute` 数据库和相应账号；服务账号配置到本地文件，迁移账号通过环境变量 `MIGRATION_DB_URL`、`MIGRATION_DB_USER`、`MIGRATION_DB_PASSWORD` 提供，然后执行：
+先由数据库管理员创建 `llmroute`，给运行服务的账号授予四张业务表的 `SELECT/INSERT/UPDATE` 权限。运行账号配置到本地文件，迁移账号通过环境变量 `MIGRATION_DB_URL`、`MIGRATION_DB_USER`、`MIGRATION_DB_PASSWORD` 提供，然后执行：
 
 ```bash
 ./backend/mvnw -f backend/pom.xml flyway:migrate
 ```
 
 Windows 将命令中的 Wrapper 换成 `.\backend\mvnw.cmd`。迁移环境变量不会从 `application-local.properties` 读取。不要将别人的 localhost、数据库账号或密钥直接复制到自己的设备。
+
+### 会话保留
+
+会话、消息和行程快照在最后一次提交或结束后保留 30 天。到期记录在 API 中返回找不到，由数据库维护账号定期分批清理。下面的语句每次处理至多 500 个到期会话，并在同一事务内按外键顺序删除。清理账号需要四张业务表的查询和删除权限以及创建临时表权限。
+
+```sql
+CREATE TEMPORARY TABLE expired_conversations (
+    conversation_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY
+);
+START TRANSACTION;
+INSERT INTO expired_conversations
+    SELECT conversation_id FROM conversation
+    WHERE updated_at_utc < UTC_TIMESTAMP(3) - INTERVAL 30 DAY
+    ORDER BY updated_at_utc, conversation_id LIMIT 500 FOR UPDATE;
+DELETE t FROM conversation_turn t JOIN expired_conversations e USING (conversation_id);
+DELETE q FROM journey_query q JOIN expired_conversations e USING (conversation_id);
+DELETE m FROM conversation_message m JOIN expired_conversations e USING (conversation_id);
+DELETE c FROM conversation c JOIN expired_conversations e USING (conversation_id);
+COMMIT;
+DROP TEMPORARY TABLE expired_conversations;
+```
 
 ### 网页原型
 
@@ -141,16 +162,13 @@ npm --prefix frontend run build:mp-weixin
 node tools/test.js
 ```
 
-本次整理已通过后端 168 项测试与打包、前端类型检查与生产构建、原型路网断言；另从不含本机配置和依赖目录的副本验证了依赖安装、后端启动和 220 个地点加载。真实高德和真实模型的结论来自已有验收记录；本次整理未重新发起付费服务查询，未验收手机或真实数据库连接。
-
 ## 目录
 
-- `backend/`：地点、校园接驳、城市路线、行程组合和模型工具自检。
+- `backend/`：地点、校园接驳、行程组合、模型问路和匿名会话。
 - `frontend/`：uni-app / Vue 3 微信小程序。
 - `web/`：独立网页原型及生成的地图数据；后端也会读取其中的校门实体。
 - `source-data/校园数据/`：公开来源数据、地图与字段说明，保留来源候选状态。
 - `tools/`：数据生成脚本、原型预览与断言检查。
 - `docs/api.md`：当前接口与字段约定。
-- `docs/tasks.md`：剩余开发任务，可直接交给 Agent。
 
 应用层核实结论位于 `backend/src/main/resources/data/`，不覆盖来源数据来改变其核实状态。OSM 数据保留 © OpenStreetMap contributors 署名；其他来源和使用限制见 [数据说明](source-data/校园数据/README.md)。

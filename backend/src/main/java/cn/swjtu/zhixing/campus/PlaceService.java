@@ -68,6 +68,23 @@ public class PlaceService {
         return hits.stream().map(Hit::candidate).toList();
     }
 
+    /** Prefer exact names and exact aliases together, including same-name candidates. */
+    public List<PlaceCandidate> searchForRouting(String keyword, PlaceKind scope) {
+        List<PlaceCandidate> matches = search(keyword, scope);
+        String normalized = normalize(keyword);
+        List<PlaceCandidate> exact = matches.stream()
+                .filter(candidate -> score(candidate, normalized) >= 96)
+                .toList();
+        if (exact.isEmpty()) {
+            return matches;
+        }
+        List<PlaceCandidate> physical = exact.stream()
+                .filter(candidate -> !isDirectoryReference(candidate)).toList();
+        // When an exact verified physical alias is available, directory-only organizations
+        // remain searchable through the place API but cannot represent a departure point.
+        return physical.stream().anyMatch(PlaceCandidate::routingReady) ? physical : exact;
+    }
+
     public List<PlaceCandidate> search(String keyword) {
         return search(keyword, (PlaceKind) null);
     }
@@ -85,6 +102,10 @@ public class PlaceService {
     }
 
     // ------------------------------------------------------------------
+
+    private static boolean isDirectoryReference(PlaceCandidate candidate) {
+        return !candidate.routingReady() && candidate.id().startsWith("swjtu_org_");
+    }
 
     private static int score(PlaceCandidate candidate, String normalizedKeyword) {
         String name = normalize(candidate.name());

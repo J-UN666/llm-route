@@ -1,10 +1,13 @@
 package cn.swjtu.zhixing.assistant;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpTimeoutException;
 import java.time.Duration;
@@ -80,7 +83,7 @@ public class OpenAiToolCallingClient implements ToolCallingClient {
         } catch (RestClientException exception) {
             throw new ToolCallingException(502, AssistantErrorCodes.MODEL_UPSTREAM_ERROR, "模型请求失败", true);
         }
-        return parseResponse(raw);
+        return parseResponse(raw, request.strictToolArguments());
     }
 
     private String buildPayload(ToolCallingRequest request) {
@@ -123,6 +126,9 @@ public class OpenAiToolCallingClient implements ToolCallingClient {
         }
         body.put("tool_choice", "auto");
         body.put("temperature", 0);
+        if ("api.deepseek.com".equalsIgnoreCase(URI.create(properties.chatCompletionsUrl()).getHost())) {
+            body.putObject("thinking").put("type", "disabled");
+        }
         try {
             return objectMapper.writeValueAsString(body);
         } catch (JsonProcessingException exception) {
@@ -130,13 +136,16 @@ public class OpenAiToolCallingClient implements ToolCallingClient {
         }
     }
 
-    private ToolCallingResponse parseResponse(String raw) {
+    private ToolCallingResponse parseResponse(String raw, boolean strict) {
         if (raw == null || raw.isBlank()) {
             throw upstreamError("模型响应为空");
         }
         JsonNode root;
         try {
-            root = objectMapper.readTree(raw);
+            root = strict
+                    ? objectMapper.reader().with(JsonParser.Feature.STRICT_DUPLICATE_DETECTION)
+                            .with(DeserializationFeature.FAIL_ON_TRAILING_TOKENS).readTree(raw)
+                    : objectMapper.readTree(raw);
         } catch (JsonProcessingException exception) {
             throw upstreamError("模型响应不是合法 JSON");
         }
@@ -163,6 +172,9 @@ public class OpenAiToolCallingClient implements ToolCallingClient {
                     throw upstreamError("模型工具调用结构错误");
                 }
                 JsonNode arguments = function.get("arguments");
+                if (strict && (arguments == null || !arguments.isTextual())) {
+                    throw upstreamError("模型工具 arguments 必须是 JSON 字符串");
+                }
                 String argumentsJson = arguments == null
                         ? "{}"
                         : (arguments.isTextual() ? arguments.asText() : arguments.toString());

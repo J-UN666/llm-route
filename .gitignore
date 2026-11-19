@@ -5,9 +5,10 @@
 .env.*
 !.env.example
 
-# Local agent instructions and acceptance output
+# Local agent instructions, task cards and acceptance output
 /AGENT.md
 /AGENTS.md
+/docs/tasks.md
 /docs/acceptance/
 
 # Maven build output, test reports and temporary logs

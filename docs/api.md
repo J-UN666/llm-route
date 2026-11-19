@@ -62,7 +62,32 @@
 
 返回 `requestId/model/toolCalls/answer`。模型请求 `get_service_info`，Java 校验工具名和严格 JSON 参数、执行工具，再按 callId 将结果回传模型。工具只接受空对象；尾随非空文本、第二个 JSON 对象、未知工具和多余参数均拒绝。最大轮数由配置限制。
 
-此接口不支持业务问路或多轮会话，目前没有 `/api/assistant/query`。模型配置缺失 503、工具非法 422、上游/协议异常 502、超时 504；模型失败不影响普通查询。
+自检独立于问路和会话。模型配置缺失 503、工具非法 422、上游/协议异常 502、超时 504；模型失败不影响普通查询。
+
+## 自然语言问路
+
+`POST /api/assistant/query` 接受以下两种请求。
+
+- 单轮：`{"message":"从图书馆去天府广场，少走路"}`。单轮无需会话数据库，不保存历史。
+- 会话：加 `conversationId`、`clientRequestId`（UUID v4）、`stateVersion`（非负整数），并在 `X-Conversation-Token` 请求头传 owner token。输入为非空 `message`（最多 500 字符）或 `confirmation: {"confirmationId":"…","placeId":"…"}`，两者选一。点击确认需要已创建的会话。候选 ID 只对当前待确认项有效，有效期 10 分钟。
+
+问路响应固定包含 `schemaVersion: 1`、`requestId`、`status`、`answer`、`conditions`、`clarifications`、`toolCalls`、`journey`、`journeyRequestId`、`error`、`conversationId`、`stateVersion`。后两个会话字段在单轮时为 null。`journey` 是普通行程接口的原始结果，包含原始排序、空值与轨迹。工具轨迹只保留调用 ID、工具、结果状态、行程请求 ID 和用于核验的稳定 ID、时间、偏好。转发给模型的结果省略轨迹。
+
+- `SUCCEEDED` / `NO_ROUTE`：行程已查，后者的 `plans` 为空。
+- `NEEDS_CLARIFICATION`：`clarifications` 列出 `field`、`reason`、提示、候选和确认编号/有效期。地点原因包括 `MISSING_ORIGIN`、`MISSING_DESTINATION`、`LOCATION_UNKNOWN`、`NO_MATCH`、`AMBIGUOUS`、`PLACE_UNAVAILABLE`。候选带稳定 ID、名称、类别、算路可用性和原因。确认过期返回 409，候选越界或不可用返回 422。
+- `JOURNEY_FAILED`：`error` 保留行程请求 ID、代码、提示和可重试标志。高德未配置为 `PROVIDER_NOT_CONFIGURED`，高德超时为 `PROVIDER_TIMEOUT`。此类结果作为一次已接受的业务答复保存。
+- 模型未配置、超时、协议/轮次失败和数据库不可用按 HTTP 错误返回 `requestId/code/message/retryable`，不接受该轮。整体问路执行预算 55 秒，工具轮次默认 3 轮，最多 8 次调用，每轮用户提交最多一次行程执行。小程序超时为 60 秒。
+
+未指定时间时按北京时间下一整分钟出发，未指定偏好时按推荐。答复展示实际出发时间和偏好。会话保留已确认的四项条件，仅覆盖本轮明确修改项。已保存出发时间过期时先要求新时间。新地点经过服务端查找与可用性检查，同名实体保留独立 ID。图书馆等已登记的实体别名优先匹配算路地点，官方组织目录条目仍可在地点 API 中按原 ID 查找。无法获取用户当前位置时要求指定地点。
+
+## 匿名会话
+
+- `POST /api/assistant/conversations` → HTTP 201，返回 `conversationId/ownerToken/stateVersion`。owner token 只在创建时返回。
+- `GET /api/assistant/conversations/{id}` → 当前版本、状态、条件、待确认项、最近 40 条有序用户/助手消息及 `latest` 答复。消息带提交时间和历史行程请求 ID。
+- `POST /api/assistant/conversations/{id}/close` → HTTP 204，幂等结束会话。
+- `GET /api/assistant/conversations/{id}/journeys/{requestId}` → 此会话已接受的历史行程原始快照。
+
+创建以外的会话请求均发送 `X-Conversation-Token`。凭据错误与会话不存在均返回 404。凭据在数据库中只保存 SHA-256。相同 `clientRequestId` 和相同请求体返回已接受的原答复，省略重复写入；重复标识换请求体或请求版本已过时返回 409。客户端先恢复最新状态，再发起新提交。新字段按 `schemaVersion=1` 向后兼容地增加，客户端按已知状态渲染并可显示通用错误；破坏性改动提升契约版本。
 
 ## 错误与健康检查
 
@@ -84,6 +109,6 @@
 
 ## 数据库边界
 
-唯一迁移入口为 `backend/src/main/resources/db/migration/`。`conversation` 保存匿名会话条件、确认状态和版本；`conversation_message` 保存有序消息；`journey_query` 保存输入、结果和故障快照。
+唯一迁移入口为 `backend/src/main/resources/db/migration/`。`conversation` 保存匿名会话条件、确认状态和版本；`conversation_message` 保存有序消息；`journey_query` 保存输入、结果和故障快照。V2 新增的 `conversation_turn` 保存请求指纹、重试标识与关联的答复。
 
-后续实现以 owner token 哈希隔离会话，以 `state_version` 防止旧请求覆盖新条件，按会话分配消息序号，数据库时间列统一 UTC。迁移 SQL 已提供，Repository、事务和持久化调用尚未实现。字段和约束以 SQL 为准。
+模型和高德在事务外执行。提交时以 `state_version` 条件更新，并在同一短事务内提交状态、消息和路线快照。过时结果丢弃，最新界面只显示已接受版本。会话按 30 天未更新到期。查询接口不再返回到期会话。管理员按 README 的清理步骤定期删除到期会话与关联消息、重试记录及快照。普通行程独立于会话数据库。

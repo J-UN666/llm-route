@@ -442,6 +442,10 @@ public class JourneyService {
             return new JourneyApiException(HttpStatus.BAD_GATEWAY, "PROVIDER_RATE_LIMITED",
                     message, true, requestId);
         }
+        if (primary.code() == TransitErrorCode.PROVIDER_NOT_CONFIGURED) {
+            return new JourneyApiException(HttpStatus.BAD_GATEWAY, "PROVIDER_ERROR",
+                    message, true, requestId, "PROVIDER_NOT_CONFIGURED");
+        }
         if (primary.code() == TransitErrorCode.INVALID_PARAMETER) {
             return new JourneyApiException(HttpStatus.UNPROCESSABLE_ENTITY, "INVALID_PARAMETER",
                     message, false, requestId);

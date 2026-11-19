@@ -29,6 +29,14 @@
       </view>
 
       <!-- 规划输入卡 -->
+      <navigator url="/pages/assistant/index" class="assistant-entry" hover-class="assistant-entry-pressed">
+        <view>
+          <text class="assistant-entry-title">自然语言问路</text>
+          <text class="assistant-entry-example">试试说「从图书馆去天府广场，少走路」</text>
+        </view>
+        <text aria-hidden="true">›</text>
+      </navigator>
+
       <view class="card">
         <view class="card-head">
           <view class="card-title">
@@ -1301,5 +1309,22 @@ onBeforeUnmount(() => {
   line-height: 1.7;
   word-break: break-all;
 }
+
+.assistant-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+  padding: 24rpx;
+  border-radius: 20rpx;
+  background: #e9f3fb;
+  color: #163c59;
+}
+.assistant-entry-pressed { background: #dcecf8; }
+.assistant-entry-title,
+.assistant-entry-example { display: block; }
+.assistant-entry-title { font-size: 30rpx; font-weight: 650; }
+.assistant-entry-example { margin-top: 6rpx; font-size: 24rpx; }
 
 </style>

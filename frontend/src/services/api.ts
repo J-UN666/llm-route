@@ -10,6 +10,8 @@ import type {
   PlaceSearchResponse
 } from '@/types/journey';
 
+import type { AssistantReply, AssistantSession, AssistantSnapshot, AssistantSubmission } from '@/types/assistant';
+
 const FALLBACK_API_BASE_URL = 'http://127.0.0.1:8080';
 const REQUEST_TIMEOUT_MS = 15000;
 const BEIJING_OFFSET_MINUTES = 8 * 60;
@@ -128,6 +130,8 @@ interface RequestConfig {
   path: string;
   method: 'GET' | 'POST';
   data?: string | Record<string, unknown> | ArrayBuffer;
+  header?: Record<string, string>;
+  timeout?: number;
 }
 
 function requestRaw(config: RequestConfig): Promise<RawResponse> {
@@ -135,7 +139,8 @@ function requestRaw(config: RequestConfig): Promise<RawResponse> {
     const requestOptions: UniApp.RequestOptions = {
       url: `${API_BASE_URL}${config.path}`,
       method: config.method,
-      timeout: REQUEST_TIMEOUT_MS,
+      timeout: config.timeout ?? REQUEST_TIMEOUT_MS,
+      header: config.header,
       success: (response) => {
         resolve({ statusCode: response.statusCode, data: response.data });
       },
@@ -144,7 +149,7 @@ function requestRaw(config: RequestConfig): Promise<RawResponse> {
       }
     };
     if (config.method === 'POST') {
-      requestOptions.header = { 'Content-Type': 'application/json' };
+      requestOptions.header = { 'Content-Type': 'application/json', ...config.header };
       requestOptions.data = config.data;
     }
     uni.request(requestOptions);
@@ -209,6 +214,59 @@ export async function planJourney(request: JourneyRequest): Promise<JourneyRespo
     });
   }
   return body;
+}
+
+const ASSISTANT_TIMEOUT_MS = 60_000;
+
+async function assistantRequest<T>(config: RequestConfig, expectedStatus = 200): Promise<T> {
+  const response = await requestRaw(config);
+  if (response.statusCode !== expectedStatus) {
+    throw createHttpError(response.statusCode, response.data);
+  }
+  return response.data as T;
+}
+
+function sessionPath(session: AssistantSession): string {
+  return `/api/assistant/conversations/${encodeURIComponent(session.conversationId)}`;
+}
+
+function ownerHeader(session: AssistantSession): Record<string, string> {
+  return { 'X-Conversation-Token': session.ownerToken };
+}
+
+export function createAssistantSession(): Promise<AssistantSession> {
+  return assistantRequest({ path: '/api/assistant/conversations', method: 'POST' }, 201);
+}
+
+export function getAssistantSession(session: AssistantSession): Promise<AssistantSnapshot> {
+  return assistantRequest({ path: sessionPath(session), method: 'GET', header: ownerHeader(session) });
+}
+
+export function closeAssistantSession(session: AssistantSession): Promise<void> {
+  return assistantRequest({ path: `${sessionPath(session)}/close`, method: 'POST', header: ownerHeader(session) }, 204);
+}
+
+export function getAssistantJourney(session: AssistantSession, requestId: string): Promise<JourneyResponse> {
+  return assistantRequest({
+    path: `${sessionPath(session)}/journeys/${encodeURIComponent(requestId)}`,
+    method: 'GET',
+    header: ownerHeader(session)
+  });
+}
+
+export function sendAssistantTurn(session: AssistantSession, submission: AssistantSubmission): Promise<AssistantReply> {
+  return assistantRequest({
+    path: '/api/assistant/query',
+    method: 'POST',
+    header: ownerHeader(session),
+    timeout: ASSISTANT_TIMEOUT_MS,
+    data: {
+      ...submission.input,
+      conversationId: session.conversationId,
+      stateVersion: submission.stateVersion,
+      clientRequestId: submission.clientRequestId
+    }
+  });
 }
 
 /** 把任意异常转为页面可直接展示的错误视图。 */
@@ -342,7 +400,7 @@ export function getBeijingNow(now: Date = new Date()): BeijingNow {
 }
 
 const ISO_WITH_OFFSET_RE =
-  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?(?:\.(\d{1,3}))?(Z|[+-]\d{2}:\d{2})$/;
+  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?(?:\.(\d{1,9}))?(Z|[+-]\d{2}:\d{2})$/;
 
 function parseIsoToEpochMs(iso: string): number | null {
   const match = ISO_WITH_OFFSET_RE.exec(iso.trim());

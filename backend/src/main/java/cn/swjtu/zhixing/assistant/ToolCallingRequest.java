@@ -6,5 +6,10 @@ import java.util.List;
 public record ToolCallingRequest(
         String model,
         List<ToolCallingMessage> messages,
-        List<ToolDefinition> tools) {
+        List<ToolDefinition> tools,
+        boolean strictToolArguments) {
+
+    public ToolCallingRequest(String model, List<ToolCallingMessage> messages, List<ToolDefinition> tools) {
+        this(model, messages, tools, false);
+    }
 }

@@ -14,10 +14,17 @@ public class JourneyApiException extends RuntimeException {
     private final String code;
     private final HttpStatus status;
     private final boolean retryable;
+    private final String causeCode;
 
     public JourneyApiException(HttpStatus status, String code, String message,
                                boolean retryable, String requestId) {
+        this(status, code, message, retryable, requestId, code);
+    }
+
+    JourneyApiException(HttpStatus status, String code, String message,
+                        boolean retryable, String requestId, String causeCode) {
         super(message);
+        this.causeCode = causeCode;
         this.status = status;
         this.code = code;
         this.retryable = retryable;
@@ -30,6 +37,10 @@ public class JourneyApiException extends RuntimeException {
 
     public String code() {
         return code;
+    }
+
+    public String causeCode() {
+        return causeCode;
     }
 
     public HttpStatus status() {
