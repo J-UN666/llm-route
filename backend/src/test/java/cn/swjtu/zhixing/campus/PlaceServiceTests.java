@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Optional;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ class PlaceServiceTests {
                 new ClassPathResource("data/application-places.json"),
                 new ObjectMapper());
         loader.load();
-        placeService = new PlaceService(loader);
+        placeService = new PlaceService(loader, Optional.empty());
         assertThat(loader.isLoaded()).as("测试数据必须能加载：%s", loader.loadErrorMessage()).isTrue();
     }
 
@@ -121,19 +122,21 @@ class PlaceServiceTests {
     }
 
     @Test
-    void westGateKeepsCampusOnlyLimitation() {
+    void westGateUsesTheTrialRoutingPointAndKeepsItsAmapMarker() {
         PlaceCandidate west = placeService.getById("campus_gate_west");
         assertThat(west.kind()).isEqualTo(PlaceKind.GATE);
-        assertThat(west.routingReady()).isFalse();
-        assertThat(west.routingPosition()).isNull();
-        assertThat(west.unavailableReason()).contains("campusOnly");
+        assertThat(west.routingReady()).isTrue();
+        assertThat(west.routingPosition().pointId()).isEqualTo("osm_node_11668769188");
+        assertThat(west.routingPosition().coordinateSystem()).isEqualTo("WGS84");
+        assertThat(west.verificationStatus()).isEqualTo("PROJECT_ASSUMED_OPEN");
+        assertThat(west.displayPosition().pointId()).isEqualTo("amap_poi_B001C80PYA");
+        assertThat(west.unavailableReason()).isNull();
+        assertThat(placeService.search(null, PlaceKind.GATE)).hasSize(6).allMatch(PlaceCandidate::routingReady);
     }
 
     @Test
     void amapLocationsFillOnlyTheDisplayPositionOfExistingPlaces() {
         Map<String, String> poiIds = Map.of(
-                "campus_gate_west", "B001C80PYA",
-                "osm_node_2178309445", "B0FFG092LP",
                 "swjtu_org_99", "B0FFFZSZYO",
                 "osm_way_207570532", "B001C0A25F",
                 "swjtu_org_345", "B001C0A25F",

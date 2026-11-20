@@ -315,7 +315,7 @@ class JourneyPlanRankingTests {
                 segments,
                 List.of("AMAP_V3_TRANSIT_INTEGRATED"),
                 DEPARTURE,
-                "places=2026-11-15.2;connectors=2026-11-15.4");
+                "places=2026-11-15.2;connectors=2026-11-15.4", null);
     }
 
     private static JourneyPoint exitPoint(String pointId) {

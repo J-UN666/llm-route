@@ -20,6 +20,7 @@ export interface PlaceCandidate {
   id: string;
   name: string;
   kind: PlaceKind;
+  address?: string | null;
   category: string | null;
   aliases: string[];
   routingReady: boolean;
@@ -113,6 +114,7 @@ export interface JourneyPlan {
   destinationId: string;
   gateId: string | null;
   gateExitPoint: JourneyPoint | null;
+  destinationPoint?: JourneyPoint | null;
   departureTime: string;
   cityDepartureTime: string | null;
   providerDepartureTime: string | null;

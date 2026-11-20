@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 import json
 import ssl
 from urllib.error import HTTPError
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from uuid import uuid4
 
@@ -38,13 +39,18 @@ def check(args):
     places = request("/api/places?scope=CAMPUS")["items"]
     assert any(place["id"] == LIBRARY and place["routingReady"] for place in places)
     departure = (datetime.now(timezone(timedelta(hours=8))) + timedelta(minutes=10)).replace(second=0, microsecond=0)
+    params = urlencode({"originId": LIBRARY, "departureTime": departure.isoformat()})
+    connectors = request("/api/campus/connectors?" + params)["connectors"]
+    exits = {item["gateId"]: item["gateExitPoint"]["pointId"] for item in connectors}
     form = request("/api/journeys", {
         "originId": LIBRARY, "destinationId": "C01", "departureTime": departure.isoformat(), "preference": "LESS_WALKING"
     })
     provider = "AMAP" if args.live else "DEMO"
     assert form["status"] == "SUCCEEDED" and form["provider"] == provider and form["plans"]
     for plan in form["plans"]:
-        assert plan["gateId"] == "campus_gate_east"
+        if not args.live:
+            assert plan["gateId"] == "campus_gate_east"
+        assert plan["gateExitPoint"]["pointId"] == exits[plan["gateId"]]
         segments = plan["segments"]
         assert segments and segments[0]["mode"] == "CAMPUS_WALK"
         assert segments[0]["toPoint"]["pointId"] == plan["gateExitPoint"]["pointId"]

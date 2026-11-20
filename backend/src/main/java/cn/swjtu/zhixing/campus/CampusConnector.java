@@ -11,8 +11,7 @@ import java.util.List;
  *       物理点位保存在 {@code gatePoints}；</li>
  *   <li>{@code walkMeters}/{@code durationSeconds} 必须等于 {@code segments} 的加总；
  *       几何端点与起点/出校点一致；</li>
- *   <li>只有 {@code verificationStatus=APPLICATION_VERIFIED} 且按时段规则可用的接驳才会
- *       被服务返回；未审核/不通过连接保留在应用 JSON 中并给出明确原因。</li>
+ *   <li>已确认与项目试用接驳按各自的通行规则参与算路。</li>
  * </ul>
  */
 public record CampusConnector(

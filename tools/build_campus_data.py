@@ -178,7 +178,6 @@ gate_list.append({
     'nodeIds': west_node_ids,
     'routeNodeId': west_route_node_id,
     'sourceIds': [west_label['source_id'], west_route_node['source_id']],
-    'campusOnly': True,
 })
 
 # ---------- 周边交通点 ----------

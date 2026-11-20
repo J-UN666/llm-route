@@ -33,7 +33,7 @@ import org.springframework.stereotype.Service;
  *
  * <p>数据来自应用层独立 JSON（默认 {@code classpath:data/campus-connectors.json}），启动时只读加载并校验
  * 分段加总、几何端点、是否包含禁行分段等不变量。服务只返回在当前 {@code departureTime} 下
- * 审核可用（{@code APPLICATION_VERIFIED} 且无命中的开放限制）的接驳；未审核、不通过或
+ * 经确认或由项目启用试用且无开放限制的接驳；未启用、不通过或
  * 时段不可用的连接通过 {@link Resolution#unavailable()} 给出明确原因，供控制器返回 422。</p>
  *
  * <p>时间语义固定为 {@code Asia/Shanghai}；{@code departureTime} 必须是带时区的 ISO-8601 时间。</p>
@@ -45,6 +45,7 @@ public class CampusConnectorService {
 
     /** 只有该状态的接驳才可能被返回。 */
     static final String VERIFICATION_APPROVED = "APPLICATION_VERIFIED";
+    public static final String PROJECT_ASSUMED_OPEN = "PROJECT_ASSUMED_OPEN";
     /** 校园地点类型（{@link PlaceKind#CAMPUS}）。 */
     private static final String KIND_CAMPUS = "CAMPUS";
     static final ZoneId CAMPUS_ZONE = ZoneId.of("Asia/Shanghai");
@@ -150,7 +151,7 @@ public class CampusConnectorService {
 
     private Optional<CampusConnectorUnavailability> evaluateAvailability(CampusConnector connector, ZonedDateTime departure) {
         String status = connector.verificationStatus();
-        if (!VERIFICATION_APPROVED.equals(status)) {
+        if (!usableStatus(status)) {
             String code = connector.unavailableReasonCode() == null || connector.unavailableReasonCode().isBlank()
                     ? "CONNECTOR_NOT_VERIFIED"
                     : connector.unavailableReasonCode();
@@ -305,7 +306,7 @@ public class CampusConnectorService {
             }
         }
 
-        if (VERIFICATION_APPROVED.equals(connector.verificationStatus())) {
+        if (usableStatus(connector.verificationStatus())) {
             validateApprovedConnector(connector, label);
         }
 
@@ -316,6 +317,10 @@ public class CampusConnectorService {
                 parseRestrictionTime(restriction.to());
             }
         }
+    }
+
+    private static boolean usableStatus(String status) {
+        return VERIFICATION_APPROVED.equals(status) || PROJECT_ASSUMED_OPEN.equals(status);
     }
 
     private void validateApprovedConnector(CampusConnector connector, String label) {

@@ -101,6 +101,7 @@
             <text class="pp-candidate-meta">
               {{ categoryLabel(item.category) }} · {{ verificationLabel(item.verificationStatus) }}
             </text>
+            <text v-if="item.address" class="pp-candidate-meta">{{ item.address }}</text>
             <text class="pp-candidate-meta">
               {{ positionBrief(item) }}
             </text>
@@ -130,6 +131,10 @@
           <view class="pp-row">
             <text class="pp-k">名称</text>
             <text class="pp-v">{{ confirming.name }}</text>
+          </view>
+          <view v-if="confirming.address" class="pp-row">
+            <text class="pp-k">地址</text>
+            <text class="pp-v">{{ confirming.address }}</text>
           </view>
           <view v-if="duplicateCount(confirming.name) > 1" class="pp-row">
             <text class="pp-k">地点编号</text>
@@ -529,6 +534,8 @@ const KIND_LABELS: Record<string, string> = {
 const VERIFICATION_LABELS: Record<string, string> = {
   APPLICATION_VERIFIED: '应用已核实',
   DISPLAY_POSITION_VERIFIED: '展示位置已核实',
+  AMAP_POI_ENTRANCE: '高德入口',
+  AMAP_POI_LOCATION: '高德地点标注点',
   SOURCE_VERIFIED: '来源已核实',
   UNVERIFIED: '来源未核验',
   PARTIALLY_VERIFIED: '部分核实'

@@ -30,13 +30,13 @@ def digest(path):
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
-def check_platform(args):
+def check_platform(channel):
     java = Path(os.environ["JAVA_HOME"]) / "bin/java" if os.environ.get("JAVA_HOME") else "java"
     actual = subprocess.check_output([java, "-version"], stderr=subprocess.STDOUT, text=True).splitlines()[0]
     expected = (ROOT / ".java-version").read_text().strip()
     if not re.search(r'"' + re.escape(expected) + r'(?:[.+-][^"]*)?"', actual):
         raise ValueError(f"需要 JDK {expected}，当前为 {actual}")
-    if args.channel == "backend":
+    if channel == "backend":
         return
     node_version = (FRONTEND / ".nvmrc").read_text().strip()
     if subprocess.check_output(["node", "-v"], text=True).strip() != "v" + node_version:
@@ -79,17 +79,17 @@ def network_config(args):
     return url
 
 
-def build_miniprogram(args, stage, url):
-    npm_options = ["--offline"] if args.offline_build else ["--prefer-offline"]
+def build_miniprogram(stage, url, *, channel, app_id="", offline_build=False):
+    npm_options = ["--offline"] if offline_build else ["--prefer-offline"]
     subprocess.run(["npm", "ci", *npm_options], cwd=FRONTEND, check=True)
     output = stage / "mp-weixin"
-    env = dict(os.environ, UNI_OUTPUT_DIR=str(output), VITE_API_BASE_URL=url, VITE_RELEASE_CHANNEL=args.channel,
-               VITE_DEMO_MODE="1" if args.channel == "demo" else "0")
+    env = dict(os.environ, UNI_OUTPUT_DIR=str(output), VITE_API_BASE_URL=url, VITE_RELEASE_CHANNEL=channel,
+               VITE_DEMO_MODE="1" if channel == "demo" else "0")
     subprocess.run(["npm", "run", "build:mp-weixin"], cwd=FRONTEND, env=env, check=True)
     config_path = output / "project.config.json"
     config = json.loads(config_path.read_text())
-    if args.channel == "wechat":
-        config["appid"] = args.app_id
+    if channel == "wechat":
+        config["appid"] = app_id
         config.setdefault("setting", {})["urlCheck"] = True
         config_path.write_text(json.dumps(config, ensure_ascii=False, indent=2) + "\n")
         compiled_api = (output / "services/api.js").read_text()
@@ -97,21 +97,26 @@ def build_miniprogram(args, stage, url):
             raise ValueError("体验版制品未正确注入 API 基址")
     if not (output / "app.json").is_file():
         raise ValueError("缺少已构建的小程序入口")
+    return output
+
+
+def build_backend(offline_build):
+    command = ["./backend/mvnw", "-B", "-f", "backend/pom.xml", "-DskipTests"]
+    if offline_build:
+        command.append("-o")
+    subprocess.run([*command, "package"], cwd=ROOT, check=True)
+    return ROOT / "backend/target/llm-route-backend.jar"
 
 
 def package(args, output, url):
-    check_platform(args)
+    check_platform(args.channel)
     for path in RUNTIME_DATA + SOURCE_DATA:
         if not (ROOT / path).is_file():
             raise ValueError(f"缺少校园数据：{path}")
     if args.jar:
         source_jar = Path(args.jar).resolve()
     else:
-        command = ["./backend/mvnw", "-B", "-f", "backend/pom.xml", "-DskipTests"]
-        if args.offline_build:
-            command.append("-o")
-        subprocess.run([*command, "package"], cwd=ROOT, check=True)
-        source_jar = ROOT / "backend/target/llm-route-backend.jar"
+        source_jar = build_backend(args.offline_build)
 
     with zipfile.ZipFile(source_jar) as jar:
         data_version = {
@@ -141,7 +146,7 @@ def package(args, output, url):
             for name in ("zhixing.service", "zhixing.nginx.conf", "runtime.env.example"):
                 shutil.copyfile(ROOT / "deploy" / name, target / name)
         if url:
-            build_miniprogram(args, stage, url)
+            build_miniprogram(stage, url, channel=args.channel, app_id=args.app_id, offline_build=args.offline_build)
         checksums = {path.relative_to(stage).as_posix(): digest(path)
                      for path in sorted(stage.rglob("*")) if path.is_file()}
         manifest = dict(channel=args.channel, commit=source_ref, dirty=dirty,

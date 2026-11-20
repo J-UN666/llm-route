@@ -6,6 +6,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,12 +23,22 @@ import cn.swjtu.zhixing.transit.TransitSegment;
 import cn.swjtu.zhixing.transit.TransitStatus;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpServer;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.InetSocketAddress;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,12 +65,55 @@ class JourneyApiIntegrationTests {
     private static final String LIBRARY = "osm_way_1098786977";
     private static final String TIENS = "C01";
     private static final String DEPARTURE = "2026-11-16T09:00:00+08:00";
+    private static final int GATE_COUNT = 6;
     private static final String EXIT_POINT = "osm_node_13469658219";
     private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
+    private static final String MUSEUM = "amap:B001C8SBG2";
+    private static final String POI = """
+            {"id":"B001C8SBG2","name":"成都博物馆","cityname":"成都市","adname":"青羊区",
+             "address":"小河街1号","location":"104.063749,30.657297","navi":{"entr_location":"104.06428,30.656979"}}
+            """;
+    private static HttpServer placeServer;
 
     @DynamicPropertySource
-    static void campusDataRoot(DynamicPropertyRegistry registry) {
+    static void services(DynamicPropertyRegistry registry) throws IOException {
+        placeServer = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+        placeServer.createContext("/v5/place/text", JourneyApiIntegrationTests::mockPlace);
+        placeServer.createContext("/v5/place/detail", JourneyApiIntegrationTests::mockPlace);
+        placeServer.start();
+        registry.add("amap.place-base-url", () -> "http://127.0.0.1:" + placeServer.getAddress().getPort());
+        registry.add("amap.web-service-key", () -> "integration-key");
         registry.add("campus.data-root", () -> JourneyTestDataRoot.repoRoot().toString());
+    }
+
+    @AfterAll
+    static void stopPlaceServer() {
+        if (placeServer != null) {
+            placeServer.stop(0);
+        }
+    }
+
+    private static void mockPlace(HttpExchange exchange) throws IOException {
+        try (exchange) {
+            Map<String, String> params = Arrays.stream(exchange.getRequestURI().getRawQuery().split("&"))
+                    .map(param -> param.split("=", 2))
+                    .collect(Collectors.toMap(pair -> pair[0], pair -> URLDecoder.decode(pair[1], StandardCharsets.UTF_8)));
+            boolean validKey = "integration-key".equals(params.get("key"));
+            boolean validSearch = "成都博物馆".equals(params.get("keywords")) && "成都市".equals(params.get("region"))
+                    && "true".equals(params.get("city_limit"));
+            boolean validDetail = "B001C8SBG2".equals(params.get("id"));
+            boolean unrelatedRecommendation = "不存在的地名".equals(params.get("keywords"));
+            String body = !validKey ? """
+                    {"status":"0","infocode":"10001"}
+                    """ : "测试限流".equals(params.get("keywords")) ? """
+                    {"status":"0","infocode":"10021"}
+                    """ : "{\"status\":\"1\",\"pois\":["
+                            + (validSearch || validDetail || unrelatedRecommendation ? POI : "") + "]}";
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
+            exchange.sendResponseHeaders(200, bytes.length);
+            exchange.getResponseBody().write(bytes);
+        }
     }
 
     @Autowired
@@ -78,6 +132,10 @@ class JourneyApiIntegrationTests {
 
     /** 用给定城市方案答复 provider，并保留出发时刻取整到下一分钟的等待秒数。 */
     private void stubProviderPlans(List<TransitPlan> plans) {
+        stubProviderPlansByGate(point -> EXIT_POINT.equals(point.pointId()) ? plans : List.of());
+    }
+
+    private void stubProviderPlansByGate(java.util.function.Function<TransitPoint, List<TransitPlan>> byGate) {
         when(transitProvider.search(any(TransitPoint.class), any(TransitPoint.class),
                 any(OffsetDateTime.class), any(TransitPreference.class)))
                 .thenAnswer(invocation -> {
@@ -86,10 +144,41 @@ class JourneyApiIntegrationTests {
                             .toOffsetDateTime();
                     OffsetDateTime rounded = local.truncatedTo(ChronoUnit.MINUTES).plusMinutes(1);
                     int roundingWait = (int) (rounded.toEpochSecond() - local.toEpochSecond());
+                    List<TransitPlan> plans = byGate.apply(invocation.getArgument(0));
                     return new TransitSearchResult("AMAP",
-                            OffsetDateTime.parse("2026-11-16T01:20:00Z"),
-                            requested, rounded, roundingWait, TransitStatus.OK, plans);
+                            OffsetDateTime.parse("2026-11-16T01:20:00Z"), requested, rounded, roundingWait,
+                            plans.isEmpty() ? TransitStatus.NO_ROUTE : TransitStatus.OK, plans);
                 });
+    }
+
+    @Test
+    void onlineSearchAndJourneyUseTheSameVerifiedEntrance() throws Exception {
+        mockMvc.perform(get("/api/places").param("scope", "CITY").param("keyword", "成都博物馆"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items[0].id").value(MUSEUM))
+                .andExpect(jsonPath("$.items[0].address").value("青羊区 小河街1号"))
+                .andExpect(jsonPath("$.items[0].displayPosition.longitude").value(104.063749))
+                .andExpect(jsonPath("$.items[0].routingPosition.longitude").value(104.06428));
+
+        JsonNode body = postJourney(requestBody(LIBRARY, MUSEUM, DEPARTURE, "LESS_WALKING"));
+        assertThat(body.path("status").asText()).isEqualTo("SUCCEEDED");
+        assertThat(body.path("plans").get(0).path("destinationPoint").path("name").asText()).isEqualTo("成都博物馆");
+        assertThat(body.path("plans").get(0).path("destinationPoint").path("longitude").asDouble())
+                .isEqualTo(104.06428);
+        verify(transitProvider, times(GATE_COUNT)).search(any(),
+                eq(new TransitPoint("amap:B001C8SBG2:amap_poi_entrance", 104.06428, 30.656979, "GCJ-02")),
+                any(), eq(TransitPreference.LESS_WALKING));
+    }
+
+    @Test
+    void onlineRateLimitIsDistinctFromAnEmptySearch() throws Exception {
+        mockMvc.perform(get("/api/places").param("scope", "CITY").param("keyword", "测试限流"))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(jsonPath("$.code").value("PLACE_SEARCH_RATE_LIMITED"))
+                .andExpect(jsonPath("$.retryable").value(true));
+        mockMvc.perform(get("/api/places").param("scope", "CITY").param("keyword", "不存在的地名"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items").isEmpty());
     }
 
     @Test
@@ -99,7 +188,7 @@ class JourneyApiIntegrationTests {
         org.assertj.core.api.Assertions.assertThat(body.path("status").asText()).isEqualTo("SUCCEEDED");
         org.assertj.core.api.Assertions.assertThat(body.path("plans").size()).isEqualTo(1);
         org.assertj.core.api.Assertions.assertThat(body.path("campusDataVersion").asText())
-                .isEqualTo("places=2026-11-19.2;connectors=2026-11-19.2");
+                .isEqualTo("places=2026-11-20.1;connectors=2026-11-20.1");
         org.assertj.core.api.Assertions.assertThat(body.path("provider").asText()).isEqualTo("AMAP");
         JsonNode plan = body.path("plans").get(0);
         org.assertj.core.api.Assertions.assertThat(plan.path("gateId").asText()).isEqualTo("campus_gate_east");
@@ -184,7 +273,7 @@ class JourneyApiIntegrationTests {
 
     @Test
     void preferencesRankRealCampusCandidatesAndReturnAtMostThree() throws Exception {
-        // 同一校门（library 仅有东门可用）下的四条城市方案，乘车序列互不相同。
+        // 同一校门（固定返回东门方案）下的四条城市方案，乘车序列互不相同。
         stubProviderPlans(List.of(
                 cityPlan("line_7", "SUBWAY", 3300, 2400, 2),
                 cityPlan("line_2", "SUBWAY", 3500, 2000, 1),
@@ -223,11 +312,11 @@ class JourneyApiIntegrationTests {
                 .containsExactly(List.of("bus_311"), List.of("line_6"), List.of("line_2"));
 
         // 排序入口把请求偏好透传给提供方，比较基于本次实际获得的候选。
-        verify(transitProvider, times(1)).search(any(TransitPoint.class), any(TransitPoint.class),
+        verify(transitProvider, times(GATE_COUNT)).search(any(TransitPoint.class), any(TransitPoint.class),
                 any(OffsetDateTime.class), eq(TransitPreference.RECOMMENDED));
-        verify(transitProvider, times(1)).search(any(TransitPoint.class), any(TransitPoint.class),
+        verify(transitProvider, times(GATE_COUNT)).search(any(TransitPoint.class), any(TransitPoint.class),
                 any(OffsetDateTime.class), eq(TransitPreference.LESS_WALKING));
-        verify(transitProvider, times(1)).search(any(TransitPoint.class), any(TransitPoint.class),
+        verify(transitProvider, times(GATE_COUNT)).search(any(TransitPoint.class), any(TransitPoint.class),
                 any(OffsetDateTime.class), eq(TransitPreference.FEWER_TRANSFERS));
     }
 
@@ -378,13 +467,26 @@ class JourneyApiIntegrationTests {
                 org.mockito.ArgumentCaptor.forClass(TransitPoint.class);
         org.mockito.ArgumentCaptor<OffsetDateTime> departure =
                 org.mockito.ArgumentCaptor.forClass(OffsetDateTime.class);
-        verify(transitProvider).search(origin.capture(), any(TransitPoint.class),
+        verify(transitProvider, times(GATE_COUNT)).search(origin.capture(), any(TransitPoint.class),
                 departure.capture(), any(TransitPreference.class));
-        org.assertj.core.api.Assertions.assertThat(origin.getValue().pointId()).isEqualTo(EXIT_POINT);
-        org.assertj.core.api.Assertions.assertThat(origin.getValue().coordinateSystem())
-                .isEqualTo("WGS84");
-        org.assertj.core.api.Assertions.assertThat(departure.getValue())
+        List<String> points = origin.getAllValues().stream().map(TransitPoint::pointId).toList();
+        assertThat(points).containsExactlyInAnyOrder(EXIT_POINT, "osm_node_11668769188", "osm_node_2178309445",
+                "osm_node_2178323767", "osm_node_8386702126", "osm_node_9893305424");
+        assertThat(origin.getAllValues()).extracting(TransitPoint::coordinateSystem).containsOnly("WGS84");
+        assertThat(departure.getAllValues().get(points.indexOf(EXIT_POINT)))
                 .isEqualTo(OffsetDateTime.parse("2026-11-16T09:11:04+08:00"));
+    }
+
+    @Test
+    void westGateCanWinWhenItHasTheShortestFullJourney() throws Exception {
+        stubProviderPlansByGate(point -> List.of(point.pointId().equals("osm_node_11668769188")
+                ? cityPlan("west-metro", "SUBWAY", 1200, 450, 0)
+                : cityPlan("other-metro", "SUBWAY", 3600, 1000, 1)));
+        JsonNode result = postJourney(requestBody(LIBRARY, TIENS, DEPARTURE, "RECOMMENDED"));
+        JsonNode best = result.path("plans").get(0);
+        assertThat(best.path("gateId").asText()).isEqualTo("campus_gate_west");
+        assertThat(best.path("segments").get(0).path("toPoint")).isEqualTo(best.path("gateExitPoint"));
+        assertThat(result.path("warnings").toString()).contains("西门", "实际通行以现场为准");
     }
 
     /**

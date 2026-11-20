@@ -125,7 +125,7 @@ class CampusDataLoaderTests {
         assertThat(loader.loadErrorMessage()).isNull();
         List<PlaceCandidate> candidates = loader.candidates();
         assertThat(candidates).hasSize(220);
-        assertThat(loader.dataVersion()).isEqualTo("2026-11-19.2");
+        assertThat(loader.dataVersion()).isEqualTo("2026-11-20.1");
 
         Map<PlaceKind, Long> counts = candidates.stream()
                 .collect(Collectors.groupingBy(PlaceCandidate::kind, Collectors.counting()));

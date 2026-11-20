@@ -11,14 +11,11 @@
 方法：
   1. 在 OSM WGS84 路网上做 Dijkstra 最短路；排除 walk_permission=prohibited 与
      crosses_campus_boundary 的边（校园接驳止于校门出校点，不进入城市道路）。
-  2. 起点取图书馆、天佑斋1号楼的楼外路网接入点（演示不要求精确楼门），
-     终点取东门出校方向门节点 osm_node_13469658219（W1-04 campus_gate_east 的
-     routingPosition）。
+  2. 为图书馆、天佑斋1号楼的楼外接入点计算到应用地图中所有校门的步行路径。
   3. 连续且同一 OSM way 的边合并为一个 segment，按顺序保存说明、米数、估算秒数、
      通行状态与 WGS84 几何；总米数/总秒数由 segment 加总，供验收核对。
   4. 估算速度 1.33 m/s（约 4.8 km/h），每段秒数向上取整，总秒数=各段之和。
-  5. 团队确认东门可步行通过；按 2026-11-19 的项目口径，已启用接驳不设门禁时段。
-     地图用于坐标、几何和距离估算，明确禁行的边仍排除。
+  5. 东门保留团队确认；其余校门按项目要求试用。区分试用假设与现场通行证据，明确禁行的路段仍排除。
 
 脚本只使用 Python 标准库，可重复执行得到完全相同的 JSON（无时间戳、无随机量）。
 """
@@ -36,13 +33,15 @@ NODES_PATH = CLEANED_DIR / "graph_nodes_candidates.json"
 EDGES_PATH = CLEANED_DIR / "graph_edges_candidates.json"
 OUTPUT_PATH = REPO_ROOT / "backend" / "src" / "main" / "resources" / "data" / "campus-connectors.json"
 
-DATA_VERSION = "2026-11-19.2"
+DATA_VERSION = "2026-11-20.1"
+TRIAL_SOURCE_REF = "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+TRIAL_BASIS = "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。"
+CAMPUS_WEB_PATH = REPO_ROOT / "web" / "data" / "campus.json"
 REVIEWED_AT = "2026-11-15"
 TEAM_SOURCE_REF = "TEAM_CONFIRMATION_2026_11_15"
 DEMO_RULE_REF = "DEMO_WALKWAY_DEFAULT_OPEN"
 GATE_HOURS_RULE_REF = "PROJECT_GATE_HOURS_UNRESTRICTED_2026_11_19"
 AMAP_WALK_REF = "AMAP_WALKING_2026_11_19"
-WEST_GATE_POI_URL = "https://ditu.amap.com/place/B001C80PYA"
 WALKING_SPEED_MPS = 1.33  # 约 4.8 km/h；仅用于固定口径估算，不是现场实测
 EARTH_RADIUS_M = 6371008.8
 
@@ -59,15 +58,13 @@ EAST_GATE_NAME = "东门"
 EAST_GATE_INBOUND_NODE = "osm_node_4150911420"
 EAST_GATE_OUTBOUND_NODE = "osm_node_13469658219"
 
-WEST_GATE_ID = "campus_gate_west"
-WEST_GATE_NAME = "西门"
-WEST_GATE_NODE_A = "osm_node_11668769187"
-WEST_GATE_NODE_B = "osm_node_11668769188"
-
-SOUTHWEST_GATE_NODE = "osm_node_9893305424"
-SOUTHWEST_GATE_NAME = "西南门"
-
-DATA_VERSION_ISSUE_NOTE = "数据版本问题记录（2026-11-15）："
+GATE_KEYS = {
+    "osm_node_2178309445": "south",
+    "osm_node_2178323767": "northwest",
+    "osm_node_8386702126": "wind_tunnel",
+    "osm_node_9893305424": "southwest",
+    "campus_gate_west": "west",
+}
 
 LIBRARY_SEGMENT_DESCRIPTIONS = [
     "从图书馆东北侧楼外步道接入点出发，沿步行区向东北至图书馆北侧主轴线",
@@ -211,7 +208,7 @@ def make_geometry(nodes, node_ids):
     }
 
 
-def make_segments(nodes, groups, descriptions, gate_lane_last: bool):
+def make_segments(nodes, groups, descriptions, gate_lane_last: bool, *, trial=False):
     segments = []
     duration_sum = 0
     for index, group in enumerate(groups):
@@ -221,7 +218,10 @@ def make_segments(nodes, groups, descriptions, gate_lane_last: bool):
         )
         is_gate_lane = gate_lane_last and index == len(groups) - 1
         status, note = passability(group, is_gate_lane)
-        seconds = math.ceil(group["length_m"] / WALKING_SPEED_MPS)
+        if trial and status != "PROHIBITED":
+            status = "ASSUMED_OPEN"
+            note = f"{TRIAL_BASIS} OSM：walk_permission={group['walk_permission']}，access={group['access']}。"
+        seconds = math.ceil(round(group["length_m"], 2) / WALKING_SPEED_MPS)
         duration_sum += seconds
         geometry = make_geometry(nodes, group["node_ids"])
         # 几何折线长度必须与分段米数一致（同源 WGS84 Haversine）。
@@ -247,7 +247,7 @@ def make_segments(nodes, groups, descriptions, gate_lane_last: bool):
             "passabilityNote": note,
             "geometry": geometry,
             "osmWayIds": sorted(str(way) for way in group["osm_way_ids"]),
-            "sourceRefs": ["S04", TEAM_SOURCE_REF, DEMO_RULE_REF],
+            "sourceRefs": ["S04", TRIAL_SOURCE_REF] if trial else ["S04", TEAM_SOURCE_REF, DEMO_RULE_REF],
         })
     return segments, duration_sum
 
@@ -368,138 +368,55 @@ def approved_demo_connector(nodes, edges_on_path, connector_id, origin_id, origi
     return connector
 
 
-def pending_connector(nodes):
+def trial_connector(nodes, path, origin, gate):
+    origin_key, origin_id, origin_name, origin_node = origin
+    gate_id, gate_name = gate["id"], gate["n"]
+    exit_id = gate.get("routeNodeId", gate_id)
+    connector_id = f"connector_{origin_key}_{GATE_KEYS[gate_id]}_gate"
+    segments, seconds = make_segments(nodes, group_segments(path), [], gate_lane_last=False, trial=True)
+    for segment in segments:
+        segment["segmentId"] = f"{connector_id}_{segment['order']:02d}"
+    exit_point = make_point(nodes, exit_id, "gate_exit")
+    refs = ["S04", "web/data/campus.json", TRIAL_SOURCE_REF]
+    basis = [TRIAL_BASIS, f"出校点采用应用地图所对应的 OSM 路网节点 {exit_id}。"]
+    if gate_id == "campus_gate_west":
+        basis.append("2026-11-20 高德步行规划至交大兴业北街站 D2 口，项目出校路网点出发约 377 米，西门展示点出发约 316 米。")
+        refs.extend(["https://www.amap.com/place/BX10030840", "https://lbs.amap.com/api/webservice/guide/api/direction/"])
+    if gate_id == "osm_node_9893305424":
+        basis.append("OSM 历史数据曾标记 locked=yes，现按项目试用规则纳入；现场锁闭时请改走其他校门。")
     return {
-        "id": "connector_library_west_gate",
-        "originId": LIBRARY_ORIGIN_ID,
-        "originName": LIBRARY_ORIGIN_NAME,
-        "originPoint": make_point(nodes, LIBRARY_ACCESS_NODE, "building_access_point", [
-            "S04 OSM 建筑轮廓与相邻步道顶点核对；入口门位与开放规则待现场核实",
-        ]),
-        "gateId": WEST_GATE_ID,
-        "gateName": WEST_GATE_NAME,
-        "gatePoints": [
-            {
-                "pointId": WEST_GATE_NODE_A,
-                "longitude": nodes[WEST_GATE_NODE_A]["longitude"],
-                "latitude": nodes[WEST_GATE_NODE_A]["latitude"],
-                "coordinateSystem": "WGS84",
-                "direction": "UNKNOWN",
-                "positionRole": "gate_candidate_node",
-                "evidence": [
-                    "S04 OSM 无名门节点（barrier=gate、motor_vehicle=permit）；"
-                    "对应官方图标签“西门”（LABEL_016，S01），仅有名称线索",
-                ],
-            },
-            {
-                "pointId": WEST_GATE_NODE_B,
-                "longitude": nodes[WEST_GATE_NODE_B]["longitude"],
-                "latitude": nodes[WEST_GATE_NODE_B]["latitude"],
-                "coordinateSystem": "WGS84",
-                "direction": "UNKNOWN",
-                "positionRole": "gate_candidate_node",
-                "evidence": [
-                    "S04 OSM 无名门节点（barrier=gate、motor_vehicle=permit），"
-                    "邻接跨校界 residential 边 osm_edge_207572443_8 与 footway 过街边；进出方向未确认",
-                ],
-            },
-        ],
-        "gateExitPoint": None,
-        "segments": [],
-        "walkMeters": None,
-        "durationSeconds": None,
-        "durationBasis": None,
-        "verificationStatus": "PENDING_VERIFICATION",
-        "verifiedAt": None,
-        "verificationMethod": "高德西门 POI 与官方图和 OSM 门节点位置相符；城市接驳所用出校方向与步行权限待核对。",
-        "verificationBasis": [
-            "S04 OSM 西侧门两个候选节点 osm_node_11668769187 / osm_node_11668769188（barrier=gate、motor_vehicle=permit）",
-            "S01 官方图标签“西门”（LABEL_016）仅作名称线索，官方图无门洞与通行方向符号",
-            f"{WEST_GATE_POI_URL}：2026-11-19 核对西门高德展示点；该点距两个 OSM 候选节点均很近，方向信息由接驳另行核对。",
-            f"{AMAP_WALK_REF}：交大兴业北街站 D2 口至西门展示点的高德步行规划为 318 米、254 秒。",
-        ],
-        "missingEvidence": [
-            "西门出校方向的物理点位（两个 OSM 门节点中哪一个是出校侧）",
-            "西门是否允许日常城市出行（W1-04 应用地点将 campus_gate_west 标为 campusOnly 且 routingPosition 为空）",
-            "西门行人可用的出校路径",
-        ],
+        "id": connector_id,
+        "originId": origin_id,
+        "originName": origin_name,
+        "originPoint": make_point(nodes, origin_node, "building_external_access_point"),
+        "gateId": gate_id,
+        "gateName": gate_name,
+        "gatePoints": [{**exit_point, "direction": "OUTBOUND"}],
+        "gateExitPoint": exit_point,
+        "segments": segments,
+        "walkMeters": round(sum(segment["lengthMeters"] for segment in segments), 2),
+        "durationSeconds": seconds,
+        "durationBasis": f"按 {WALKING_SPEED_MPS} m/s 估算，各段步行秒数向上取整，总耗时为各段之和。",
+        "verificationStatus": "PROJECT_ASSUMED_OPEN",
+        "verificationMethod": "项目试用假设与 OSM 步行路网估算",
+        "verificationBasis": basis,
+        "missingEvidence": ["实际人行通行与开放时段"],
         "accessRules": {
-            "direction": "UNVERIFIED",
-            "pedestrianAccess": "UNVERIFIED",
-            "pedestrianAccessBasis": "无西门人行通行证据；官方图仅名称标签，OSM 节点无 foot/access 规则。",
-            "gateOpenHours": None,
-            "gateOpenHoursStatus": "EVIDENCE_UNAVAILABLE",
+            "direction": "OUTBOUND",
+            "pedestrianAccess": "ASSUMED_OPEN",
+            "pedestrianAccessBasis": TRIAL_BASIS,
+            "gateOpenHours": "试用按全天开放处理",
+            "gateOpenHoursStatus": "PROJECT_ASSUMED_UNRESTRICTED",
             "timeRestrictions": [],
-            "timeRestrictionBasis": "西门尚未启用为城市接驳，项目已启用接驳的时段规则不改变西门的待核对状态。",
+            "timeRestrictionBasis": TRIAL_BASIS,
         },
-        "sourceRefs": ["S01", "S04", WEST_GATE_POI_URL, AMAP_WALK_REF],
-        "unavailableReasonCode": "GATE_EXIT_POINT_UNVERIFIED",
-        "unavailableReason": (
-            "西门两个 OSM 门节点（osm_node_11668769187 / osm_node_11668769188）的进出方向未确认，"
-            "应用地点将 campus_gate_west 标为 campusOnly 且 routingPosition 为空；"
-            "高德已补充展示位置，城市接驳等待出校点和步行路径核对。"
-        ),
+        "sourceRefs": refs,
+        "unavailableReasonCode": None,
+        "unavailableReason": None,
     }
 
 
-def rejected_connector(nodes):
-    return {
-        "id": "connector_dorm1_southwest_gate",
-        "originId": DORM1_ORIGIN_ID,
-        "originName": DORM1_ORIGIN_NAME,
-        "originPoint": make_point(nodes, DORM1_ACCESS_NODE, "building_access_point", [
-            "S04 OSM 建筑轮廓与相邻人行步道顶点核对；入口门位与开放规则待现场核实",
-        ]),
-        "gateId": SOUTHWEST_GATE_NODE,
-        "gateName": SOUTHWEST_GATE_NAME,
-        "gatePoints": [
-            {
-                "pointId": SOUTHWEST_GATE_NODE,
-                "longitude": nodes[SOUTHWEST_GATE_NODE]["longitude"],
-                "latitude": nodes[SOUTHWEST_GATE_NODE]["latitude"],
-                "coordinateSystem": "WGS84",
-                "direction": "UNKNOWN",
-                "positionRole": "gate_candidate_node",
-                "evidence": [
-                    "S04 OSM 西南门节点 barrier=gate、locked=yes；邻接跨校界 residential 边 osm_edge_413859301_9（精勤路）",
-                ],
-            },
-        ],
-        "gateExitPoint": None,
-        "segments": [],
-        "walkMeters": None,
-        "durationSeconds": None,
-        "durationBasis": None,
-        "verificationStatus": "REJECTED",
-        "verifiedAt": REVIEWED_AT,
-        "verificationMethod": "OSM 标签审核：西南门标注 locked=yes，视为当前不开放。",
-        "verificationBasis": [
-            "S04 OSM 西南门节点 osm_node_9893305424（barrier=gate、locked=yes，source_updated_at 2022-11-19）",
-            "该门不在 W1-04 首批应用地点校门范围内；无开放时段、人行规则与现场通行证据",
-        ],
-        "missingEvidence": [
-            "西南门当前是否仍 locked=yes（OSM 标签更新时间 2022-11-19，需现场核实）",
-            "若开放，出校方向点位、开放时段与人行规则",
-        ],
-        "accessRules": {
-            "direction": "UNVERIFIED",
-            "pedestrianAccess": "PROHIBITED",
-            "pedestrianAccessBasis": "S04 OSM 标签 barrier=gate、locked=yes；未取得现场开放证据，按不开放审核。",
-            "gateOpenHours": None,
-            "gateOpenHoursStatus": "EVIDENCE_UNAVAILABLE",
-            "timeRestrictions": [],
-            "timeRestrictionBasis": "无开放时段证据；locked=yes 表示当前关闭。",
-        },
-        "sourceRefs": ["S04"],
-        "unavailableReasonCode": "GATE_LOCKED",
-        "unavailableReason": (
-            "S04 OSM 西南门节点 osm_node_9893305424 标注 barrier=gate、locked=yes，"
-            "无开放时段与出校方向证据，审核不通过，不生成接驳路线。"
-        ),
-    }
-
-
-def validate_connectors(connectors):
+def validate_connectors(connectors, gates, origins):
     ids = [connector["id"] for connector in connectors]
     if len(ids) != len(set(ids)):
         raise RuntimeError("接驳 ID 重复")
@@ -515,12 +432,14 @@ def validate_connectors(connectors):
                 f"{connector['id']} 仍列有 {len(connector['missingEvidence'])} 项缺失证据，"
                 "不能标记 APPLICATION_VERIFIED"
             )
-    with_route = [connector for connector in connectors if connector["segments"]]
-    origins = {connector["originId"] for connector in with_route}
-    if len(with_route) < 2 or len(origins) < 2:
-        raise RuntimeError("验收要求至少两个起点各有一条可核对的接驳（候选或已审核）")
-    for connector in with_route:
-        status = connector["verificationStatus"]
+    pairs = {(connector["originId"], connector["gateId"]) for connector in connectors}
+    expected = {(origin[1], gate["id"]) for origin in origins for gate in gates}
+    if pairs != expected or len(connectors) != len(expected):
+        raise RuntimeError("每个起点必须恰有一条到各校门的接驳")
+    exits = {gate["id"]: gate.get("routeNodeId", gate["id"]) for gate in gates}
+    for connector in connectors:
+        if not connector["segments"]:
+            raise RuntimeError(f"{connector['id']} 缺少步行分段")
         if connector["gateExitPoint"] is None:
             raise RuntimeError(f"{connector['id']} 缺少 gateExitPoint")
         outbound = [
@@ -529,7 +448,7 @@ def validate_connectors(connectors):
         ]
         if len(outbound) != 1 or outbound[0]["pointId"] != connector["gateExitPoint"]["pointId"]:
             raise RuntimeError(f"{connector['id']} 的 gateExitPoint 不属于该物理出校点")
-        if connector["gateId"] != EAST_GATE_ID:
+        if connector["gateExitPoint"]["pointId"] != exits[connector["gateId"]]:
             raise RuntimeError(f"{connector['id']} 校门 ID 与出校物理点不匹配")
         segment_sum = sum(segment["lengthMeters"] for segment in connector["segments"])
         if round(segment_sum, 2) != connector["walkMeters"]:
@@ -559,19 +478,6 @@ def validate_connectors(connectors):
                 raise RuntimeError(f"{connector['id']} 含禁行分段 {segment['segmentId']}")
             if segment["geometry"]["coordinateSystem"] != "WGS84":
                 raise RuntimeError(f"{connector['id']} 分段坐标系不是 WGS84")
-        if status == "PENDING_VERIFICATION" and not connector["missingEvidence"]:
-            raise RuntimeError(f"{connector['id']} 待核实候选接驳必须列出缺失证据")
-    for connector in connectors:
-        status = connector["verificationStatus"]
-        if status != "APPLICATION_VERIFIED":
-            if not connector["unavailableReasonCode"] or not connector["unavailableReason"]:
-                raise RuntimeError(f"{connector['id']} 待核实/不通过连接缺少不可用原因")
-        if status == "REJECTED":
-            if (connector["segments"] or connector["walkMeters"] is not None
-                    or connector["durationSeconds"] is not None):
-                raise RuntimeError(f"{connector['id']} 不通过连接不应带接驳数字")
-        if status == "APPLICATION_VERIFIED" and not connector["segments"]:
-            raise RuntimeError(f"{connector['id']} 已审核连接必须带接驳路线")
 
 
 def main():
@@ -580,8 +486,8 @@ def main():
     nodes = {node["node_id"]: node for node in nodes_list}
     adjacency = build_graph(nodes, edges)
 
-    library_distance, library_path = shortest_path(adjacency, nodes, LIBRARY_ACCESS_NODE, EAST_GATE_OUTBOUND_NODE)
-    dorm1_distance, dorm1_path = shortest_path(adjacency, nodes, DORM1_ACCESS_NODE, EAST_GATE_OUTBOUND_NODE)
+    _, library_path = shortest_path(adjacency, nodes, LIBRARY_ACCESS_NODE, EAST_GATE_OUTBOUND_NODE)
+    _, dorm1_path = shortest_path(adjacency, nodes, DORM1_ACCESS_NODE, EAST_GATE_OUTBOUND_NODE)
 
     library_connector = approved_demo_connector(
         nodes, library_path, "connector_library_east_gate",
@@ -606,21 +512,24 @@ def main():
         ],
     )
 
-    connectors = [
-        library_connector,
-        dorm1_connector,
-        pending_connector(nodes),
-        rejected_connector(nodes),
+    origins = [
+        ("library", LIBRARY_ORIGIN_ID, LIBRARY_ORIGIN_NAME, LIBRARY_ACCESS_NODE),
+        ("dorm1", DORM1_ORIGIN_ID, DORM1_ORIGIN_NAME, DORM1_ACCESS_NODE),
     ]
-    validate_connectors(connectors)
+    gates = load_json(CAMPUS_WEB_PATH)["gates"]
+    connectors = [library_connector, dorm1_connector]
+    for origin in origins:
+        for gate in gates:
+            if gate["id"] != EAST_GATE_ID:
+                _, path = shortest_path(adjacency, nodes, origin[3], gate.get("routeNodeId", gate["id"]))
+                connectors.append(trial_connector(nodes, path, origin, gate))
+    validate_connectors(connectors, gates, origins)
 
     payload = {
         "dataVersion": DATA_VERSION,
         "description": (
-            "校园接驳：图书馆、天佑斋1号楼使用楼外路网接入点，经东门衔接城市段。"
-            "已启用的东门接驳按2026-11-19项目规则不设门禁时段。"
-            "几何与距离来自S04 OSM WGS84路网，耗时按1.33 m/s估算。"
-            "西门有高德展示点，城市接驳待核实；西南门仍为拒绝，明确禁行边继续排除。"
+            "图书馆、天佑斋1号楼按 OSM WGS84 人行路网接入六座校门，耗时按 1.33 m/s 估算。"
+            "东门保留团队确认；其余校门按项目试用假设纳入，实际通行与开放时段以现场为准。"
         ),
         "connectors": connectors,
     }

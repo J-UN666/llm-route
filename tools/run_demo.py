@@ -17,7 +17,9 @@ import tarfile
 import tempfile
 import time
 from urllib.error import URLError
-from urllib.request import urlopen
+from urllib.request import build_opener, ProxyHandler
+
+LOCAL_HTTP = build_opener(ProxyHandler({}))
 
 
 def wait_for(probe, process, label):
@@ -38,7 +40,7 @@ def listening(port):
 
 def chat_ready(port):
     try:
-        with urlopen(f"http://127.0.0.1:{port}/actuator/health/chat", timeout=1) as response:
+        with LOCAL_HTTP.open(f"http://127.0.0.1:{port}/actuator/health/chat", timeout=1) as response:
             return json.load(response)["status"] == "UP"
     except (URLError, TimeoutError):
         return False
@@ -153,22 +155,22 @@ def provision(mysqld, state, log):
     return data, credentials
 
 
-def start(args):
-    bundle, meta = open_bundle(args.bundle, args.offline_build)
-    java, mysqld = executables(meta)
-    api_port = args.port or int(meta["apiBaseUrl"].rsplit(":", 1)[-1])
-    if api_port == args.db_port or any(listening(port) for port in (api_port, args.db_port)):
-        raise ValueError("本机端口已占用或重复，请检查 --port 和 --db-port")
-
-    state = (args.state or bundle / ".state").resolve()
+@contextmanager
+def state_lock(state):
     state.mkdir(mode=0o700, parents=True, exist_ok=True)
     if state.stat().st_mode & 0o077:
         raise ValueError("演示状态目录需要权限 0700，请提供独立私有目录")
-    with (state / "lock").open("a") as lock, tempfile.TemporaryDirectory(prefix="zhixing-", dir="/tmp") as temporary:
+    with (state / "lock").open("a") as lock:
         try:
             fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError as error:
-            raise RuntimeError("该演示状态目录正在使用，请停止原进程或指定其他 --state") from error
+            raise RuntimeError("该演示目录正在使用，请回到已打开的终端或停止原进程") from error
+        yield
+
+
+@contextmanager
+def demo_database(mysqld, port, state, workdir, runner):
+    with state_lock(state), tempfile.TemporaryDirectory(prefix="zhixing-", dir="/tmp") as temporary:
         mysql_log = state / "mysql.log"
         data, credentials = provision(mysqld, state, mysql_log)
         config = Path(temporary) / "initialize.sql"
@@ -181,28 +183,43 @@ GRANT ALL ON zhixingdemo.* TO 'demo_migration'@'127.0.0.1';
 GRANT SELECT, INSERT, UPDATE ON zhixingdemo.* TO 'demo_app'@'127.0.0.1';
 """)
         command = [mysqld, "--no-defaults", f"--datadir={data}", "--bind-address=127.0.0.1",
-                   f"--port={args.db_port}", f"--socket={Path(temporary) / 'mysql.sock'}",
+                   f"--port={port}", f"--socket={Path(temporary) / 'mysql.sock'}",
                    f"--pid-file={Path(temporary) / 'mysqld.pid'}", "--mysqlx=OFF", "--skip-log-bin",
                    "--skip-name-resolve", f"--init-file={config}", f"--log-error={mysql_log}"]
-        with child(command, state / "mysql-console.log", cwd=bundle) as database:
-            wait_for(lambda: listening(args.db_port), database, "MySQL")
-            url = f"jdbc:mysql://127.0.0.1:{args.db_port}/zhixingdemo?connectionTimeZone=UTC&sslMode=DISABLED&allowPublicKeyRetrieval=true"
+        with child(command, state / "mysql-console.log", cwd=workdir) as database:
+            wait_for(lambda: listening(port), database, "MySQL")
+            url = f"jdbc:mysql://127.0.0.1:{port}/zhixingdemo?connectionTimeZone=UTC&sslMode=DISABLED&allowPublicKeyRetrieval=true"
             migration = dict(os.environ, MIGRATION_DB_URL=url, MIGRATION_DB_USER="demo_migration",
                              MIGRATION_DB_PASSWORD=credentials["migration"])
-            runner = [java, "-jar", str(bundle / "backend.jar")]
             with (state / "migration.log").open("ab") as log:
-                subprocess.run([*runner, "--migrate"], cwd=bundle, env=migration, check=True,
+                subprocess.run([*runner, "--migrate"], cwd=workdir, env=migration, check=True,
                                stdout=log, stderr=subprocess.STDOUT)
-            api_environment = {key: os.environ[key] for key in ("PATH", "LANG", "JAVA_HOME") if key in os.environ}
-            api_environment.update(DB_URL=url, DB_USER="demo_app", DB_PASSWORD=credentials["app"],
-                                   CAMPUS_DATA_ROOT=str(bundle / "data"), SERVER_PORT=str(api_port))
-            with child([*runner, "--spring.profiles.active=demo"], state / "backend.log",
-                       cwd=bundle, env=api_environment) as app:
-                wait_for(lambda: chat_ready(api_port), app, "聊天服务")
-                print(f"离线演示已启动 http://127.0.0.1:{api_port}，日志位于 {state}。Ctrl+C 停止。", flush=True)
-                while database.poll() is None and app.poll() is None:
-                    time.sleep(0.5)
-                raise RuntimeError("演示进程已退出，请查看日志")
+            yield database, {"DB_URL": url, "DB_USER": "demo_app", "DB_PASSWORD": credentials["app"]}
+
+
+def wait_for_exit(database, app):
+    while database.poll() is None and app.poll() is None:
+        time.sleep(0.5)
+    raise RuntimeError("演示进程已退出，请查看日志")
+
+
+def start(args):
+    bundle, meta = open_bundle(args.bundle, args.offline_build)
+    java, mysqld = executables(meta)
+    api_port = args.port or int(meta["apiBaseUrl"].rsplit(":", 1)[-1])
+    if api_port == args.db_port or any(listening(port) for port in (api_port, args.db_port)):
+        raise ValueError("本机端口已占用或重复，请检查 --port 和 --db-port")
+
+    state = (args.state or bundle / ".state").resolve()
+    runner = [java, "-jar", str(bundle / "backend.jar")]
+    with demo_database(mysqld, args.db_port, state, bundle, runner) as (database, db_env):
+        api_environment = {key: os.environ[key] for key in ("PATH", "LANG", "JAVA_HOME") if key in os.environ}
+        api_environment.update(db_env, CAMPUS_DATA_ROOT=str(bundle / "data"), SERVER_PORT=str(api_port))
+        with child([*runner, "--spring.profiles.active=demo"], state / "backend.log",
+                   cwd=bundle, env=api_environment) as app:
+            wait_for(lambda: chat_ready(api_port), app, "聊天服务")
+            print(f"离线演示已启动 http://127.0.0.1:{api_port}，日志位于 {state}。Ctrl+C 停止。", flush=True)
+            wait_for_exit(database, app)
 
 
 def stop(_signal, _frame):

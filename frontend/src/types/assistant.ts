@@ -14,6 +14,7 @@ export interface AssistantCandidate {
   name: string;
   kind: PlaceScope;
   category: string | null;
+  address?: string | null;
   routingReady: boolean;
   unavailableReason: string | null;
 }

@@ -1,5 +1,6 @@
 package cn.swjtu.zhixing.campus;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -22,6 +23,7 @@ class CampusConnectorControllerTests {
 
     private static final String LIBRARY = "osm_way_1098786977";
     private static final String DORMITORY = "osm_way_1099340057";
+    private static final String EAST = "$.connectors[?(@.gateId == 'campus_gate_east')]";
     private static final String DEPARTURE = "2026-11-15T09:00:00+08:00";
 
     @DynamicPropertySource
@@ -37,16 +39,16 @@ class CampusConnectorControllerTests {
         mockMvc.perform(get("/api/campus/connectors")
                         .param("originId", LIBRARY).param("departureTime", DEPARTURE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.dataVersion").value("2026-11-19.2"))
-                .andExpect(jsonPath("$.connectors", hasSize(1)))
-                .andExpect(jsonPath("$.connectors[0].id").value("connector_library_east_gate"))
-                .andExpect(jsonPath("$.connectors[0].verificationStatus").value("APPLICATION_VERIFIED"))
-                .andExpect(jsonPath("$.connectors[0].verificationMethod", containsString("团队确认")))
-                .andExpect(jsonPath("$.connectors[0].originPoint.positionRole").value("building_external_access_point"))
-                .andExpect(jsonPath("$.connectors[0].gateExitPoint.pointId").value("osm_node_13469658219"))
-                .andExpect(jsonPath("$.connectors[0].walkMeters").value(879.07))
-                .andExpect(jsonPath("$.connectors[0].durationSeconds").value(664))
-                .andExpect(jsonPath("$.connectors[0].missingEvidence", hasSize(0)));
+                .andExpect(jsonPath("$.dataVersion").value("2026-11-20.1"))
+                .andExpect(jsonPath("$.connectors", hasSize(6)))
+                .andExpect(jsonPath(EAST + ".id", contains("connector_library_east_gate")))
+                .andExpect(jsonPath(EAST + ".verificationStatus", contains("APPLICATION_VERIFIED")))
+                .andExpect(jsonPath(EAST + ".verificationMethod", contains(containsString("团队确认"))))
+                .andExpect(jsonPath(EAST + ".originPoint.positionRole", contains("building_external_access_point")))
+                .andExpect(jsonPath(EAST + ".gateExitPoint.pointId", contains("osm_node_13469658219")))
+                .andExpect(jsonPath(EAST + ".walkMeters", contains(879.07)))
+                .andExpect(jsonPath(EAST + ".durationSeconds", contains(664)))
+                .andExpect(jsonPath(EAST + ".missingEvidence", contains(hasSize(0))));
     }
 
     @Test
@@ -54,19 +56,11 @@ class CampusConnectorControllerTests {
         mockMvc.perform(get("/api/campus/connectors")
                         .param("originId", DORMITORY).param("departureTime", DEPARTURE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.connectors", hasSize(1)))
-                .andExpect(jsonPath("$.connectors[0].id").value("connector_dorm1_east_gate"))
-                .andExpect(jsonPath("$.connectors[0].walkMeters").value(1807.87))
-                .andExpect(jsonPath("$.connectors[0].durationSeconds").value(1369))
-                .andExpect(jsonPath("$.connectors[0].accessRules.pedestrianAccess").value("PERMITTED"));
-    }
-
-    @Test
-    void fixedSampleUrlFromTaskCardIsReplayable() throws Exception {
-        mockMvc.perform(get("/api/campus/connectors")
-                        .param("originId", LIBRARY).param("departureTime", DEPARTURE))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.connectors[0].id").value("connector_library_east_gate"));
+                .andExpect(jsonPath("$.connectors", hasSize(6)))
+                .andExpect(jsonPath(EAST + ".id", contains("connector_dorm1_east_gate")))
+                .andExpect(jsonPath(EAST + ".walkMeters", contains(1807.87)))
+                .andExpect(jsonPath(EAST + ".durationSeconds", contains(1369)))
+                .andExpect(jsonPath(EAST + ".accessRules.pedestrianAccess", contains("PERMITTED")));
     }
 
     @Test

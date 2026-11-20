@@ -5,6 +5,7 @@ import static cn.swjtu.zhixing.assistant.AssistantConversation.*;
 import cn.swjtu.zhixing.campus.CampusConnector;
 import cn.swjtu.zhixing.campus.CampusConnectorService;
 import cn.swjtu.zhixing.campus.CampusConnectorUnavailability;
+import cn.swjtu.zhixing.campus.OnlinePlaceException;
 import cn.swjtu.zhixing.campus.PlaceCandidate;
 import cn.swjtu.zhixing.campus.PlaceKind;
 import cn.swjtu.zhixing.campus.PlaceNotFoundException;
@@ -127,6 +128,10 @@ class AssistantPlanner {
             work.cancel(true);
             throw timeout(requestId);
         } catch (ExecutionException ex) {
+            if (ex.getCause() instanceof OnlinePlaceException placeError) {
+                throw failure(placeError.status(), placeError.code(), placeError.getMessage(),
+                        placeError.retryable(), requestId);
+            }
             if (ex.getCause() instanceof RuntimeException runtime) {
                 throw runtime;
             }
@@ -262,7 +267,8 @@ class AssistantPlanner {
         private Object execute(ModelToolCall call, AssistantTools.Arguments args) {
             return switch (args) {
                 case AssistantTools.Search search -> {
-                    List<Candidate> matches = tools.search(search).stream().map(AssistantPlanner::candidate).toList();
+                    List<Candidate> matches = tools.search(search, credentials).stream()
+                            .map(AssistantPlanner::candidate).toList();
                     if (search.scope() != PlaceKind.GATE) {
                         Field field = search.scope() == PlaceKind.CAMPUS ? Field.ORIGIN : Field.DESTINATION;
                         Map<String, Candidate> combined = placeMatches.computeIfAbsent(field, key -> new LinkedHashMap<>());
@@ -426,7 +432,7 @@ class AssistantPlanner {
                 return;
             }
             try {
-                PlaceCandidate place = tools.place(id);
+                PlaceCandidate place = tools.place(id, credentials);
                 if (place.kind() != kind(field) || !place.routingReady() || place.routingPosition() == null) {
                     unavailable(field, candidate(place));
                 }
@@ -439,7 +445,7 @@ class AssistantPlanner {
 
         private boolean available(Field field, String id) {
             try {
-                PlaceCandidate place = tools.place(id);
+                PlaceCandidate place = tools.place(id, credentials);
                 return place.kind() == kind(field) && place.routingReady() && place.routingPosition() != null;
             } catch (PlaceNotFoundException ex) {
                 return false;
@@ -550,7 +556,7 @@ class AssistantPlanner {
 
     private static Candidate candidate(PlaceCandidate place) {
         return new Candidate(place.id(), place.name(), place.kind(), place.category(),
-                place.routingReady() && place.routingPosition() != null, place.unavailableReason());
+                place.routingReady() && place.routingPosition() != null, place.unavailableReason(), place.address());
     }
 
     private static ConnectorSummary summary(CampusConnector connector) {

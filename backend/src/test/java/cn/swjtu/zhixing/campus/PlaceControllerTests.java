@@ -44,7 +44,7 @@ class PlaceControllerTests {
                 .andExpect(jsonPath("$.items[0].displayPosition.positionRole").value("amap_building_poi"))
                 .andExpect(jsonPath("$.items[0].displayPosition.longitude").isNumber())
                 .andExpect(jsonPath("$.items[0].displayPosition.latitude").isNumber())
-                .andExpect(jsonPath("$.items[0].dataVersion").value("2026-11-19.2"))
+                .andExpect(jsonPath("$.items[0].dataVersion").value("2026-11-20.1"))
                 .andExpect(jsonPath("$.items[0].sourceRefs[0]").value("S03"))
                 .andExpect(jsonPath("$.items[0].aliases").isArray());
     }
@@ -85,7 +85,7 @@ class PlaceControllerTests {
                 .andExpect(jsonPath("$.items[0].routingPosition.pointId").value("osm_way_1395271422"))
                 .andExpect(jsonPath("$.items[0].routingPosition.coordinateSystem").value("WGS84"))
                 .andExpect(jsonPath("$.items[0].routingPosition.positionRole").value("destination_point"))
-                .andExpect(jsonPath("$.items[0].dataVersion").value("2026-11-19.2"));
+                .andExpect(jsonPath("$.items[0].dataVersion").value("2026-11-20.1"));
     }
 
     @Test
@@ -142,7 +142,7 @@ class PlaceControllerTests {
                     .andExpect(jsonPath("$.routingReady").value(true))
                     .andExpect(jsonPath("$.routingPosition.positionRole").value("building_external_access_point"))
                     .andExpect(jsonPath("$.displayPosition.positionRole").value(origin.getValue()))
-                    .andExpect(jsonPath("$.dataVersion").value("2026-11-19.2"));
+                    .andExpect(jsonPath("$.dataVersion").value("2026-11-20.1"));
         }
     }
 }

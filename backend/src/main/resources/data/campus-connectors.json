@@ -1,6 +1,6 @@
 {
-  "dataVersion": "2026-11-19.2",
-  "description": "校园接驳：图书馆、天佑斋1号楼使用楼外路网接入点，经东门衔接城市段。已启用的东门接驳按2026-11-19项目规则不设门禁时段。几何与距离来自S04 OSM WGS84路网，耗时按1.33 m/s估算。西门有高德展示点，城市接驳待核实；西南门仍为拒绝，明确禁行边继续排除。",
+  "dataVersion": "2026-11-20.1",
+  "description": "图书馆、天佑斋1号楼按 OSM WGS84 人行路网接入六座校门，耗时按 1.33 m/s 估算。东门保留团队确认；其余校门按项目试用假设纳入，实际通行与开放时段以现场为准。",
   "connectors": [
     {
       "id": "connector_library_east_gate",
@@ -1171,6 +1171,1889 @@
       "unavailableReason": null
     },
     {
+      "id": "connector_library_south_gate",
+      "originId": "osm_way_1098786977",
+      "originName": "西南交通大学犀浦校区图书馆",
+      "originPoint": {
+        "pointId": "osm_node_5167087319",
+        "longitude": 103.9832456,
+        "latitude": 30.7693165,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_external_access_point"
+      },
+      "gateId": "osm_node_2178309445",
+      "gateName": "南门",
+      "gatePoints": [
+        {
+          "pointId": "osm_node_2178309445",
+          "longitude": 103.9897905,
+          "latitude": 30.7629679,
+          "coordinateSystem": "WGS84",
+          "positionRole": "gate_exit",
+          "direction": "OUTBOUND"
+        }
+      ],
+      "gateExitPoint": {
+        "pointId": "osm_node_2178309445",
+        "longitude": 103.9897905,
+        "latitude": 30.7629679,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "segments": [
+        {
+          "segmentId": "connector_library_south_gate_01",
+          "order": 1,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_5167087319",
+          "toPointId": "osm_node_5167087325",
+          "lengthMeters": 112.29,
+          "durationSeconds": 85,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9832456,
+                30.7693165
+              ],
+              [
+                103.9834108,
+                30.7691175
+              ],
+              [
+                103.983546,
+                30.7689547
+              ],
+              [
+                103.9837472,
+                30.7686735
+              ],
+              [
+                103.9837735,
+                30.7686037
+              ],
+              [
+                103.9838315,
+                30.7684496
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572445"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_south_gate_02",
+          "order": 2,
+          "description": "沿自行车/步行通道步行",
+          "fromPointId": "osm_node_5167087325",
+          "toPointId": "osm_node_5194468015",
+          "lengthMeters": 47.1,
+          "durationSeconds": 36,
+          "highway": "cycleway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9838315,
+                30.7684496
+              ],
+              [
+                103.9840439,
+                30.7684161
+              ],
+              [
+                103.9841323,
+                30.7684161
+              ],
+              [
+                103.9842535,
+                30.7684234
+              ],
+              [
+                103.98432,
+                30.7684312
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "535905495"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_south_gate_03",
+          "order": 3,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_5194468015",
+          "toPointId": "osm_node_5194469690",
+          "lengthMeters": 505.93,
+          "durationSeconds": 381,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.98432,
+                30.7684312
+              ],
+              [
+                103.9844984,
+                30.7682596
+              ],
+              [
+                103.9846352,
+                30.7681281
+              ],
+              [
+                103.9854863,
+                30.7673097
+              ],
+              [
+                103.9857098,
+                30.7670948
+              ],
+              [
+                103.9858162,
+                30.7669925
+              ],
+              [
+                103.9865096,
+                30.7663258
+              ],
+              [
+                103.9866817,
+                30.7661603
+              ],
+              [
+                103.986754,
+                30.7660908
+              ],
+              [
+                103.9870817,
+                30.7657757
+              ],
+              [
+                103.9875799,
+                30.7652966
+              ],
+              [
+                103.9876142,
+                30.7652636
+              ],
+              [
+                103.9876736,
+                30.7652065
+              ],
+              [
+                103.987704,
+                30.7651773
+              ],
+              [
+                103.9878483,
+                30.7650385
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "536135134"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_south_gate_04",
+          "order": 4,
+          "description": "沿步行区步道步行",
+          "fromPointId": "osm_node_5194469690",
+          "toPointId": "osm_node_5192904117",
+          "lengthMeters": 97.08,
+          "durationSeconds": 73,
+          "highway": "pedestrian",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9878483,
+                30.7650385
+              ],
+              [
+                103.988443,
+                30.7644313
+              ],
+              [
+                103.9885044,
+                30.7643719
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1067768046"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_south_gate_05",
+          "order": 5,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_5192904117",
+          "toPointId": "osm_node_2178309445",
+          "lengthMeters": 198.69,
+          "durationSeconds": 150,
+          "highway": "residential",
+          "roadName": "承唐路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9885044,
+                30.7643719
+              ],
+              [
+                103.9887995,
+                30.7640348
+              ],
+              [
+                103.9896423,
+                30.7631274
+              ],
+              [
+                103.9897905,
+                30.7629679
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207570521"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        }
+      ],
+      "walkMeters": 961.09,
+      "durationSeconds": 725,
+      "durationBasis": "按 1.33 m/s 估算，各段步行秒数向上取整，总耗时为各段之和。",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
+      "verificationMethod": "项目试用假设与 OSM 步行路网估算",
+      "verificationBasis": [
+        "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "出校点采用应用地图所对应的 OSM 路网节点 osm_node_2178309445。"
+      ],
+      "missingEvidence": [
+        "实际人行通行与开放时段"
+      ],
+      "accessRules": {
+        "direction": "OUTBOUND",
+        "pedestrianAccess": "ASSUMED_OPEN",
+        "pedestrianAccessBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "gateOpenHours": "试用按全天开放处理",
+        "gateOpenHoursStatus": "PROJECT_ASSUMED_UNRESTRICTED",
+        "timeRestrictions": [],
+        "timeRestrictionBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。"
+      },
+      "sourceRefs": [
+        "S04",
+        "web/data/campus.json",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+      ],
+      "unavailableReasonCode": null,
+      "unavailableReason": null
+    },
+    {
+      "id": "connector_library_northwest_gate",
+      "originId": "osm_way_1098786977",
+      "originName": "西南交通大学犀浦校区图书馆",
+      "originPoint": {
+        "pointId": "osm_node_5167087319",
+        "longitude": 103.9832456,
+        "latitude": 30.7693165,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_external_access_point"
+      },
+      "gateId": "osm_node_2178323767",
+      "gateName": "西北一门",
+      "gatePoints": [
+        {
+          "pointId": "osm_node_2178323767",
+          "longitude": 103.9751882,
+          "latitude": 30.7699378,
+          "coordinateSystem": "WGS84",
+          "positionRole": "gate_exit",
+          "direction": "OUTBOUND"
+        }
+      ],
+      "gateExitPoint": {
+        "pointId": "osm_node_2178323767",
+        "longitude": 103.9751882,
+        "latitude": 30.7699378,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "segments": [
+        {
+          "segmentId": "connector_library_northwest_gate_01",
+          "order": 1,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_5167087319",
+          "toPointId": "osm_node_5167087312",
+          "lengthMeters": 108.23,
+          "durationSeconds": 82,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9832456,
+                30.7693165
+              ],
+              [
+                103.9830834,
+                30.7693978
+              ],
+              [
+                103.9828593,
+                30.7694938
+              ],
+              [
+                103.9827485,
+                30.7695313
+              ],
+              [
+                103.9825798,
+                30.7695628
+              ],
+              [
+                103.9824478,
+                30.7695762
+              ],
+              [
+                103.9821778,
+                30.769575
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572445"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_northwest_gate_02",
+          "order": 2,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_5167087312",
+          "toPointId": "osm_node_5167087299",
+          "lengthMeters": 177.93,
+          "durationSeconds": 134,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9821778,
+                30.769575
+              ],
+              [
+                103.9820508,
+                30.7695701
+              ],
+              [
+                103.9818349,
+                30.7695457
+              ],
+              [
+                103.9816402,
+                30.7695609
+              ],
+              [
+                103.9815623,
+                30.7696066
+              ],
+              [
+                103.9814243,
+                30.7696278
+              ],
+              [
+                103.9812686,
+                30.7696613
+              ],
+              [
+                103.9811341,
+                30.769716
+              ],
+              [
+                103.9810492,
+                30.7697586
+              ],
+              [
+                103.9809394,
+                30.7698103
+              ],
+              [
+                103.9807979,
+                30.7698225
+              ],
+              [
+                103.9806917,
+                30.7698529
+              ],
+              [
+                103.9806138,
+                30.7699107
+              ],
+              [
+                103.9804888,
+                30.7700421
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "532492073"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_northwest_gate_03",
+          "order": 3,
+          "description": "沿自行车/步行通道步行",
+          "fromPointId": "osm_node_5167087299",
+          "toPointId": "osm_node_2202763038",
+          "lengthMeters": 10.04,
+          "durationSeconds": 8,
+          "highway": "cycleway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9804888,
+                30.7700421
+              ],
+              [
+                103.9804069,
+                30.7699856
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "210164017"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_northwest_gate_04",
+          "order": 4,
+          "description": "沿自行车/步行通道步行",
+          "fromPointId": "osm_node_2202763038",
+          "toPointId": "osm_node_2202762961",
+          "lengthMeters": 23.94,
+          "durationSeconds": 18,
+          "highway": "cycleway",
+          "roadName": "石桥",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9804069,
+                30.7699856
+              ],
+              [
+                103.9802183,
+                30.7698439
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "210164035"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_northwest_gate_05",
+          "order": 5,
+          "description": "沿自行车/步行通道步行",
+          "fromPointId": "osm_node_2202762961",
+          "toPointId": "osm_node_2202763108",
+          "lengthMeters": 41.31,
+          "durationSeconds": 32,
+          "highway": "cycleway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9802183,
+                30.7698439
+              ],
+              [
+                103.979894,
+                30.7695982
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "210164016"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_northwest_gate_06",
+          "order": 6,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2202763108",
+          "toPointId": "osm_node_2178325912",
+          "lengthMeters": 351.99,
+          "durationSeconds": 265,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.979894,
+                30.7695982
+              ],
+              [
+                103.9792586,
+                30.7692373
+              ],
+              [
+                103.9784335,
+                30.7687685
+              ],
+              [
+                103.9781291,
+                30.7685956
+              ],
+              [
+                103.9775578,
+                30.768271
+              ],
+              [
+                103.9768187,
+                30.7678552
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572642"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_northwest_gate_07",
+          "order": 7,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178325912",
+          "toPointId": "osm_node_10059030883",
+          "lengthMeters": 275.07,
+          "durationSeconds": 207,
+          "highway": "residential",
+          "roadName": "菁华路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9768187,
+                30.7678552
+              ],
+              [
+                103.9765219,
+                30.7682354
+              ],
+              [
+                103.9760579,
+                30.7688298
+              ],
+              [
+                103.9756525,
+                30.7693491
+              ],
+              [
+                103.9752152,
+                30.7699098
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "413859296"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_northwest_gate_08",
+          "order": 8,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_10059030883",
+          "toPointId": "osm_node_2178323767",
+          "lengthMeters": 4.04,
+          "durationSeconds": 4,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9752152,
+                30.7699098
+              ],
+              [
+                103.9751882,
+                30.7699378
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1220208141"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        }
+      ],
+      "walkMeters": 992.55,
+      "durationSeconds": 750,
+      "durationBasis": "按 1.33 m/s 估算，各段步行秒数向上取整，总耗时为各段之和。",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
+      "verificationMethod": "项目试用假设与 OSM 步行路网估算",
+      "verificationBasis": [
+        "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "出校点采用应用地图所对应的 OSM 路网节点 osm_node_2178323767。"
+      ],
+      "missingEvidence": [
+        "实际人行通行与开放时段"
+      ],
+      "accessRules": {
+        "direction": "OUTBOUND",
+        "pedestrianAccess": "ASSUMED_OPEN",
+        "pedestrianAccessBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "gateOpenHours": "试用按全天开放处理",
+        "gateOpenHoursStatus": "PROJECT_ASSUMED_UNRESTRICTED",
+        "timeRestrictions": [],
+        "timeRestrictionBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。"
+      },
+      "sourceRefs": [
+        "S04",
+        "web/data/campus.json",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+      ],
+      "unavailableReasonCode": null,
+      "unavailableReason": null
+    },
+    {
+      "id": "connector_library_wind_tunnel_gate",
+      "originId": "osm_way_1098786977",
+      "originName": "西南交通大学犀浦校区图书馆",
+      "originPoint": {
+        "pointId": "osm_node_5167087319",
+        "longitude": 103.9832456,
+        "latitude": 30.7693165,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_external_access_point"
+      },
+      "gateId": "osm_node_8386702126",
+      "gateName": "风洞门",
+      "gatePoints": [
+        {
+          "pointId": "osm_node_8386702126",
+          "longitude": 103.9801381,
+          "latitude": 30.7731062,
+          "coordinateSystem": "WGS84",
+          "positionRole": "gate_exit",
+          "direction": "OUTBOUND"
+        }
+      ],
+      "gateExitPoint": {
+        "pointId": "osm_node_8386702126",
+        "longitude": 103.9801381,
+        "latitude": 30.7731062,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "segments": [
+        {
+          "segmentId": "connector_library_wind_tunnel_gate_01",
+          "order": 1,
+          "description": "沿步行区步道步行",
+          "fromPointId": "osm_node_5167087319",
+          "toPointId": "osm_node_5167087320",
+          "lengthMeters": 20.02,
+          "durationSeconds": 16,
+          "highway": "pedestrian",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9832456,
+                30.7693165
+              ],
+              [
+                103.9832971,
+                30.769491
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "535905500"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_wind_tunnel_gate_02",
+          "order": 2,
+          "description": "沿步行区步道步行",
+          "fromPointId": "osm_node_5167087320",
+          "toPointId": "osm_node_5194469719",
+          "lengthMeters": 42.69,
+          "durationSeconds": 33,
+          "highway": "pedestrian",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9832971,
+                30.769491
+              ],
+              [
+                103.9829983,
+                30.7697764
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1099344825"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_wind_tunnel_gate_03",
+          "order": 3,
+          "description": "沿步行区步道步行",
+          "fromPointId": "osm_node_5194469719",
+          "toPointId": "osm_node_2471746745",
+          "lengthMeters": 21.24,
+          "durationSeconds": 16,
+          "highway": "pedestrian",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9829983,
+                30.7697764
+              ],
+              [
+                103.9830986,
+                30.7699469
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "536135142"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_wind_tunnel_gate_04",
+          "order": 4,
+          "description": "沿步行区步道步行",
+          "fromPointId": "osm_node_2471746745",
+          "toPointId": "osm_node_2471746705",
+          "lengthMeters": 280.89,
+          "durationSeconds": 212,
+          "highway": "pedestrian",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9830986,
+                30.7699469
+              ],
+              [
+                103.982645,
+                30.7703897
+              ],
+              [
+                103.9823906,
+                30.7706381
+              ],
+              [
+                103.9818092,
+                30.7712058
+              ],
+              [
+                103.9814092,
+                30.7715963
+              ],
+              [
+                103.9811563,
+                30.7718432
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572460"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_wind_tunnel_gate_05",
+          "order": 5,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2471746705",
+          "toPointId": "osm_node_2178309655",
+          "lengthMeters": 35.7,
+          "durationSeconds": 27,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9811563,
+                30.7718432
+              ],
+              [
+                103.9812492,
+                30.7719711
+              ],
+              [
+                103.9813461,
+                30.7721196
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207570525"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_wind_tunnel_gate_06",
+          "order": 6,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178309655",
+          "toPointId": "osm_node_8386702126",
+          "lengthMeters": 160.91,
+          "durationSeconds": 121,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9813461,
+                30.7721196
+              ],
+              [
+                103.9812794,
+                30.7721802
+              ],
+              [
+                103.9811856,
+                30.7722677
+              ],
+              [
+                103.9810941,
+                30.7723609
+              ],
+              [
+                103.9809097,
+                30.7725551
+              ],
+              [
+                103.9805982,
+                30.7728557
+              ],
+              [
+                103.9804109,
+                30.7729756
+              ],
+              [
+                103.9802198,
+                30.7730772
+              ],
+              [
+                103.9801381,
+                30.7731062
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "532472176"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        }
+      ],
+      "walkMeters": 561.45,
+      "durationSeconds": 425,
+      "durationBasis": "按 1.33 m/s 估算，各段步行秒数向上取整，总耗时为各段之和。",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
+      "verificationMethod": "项目试用假设与 OSM 步行路网估算",
+      "verificationBasis": [
+        "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "出校点采用应用地图所对应的 OSM 路网节点 osm_node_8386702126。"
+      ],
+      "missingEvidence": [
+        "实际人行通行与开放时段"
+      ],
+      "accessRules": {
+        "direction": "OUTBOUND",
+        "pedestrianAccess": "ASSUMED_OPEN",
+        "pedestrianAccessBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "gateOpenHours": "试用按全天开放处理",
+        "gateOpenHoursStatus": "PROJECT_ASSUMED_UNRESTRICTED",
+        "timeRestrictions": [],
+        "timeRestrictionBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。"
+      },
+      "sourceRefs": [
+        "S04",
+        "web/data/campus.json",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+      ],
+      "unavailableReasonCode": null,
+      "unavailableReason": null
+    },
+    {
+      "id": "connector_library_southwest_gate",
+      "originId": "osm_way_1098786977",
+      "originName": "西南交通大学犀浦校区图书馆",
+      "originPoint": {
+        "pointId": "osm_node_5167087319",
+        "longitude": 103.9832456,
+        "latitude": 30.7693165,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_external_access_point"
+      },
+      "gateId": "osm_node_9893305424",
+      "gateName": "西南门",
+      "gatePoints": [
+        {
+          "pointId": "osm_node_9893305424",
+          "longitude": 103.9825419,
+          "latitude": 30.759961,
+          "coordinateSystem": "WGS84",
+          "positionRole": "gate_exit",
+          "direction": "OUTBOUND"
+        }
+      ],
+      "gateExitPoint": {
+        "pointId": "osm_node_9893305424",
+        "longitude": 103.9825419,
+        "latitude": 30.759961,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "segments": [
+        {
+          "segmentId": "connector_library_southwest_gate_01",
+          "order": 1,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_5167087319",
+          "toPointId": "osm_node_2178323857",
+          "lengthMeters": 414.42,
+          "durationSeconds": 312,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9832456,
+                30.7693165
+              ],
+              [
+                103.9834108,
+                30.7691175
+              ],
+              [
+                103.983546,
+                30.7689547
+              ],
+              [
+                103.9837472,
+                30.7686735
+              ],
+              [
+                103.9837735,
+                30.7686037
+              ],
+              [
+                103.9838315,
+                30.7684496
+              ],
+              [
+                103.9838137,
+                30.7683559
+              ],
+              [
+                103.9838032,
+                30.7683006
+              ],
+              [
+                103.9837501,
+                30.7681728
+              ],
+              [
+                103.9836758,
+                30.7680451
+              ],
+              [
+                103.9835378,
+                30.7678505
+              ],
+              [
+                103.9833919,
+                30.7677823
+              ],
+              [
+                103.983356,
+                30.7677257
+              ],
+              [
+                103.9833506,
+                30.7676473
+              ],
+              [
+                103.9834607,
+                30.7672732
+              ],
+              [
+                103.983474,
+                30.7672279
+              ],
+              [
+                103.9837261,
+                30.7667439
+              ],
+              [
+                103.9840398,
+                30.7663097
+              ],
+              [
+                103.9841124,
+                30.7662092
+              ],
+              [
+                103.9842555,
+                30.7660752
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572445"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_southwest_gate_02",
+          "order": 2,
+          "description": "沿自行车/步行通道步行",
+          "fromPointId": "osm_node_2178323857",
+          "toPointId": "osm_node_2178309358",
+          "lengthMeters": 21.74,
+          "durationSeconds": 17,
+          "highway": "cycleway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9842555,
+                30.7660752
+              ],
+              [
+                103.9841984,
+                30.7660298
+              ],
+              [
+                103.9840885,
+                30.7659424
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572459"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_southwest_gate_03",
+          "order": 3,
+          "description": "沿自行车/步行通道步行",
+          "fromPointId": "osm_node_2178309358",
+          "toPointId": "osm_node_5192904064",
+          "lengthMeters": 16.64,
+          "durationSeconds": 13,
+          "highway": "cycleway",
+          "roadName": "X桥",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9840885,
+                30.7659424
+              ],
+              [
+                103.9840842,
+                30.7659189
+              ],
+              [
+                103.9840771,
+                30.7659001
+              ],
+              [
+                103.9840644,
+                30.7658713
+              ],
+              [
+                103.9840522,
+                30.765849
+              ],
+              [
+                103.984039,
+                30.7658276
+              ],
+              [
+                103.9840202,
+                30.7658067
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "535905490"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_southwest_gate_04",
+          "order": 4,
+          "description": "沿自行车/步行通道步行",
+          "fromPointId": "osm_node_5192904064",
+          "toPointId": "osm_node_2178310048",
+          "lengthMeters": 16.88,
+          "durationSeconds": 13,
+          "highway": "cycleway",
+          "roadName": "X桥",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9840202,
+                30.7658067
+              ],
+              [
+                103.9840009,
+                30.7657839
+              ],
+              [
+                103.9839805,
+                30.765756
+              ],
+              [
+                103.9839668,
+                30.7657272
+              ],
+              [
+                103.9839572,
+                30.7656992
+              ],
+              [
+                103.9839508,
+                30.7656694
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "535905493"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_southwest_gate_05",
+          "order": 5,
+          "description": "沿自行车/步行通道步行",
+          "fromPointId": "osm_node_2178310048",
+          "toPointId": "osm_node_5192820107",
+          "lengthMeters": 18.59,
+          "durationSeconds": 14,
+          "highway": "cycleway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9839508,
+                30.7656694
+              ],
+              [
+                103.9838133,
+                30.7655511
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207570520"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_southwest_gate_06",
+          "order": 6,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_5192820107",
+          "toPointId": "osm_node_5192820224",
+          "lengthMeters": 122.99,
+          "durationSeconds": 93,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9838133,
+                30.7655511
+              ],
+              [
+                103.983899,
+                30.7655212
+              ],
+              [
+                103.9839375,
+                30.7654748
+              ],
+              [
+                103.9839606,
+                30.7653914
+              ],
+              [
+                103.9839807,
+                30.7652816
+              ],
+              [
+                103.9840146,
+                30.7652339
+              ],
+              [
+                103.9840269,
+                30.7651704
+              ],
+              [
+                103.9840377,
+                30.7651055
+              ],
+              [
+                103.9840608,
+                30.7650433
+              ],
+              [
+                103.9841024,
+                30.7650023
+              ],
+              [
+                103.984127,
+                30.7649692
+              ],
+              [
+                103.9841224,
+                30.7649189
+              ],
+              [
+                103.9841963,
+                30.7648699
+              ],
+              [
+                103.9842302,
+                30.7648222
+              ],
+              [
+                103.9842426,
+                30.7647613
+              ],
+              [
+                103.9842318,
+                30.7647031
+              ],
+              [
+                103.9842487,
+                30.7646713
+              ],
+              [
+                103.9842954,
+                30.7645956
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "535892702"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_southwest_gate_07",
+          "order": 7,
+          "description": "沿自行车/步行通道步行",
+          "fromPointId": "osm_node_5192820224",
+          "toPointId": "osm_node_2178310266",
+          "lengthMeters": 36.02,
+          "durationSeconds": 28,
+          "highway": "cycleway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9842954,
+                30.7645956
+              ],
+              [
+                103.9840115,
+                30.7643824
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207570500"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_southwest_gate_08",
+          "order": 8,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178310266",
+          "toPointId": "osm_node_2178310297",
+          "lengthMeters": 146.23,
+          "durationSeconds": 110,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9840115,
+                30.7643824
+              ],
+              [
+                103.9840947,
+                30.7642781
+              ],
+              [
+                103.9841902,
+                30.7641643
+              ],
+              [
+                103.9842304,
+                30.7641165
+              ],
+              [
+                103.9842812,
+                30.7640559
+              ],
+              [
+                103.9845738,
+                30.7637235
+              ],
+              [
+                103.9847755,
+                30.7634877
+              ],
+              [
+                103.9849169,
+                30.7633223
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207573054"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_southwest_gate_09",
+          "order": 9,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178310297",
+          "toPointId": "osm_node_13154428758",
+          "lengthMeters": 33.9,
+          "durationSeconds": 26,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9849169,
+                30.7633223
+              ],
+              [
+                103.9851863,
+                30.7631239
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207573055"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_southwest_gate_10",
+          "order": 10,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_13154428758",
+          "toPointId": "osm_node_2178310287",
+          "lengthMeters": 13.36,
+          "durationSeconds": 11,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9851863,
+                30.7631239
+              ],
+              [
+                103.9852924,
+                30.7630457
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1431063581"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_southwest_gate_11",
+          "order": 11,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178310287",
+          "toPointId": "osm_node_2178309477",
+          "lengthMeters": 118.51,
+          "durationSeconds": 90,
+          "highway": "residential",
+          "roadName": "精勤路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9852924,
+                30.7630457
+              ],
+              [
+                103.9852524,
+                30.763006
+              ],
+              [
+                103.985174,
+                30.7629055
+              ],
+              [
+                103.9851135,
+                30.76282
+              ],
+              [
+                103.9850338,
+                30.7626703
+              ],
+              [
+                103.985014,
+                30.7626241
+              ],
+              [
+                103.9849534,
+                30.7624284
+              ],
+              [
+                103.9849177,
+                30.7622919
+              ],
+              [
+                103.9848947,
+                30.7621874
+              ],
+              [
+                103.9848634,
+                30.7620606
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "530350950"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_southwest_gate_12",
+          "order": 12,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178309477",
+          "toPointId": "osm_node_5150117704",
+          "lengthMeters": 29.57,
+          "durationSeconds": 23,
+          "highway": "residential",
+          "roadName": "精勤路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9848634,
+                30.7620606
+              ],
+              [
+                103.9847855,
+                30.7618032
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "530350951"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_southwest_gate_13",
+          "order": 13,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_5150117704",
+          "toPointId": "osm_node_2178309248",
+          "lengthMeters": 73.96,
+          "durationSeconds": 56,
+          "highway": "residential",
+          "roadName": "精勤路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9847855,
+                30.7618032
+              ],
+              [
+                103.98476,
+                30.7617274
+              ],
+              [
+                103.9847382,
+                30.7616687
+              ],
+              [
+                103.9847132,
+                30.7616049
+              ],
+              [
+                103.9846596,
+                30.7615167
+              ],
+              [
+                103.9844078,
+                30.7612317
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207573050"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_southwest_gate_14",
+          "order": 14,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178309248",
+          "toPointId": "osm_node_2178329881",
+          "lengthMeters": 35.18,
+          "durationSeconds": 27,
+          "highway": "residential",
+          "roadName": "精勤路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9844078,
+                30.7612317
+              ],
+              [
+                103.9841628,
+                30.7609955
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207573056"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_southwest_gate_15",
+          "order": 15,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178329881",
+          "toPointId": "osm_node_9893305424",
+          "lengthMeters": 193.29,
+          "durationSeconds": 146,
+          "highway": "residential",
+          "roadName": "精勤路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9841628,
+                30.7609955
+              ],
+              [
+                103.9840348,
+                30.7608871
+              ],
+              [
+                103.9838806,
+                30.7607701
+              ],
+              [
+                103.9837178,
+                30.7606609
+              ],
+              [
+                103.9835637,
+                30.7605641
+              ],
+              [
+                103.9833857,
+                30.7604511
+              ],
+              [
+                103.9830042,
+                30.7602331
+              ],
+              [
+                103.9828339,
+                30.7601382
+              ],
+              [
+                103.9827606,
+                30.7600888
+              ],
+              [
+                103.9825419,
+                30.759961
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "413859301"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        }
+      ],
+      "walkMeters": 1291.28,
+      "durationSeconds": 979,
+      "durationBasis": "按 1.33 m/s 估算，各段步行秒数向上取整，总耗时为各段之和。",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
+      "verificationMethod": "项目试用假设与 OSM 步行路网估算",
+      "verificationBasis": [
+        "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "出校点采用应用地图所对应的 OSM 路网节点 osm_node_9893305424。",
+        "OSM 历史数据曾标记 locked=yes，现按项目试用规则纳入；现场锁闭时请改走其他校门。"
+      ],
+      "missingEvidence": [
+        "实际人行通行与开放时段"
+      ],
+      "accessRules": {
+        "direction": "OUTBOUND",
+        "pedestrianAccess": "ASSUMED_OPEN",
+        "pedestrianAccessBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "gateOpenHours": "试用按全天开放处理",
+        "gateOpenHoursStatus": "PROJECT_ASSUMED_UNRESTRICTED",
+        "timeRestrictions": [],
+        "timeRestrictionBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。"
+      },
+      "sourceRefs": [
+        "S04",
+        "web/data/campus.json",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+      ],
+      "unavailableReasonCode": null,
+      "unavailableReason": null
+    },
+    {
       "id": "connector_library_west_gate",
       "originId": "osm_way_1098786977",
       "originName": "西南交通大学犀浦校区图书馆",
@@ -1179,73 +3062,2021 @@
         "longitude": 103.9832456,
         "latitude": 30.7693165,
         "coordinateSystem": "WGS84",
-        "positionRole": "building_access_point",
-        "evidence": [
-          "S04 OSM 建筑轮廓与相邻步道顶点核对；入口门位与开放规则待现场核实"
-        ]
+        "positionRole": "building_external_access_point"
       },
       "gateId": "campus_gate_west",
       "gateName": "西门",
       "gatePoints": [
         {
-          "pointId": "osm_node_11668769187",
-          "longitude": 103.979311,
-          "latitude": 30.7643816,
-          "coordinateSystem": "WGS84",
-          "direction": "UNKNOWN",
-          "positionRole": "gate_candidate_node",
-          "evidence": [
-            "S04 OSM 无名门节点（barrier=gate、motor_vehicle=permit）；对应官方图标签“西门”（LABEL_016，S01），仅有名称线索"
-          ]
-        },
-        {
           "pointId": "osm_node_11668769188",
           "longitude": 103.9792051,
           "latitude": 30.7644976,
           "coordinateSystem": "WGS84",
-          "direction": "UNKNOWN",
-          "positionRole": "gate_candidate_node",
-          "evidence": [
-            "S04 OSM 无名门节点（barrier=gate、motor_vehicle=permit），邻接跨校界 residential 边 osm_edge_207572443_8 与 footway 过街边；进出方向未确认"
+          "positionRole": "gate_exit",
+          "direction": "OUTBOUND"
+        }
+      ],
+      "gateExitPoint": {
+        "pointId": "osm_node_11668769188",
+        "longitude": 103.9792051,
+        "latitude": 30.7644976,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "segments": [
+        {
+          "segmentId": "connector_library_west_gate_01",
+          "order": 1,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_5167087319",
+          "toPointId": "osm_node_2178323857",
+          "lengthMeters": 414.42,
+          "durationSeconds": 312,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9832456,
+                30.7693165
+              ],
+              [
+                103.9834108,
+                30.7691175
+              ],
+              [
+                103.983546,
+                30.7689547
+              ],
+              [
+                103.9837472,
+                30.7686735
+              ],
+              [
+                103.9837735,
+                30.7686037
+              ],
+              [
+                103.9838315,
+                30.7684496
+              ],
+              [
+                103.9838137,
+                30.7683559
+              ],
+              [
+                103.9838032,
+                30.7683006
+              ],
+              [
+                103.9837501,
+                30.7681728
+              ],
+              [
+                103.9836758,
+                30.7680451
+              ],
+              [
+                103.9835378,
+                30.7678505
+              ],
+              [
+                103.9833919,
+                30.7677823
+              ],
+              [
+                103.983356,
+                30.7677257
+              ],
+              [
+                103.9833506,
+                30.7676473
+              ],
+              [
+                103.9834607,
+                30.7672732
+              ],
+              [
+                103.983474,
+                30.7672279
+              ],
+              [
+                103.9837261,
+                30.7667439
+              ],
+              [
+                103.9840398,
+                30.7663097
+              ],
+              [
+                103.9841124,
+                30.7662092
+              ],
+              [
+                103.9842555,
+                30.7660752
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572445"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_west_gate_02",
+          "order": 2,
+          "description": "沿自行车/步行通道步行",
+          "fromPointId": "osm_node_2178323857",
+          "toPointId": "osm_node_7912594050",
+          "lengthMeters": 7.43,
+          "durationSeconds": 6,
+          "highway": "cycleway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9842555,
+                30.7660752
+              ],
+              [
+                103.9841984,
+                30.7660298
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572459"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_west_gate_03",
+          "order": 3,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_7912594050",
+          "toPointId": "osm_node_7912594048",
+          "lengthMeters": 16.7,
+          "durationSeconds": 13,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9841984,
+                30.7660298
+              ],
+              [
+                103.9840835,
+                30.7660562
+              ],
+              [
+                103.9840391,
+                30.7660271
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "847952491"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_west_gate_04",
+          "order": 4,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_7912594048",
+          "toPointId": "osm_node_7912594047",
+          "lengthMeters": 34.44,
+          "durationSeconds": 26,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9840391,
+                30.7660271
+              ],
+              [
+                103.9837655,
+                30.7658254
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "847952490"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_west_gate_05",
+          "order": 5,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_7912594047",
+          "toPointId": "osm_node_2178329883",
+          "lengthMeters": 11.96,
+          "durationSeconds": 9,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9837655,
+                30.7658254
+              ],
+              [
+                103.9836728,
+                30.7657531
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "847952492"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_west_gate_06",
+          "order": 6,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_2178329883",
+          "toPointId": "osm_node_2178329878",
+          "lengthMeters": 117.08,
+          "durationSeconds": 89,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9836728,
+                30.7657531
+              ],
+              [
+                103.9835901,
+                30.7658119
+              ],
+              [
+                103.9835215,
+                30.7658639
+              ],
+              [
+                103.9834516,
+                30.7659512
+              ],
+              [
+                103.9833657,
+                30.7660342
+              ],
+              [
+                103.9832638,
+                30.7660849
+              ],
+              [
+                103.9832155,
+                30.7661633
+              ],
+              [
+                103.9831243,
+                30.7662555
+              ],
+              [
+                103.9829634,
+                30.7663384
+              ],
+              [
+                103.9828615,
+                30.7663707
+              ],
+              [
+                103.9827498,
+                30.7663973
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207573052"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_west_gate_07",
+          "order": 7,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178329878",
+          "toPointId": "osm_node_11668734960",
+          "lengthMeters": 365.99,
+          "durationSeconds": 276,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9827498,
+                30.7663973
+              ],
+              [
+                103.9819762,
+                30.7659461
+              ],
+              [
+                103.9802565,
+                30.7649431
+              ],
+              [
+                103.9795811,
+                30.7645479
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1255210394"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_west_gate_08",
+          "order": 8,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_11668734960",
+          "toPointId": "osm_node_11668734959",
+          "lengthMeters": 14.46,
+          "durationSeconds": 11,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9795811,
+                30.7645479
+              ],
+              [
+                103.979493,
+                30.7646536
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1255210377"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_library_west_gate_09",
+          "order": 9,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_11668734959",
+          "toPointId": "osm_node_11668769188",
+          "lengthMeters": 32.57,
+          "durationSeconds": 25,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.979493,
+                30.7646536
+              ],
+              [
+                103.9793651,
+                30.7645934
+              ],
+              [
+                103.9792051,
+                30.7644976
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572443"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
           ]
         }
       ],
-      "gateExitPoint": null,
-      "segments": [],
-      "walkMeters": null,
-      "durationSeconds": null,
-      "durationBasis": null,
-      "verificationStatus": "PENDING_VERIFICATION",
-      "verifiedAt": null,
-      "verificationMethod": "高德西门 POI 与官方图和 OSM 门节点位置相符；城市接驳所用出校方向与步行权限待核对。",
+      "walkMeters": 1015.05,
+      "durationSeconds": 767,
+      "durationBasis": "按 1.33 m/s 估算，各段步行秒数向上取整，总耗时为各段之和。",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
+      "verificationMethod": "项目试用假设与 OSM 步行路网估算",
       "verificationBasis": [
-        "S04 OSM 西侧门两个候选节点 osm_node_11668769187 / osm_node_11668769188（barrier=gate、motor_vehicle=permit）",
-        "S01 官方图标签“西门”（LABEL_016）仅作名称线索，官方图无门洞与通行方向符号",
-        "https://ditu.amap.com/place/B001C80PYA：2026-11-19 核对西门高德展示点；该点距两个 OSM 候选节点均很近，方向信息由接驳另行核对。",
-        "AMAP_WALKING_2026_11_19：交大兴业北街站 D2 口至西门展示点的高德步行规划为 318 米、254 秒。"
+        "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "出校点采用应用地图所对应的 OSM 路网节点 osm_node_11668769188。",
+        "2026-11-20 高德步行规划至交大兴业北街站 D2 口，项目出校路网点出发约 377 米，西门展示点出发约 316 米。"
       ],
       "missingEvidence": [
-        "西门出校方向的物理点位（两个 OSM 门节点中哪一个是出校侧）",
-        "西门是否允许日常城市出行（W1-04 应用地点将 campus_gate_west 标为 campusOnly 且 routingPosition 为空）",
-        "西门行人可用的出校路径"
+        "实际人行通行与开放时段"
       ],
       "accessRules": {
-        "direction": "UNVERIFIED",
-        "pedestrianAccess": "UNVERIFIED",
-        "pedestrianAccessBasis": "无西门人行通行证据；官方图仅名称标签，OSM 节点无 foot/access 规则。",
-        "gateOpenHours": null,
-        "gateOpenHoursStatus": "EVIDENCE_UNAVAILABLE",
+        "direction": "OUTBOUND",
+        "pedestrianAccess": "ASSUMED_OPEN",
+        "pedestrianAccessBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "gateOpenHours": "试用按全天开放处理",
+        "gateOpenHoursStatus": "PROJECT_ASSUMED_UNRESTRICTED",
         "timeRestrictions": [],
-        "timeRestrictionBasis": "西门尚未启用为城市接驳，项目已启用接驳的时段规则不改变西门的待核对状态。"
+        "timeRestrictionBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。"
       },
       "sourceRefs": [
-        "S01",
         "S04",
-        "https://ditu.amap.com/place/B001C80PYA",
-        "AMAP_WALKING_2026_11_19"
+        "web/data/campus.json",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20",
+        "https://www.amap.com/place/BX10030840",
+        "https://lbs.amap.com/api/webservice/guide/api/direction/"
       ],
-      "unavailableReasonCode": "GATE_EXIT_POINT_UNVERIFIED",
-      "unavailableReason": "西门两个 OSM 门节点（osm_node_11668769187 / osm_node_11668769188）的进出方向未确认，应用地点将 campus_gate_west 标为 campusOnly 且 routingPosition 为空；高德已补充展示位置，城市接驳等待出校点和步行路径核对。"
+      "unavailableReasonCode": null,
+      "unavailableReason": null
+    },
+    {
+      "id": "connector_dorm1_south_gate",
+      "originId": "osm_way_1099340057",
+      "originName": "天佑斋1号楼",
+      "originPoint": {
+        "pointId": "osm_node_9893299669",
+        "longitude": 103.9839831,
+        "latitude": 30.7623128,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_external_access_point"
+      },
+      "gateId": "osm_node_2178309445",
+      "gateName": "南门",
+      "gatePoints": [
+        {
+          "pointId": "osm_node_2178309445",
+          "longitude": 103.9897905,
+          "latitude": 30.7629679,
+          "coordinateSystem": "WGS84",
+          "positionRole": "gate_exit",
+          "direction": "OUTBOUND"
+        }
+      ],
+      "gateExitPoint": {
+        "pointId": "osm_node_2178309445",
+        "longitude": 103.9897905,
+        "latitude": 30.7629679,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "segments": [
+        {
+          "segmentId": "connector_dorm1_south_gate_01",
+          "order": 1,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_9893299669",
+          "toPointId": "osm_node_9893299672",
+          "lengthMeters": 95.52,
+          "durationSeconds": 72,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9839831,
+                30.7623128
+              ],
+              [
+                103.9836851,
+                30.7621422
+              ],
+              [
+                103.9837194,
+                30.7618201
+              ],
+              [
+                103.9834906,
+                30.7617049
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1079229882"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_south_gate_02",
+          "order": 2,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_9893299672",
+          "toPointId": "osm_node_10156545584",
+          "lengthMeters": 62.18,
+          "durationSeconds": 47,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9834906,
+                30.7617049
+              ],
+              [
+                103.9834804,
+                30.761817
+              ],
+              [
+                103.9834394,
+                30.7622624
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1099340058"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_south_gate_03",
+          "order": 3,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_10156545584",
+          "toPointId": "osm_node_2178323811",
+          "lengthMeters": 12.08,
+          "durationSeconds": 10,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9834394,
+                30.7622624
+              ],
+              [
+                103.9833685,
+                30.7623523
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1148128322"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_south_gate_04",
+          "order": 4,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_2178323811",
+          "toPointId": "osm_node_2178310297",
+          "lengthMeters": 183.18,
+          "durationSeconds": 138,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9833685,
+                30.7623523
+              ],
+              [
+                103.9840105,
+                30.7627244
+              ],
+              [
+                103.9844221,
+                30.7629893
+              ],
+              [
+                103.9849169,
+                30.7633223
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572452"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_south_gate_05",
+          "order": 5,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178310297",
+          "toPointId": "osm_node_13154428758",
+          "lengthMeters": 33.9,
+          "durationSeconds": 26,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9849169,
+                30.7633223
+              ],
+              [
+                103.9851863,
+                30.7631239
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207573055"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_south_gate_06",
+          "order": 6,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_13154428758",
+          "toPointId": "osm_node_2178310287",
+          "lengthMeters": 13.36,
+          "durationSeconds": 11,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9851863,
+                30.7631239
+              ],
+              [
+                103.9852924,
+                30.7630457
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1431063581"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_south_gate_07",
+          "order": 7,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178310287",
+          "toPointId": "osm_node_2178323792",
+          "lengthMeters": 326.66,
+          "durationSeconds": 246,
+          "highway": "residential",
+          "roadName": "知行路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9852924,
+                30.7630457
+              ],
+              [
+                103.9853875,
+                30.7631263
+              ],
+              [
+                103.9855039,
+                30.7632024
+              ],
+              [
+                103.9855959,
+                30.7632507
+              ],
+              [
+                103.985671,
+                30.7632901
+              ],
+              [
+                103.9857767,
+                30.7633349
+              ],
+              [
+                103.9858829,
+                30.7633681
+              ],
+              [
+                103.985966,
+                30.763387
+              ],
+              [
+                103.9864549,
+                30.7634711
+              ],
+              [
+                103.9867141,
+                30.7635219
+              ],
+              [
+                103.9867755,
+                30.7635415
+              ],
+              [
+                103.9872543,
+                30.7636946
+              ],
+              [
+                103.9873919,
+                30.7637446
+              ],
+              [
+                103.987541,
+                30.7638096
+              ],
+              [
+                103.9876474,
+                30.7638651
+              ],
+              [
+                103.987951,
+                30.7640216
+              ],
+              [
+                103.9881771,
+                30.7641611
+              ],
+              [
+                103.9883479,
+                30.7642691
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207570514"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_south_gate_08",
+          "order": 8,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178323792",
+          "toPointId": "osm_node_5192904117",
+          "lengthMeters": 18.82,
+          "durationSeconds": 15,
+          "highway": "residential",
+          "roadName": "知行路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=conditional，access=permit。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9883479,
+                30.7642691
+              ],
+              [
+                103.9885044,
+                30.7643719
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207570494"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_south_gate_09",
+          "order": 9,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_5192904117",
+          "toPointId": "osm_node_2178309445",
+          "lengthMeters": 198.69,
+          "durationSeconds": 150,
+          "highway": "residential",
+          "roadName": "承唐路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9885044,
+                30.7643719
+              ],
+              [
+                103.9887995,
+                30.7640348
+              ],
+              [
+                103.9896423,
+                30.7631274
+              ],
+              [
+                103.9897905,
+                30.7629679
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207570521"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        }
+      ],
+      "walkMeters": 944.39,
+      "durationSeconds": 715,
+      "durationBasis": "按 1.33 m/s 估算，各段步行秒数向上取整，总耗时为各段之和。",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
+      "verificationMethod": "项目试用假设与 OSM 步行路网估算",
+      "verificationBasis": [
+        "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "出校点采用应用地图所对应的 OSM 路网节点 osm_node_2178309445。"
+      ],
+      "missingEvidence": [
+        "实际人行通行与开放时段"
+      ],
+      "accessRules": {
+        "direction": "OUTBOUND",
+        "pedestrianAccess": "ASSUMED_OPEN",
+        "pedestrianAccessBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "gateOpenHours": "试用按全天开放处理",
+        "gateOpenHoursStatus": "PROJECT_ASSUMED_UNRESTRICTED",
+        "timeRestrictions": [],
+        "timeRestrictionBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。"
+      },
+      "sourceRefs": [
+        "S04",
+        "web/data/campus.json",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+      ],
+      "unavailableReasonCode": null,
+      "unavailableReason": null
+    },
+    {
+      "id": "connector_dorm1_northwest_gate",
+      "originId": "osm_way_1099340057",
+      "originName": "天佑斋1号楼",
+      "originPoint": {
+        "pointId": "osm_node_9893299669",
+        "longitude": 103.9839831,
+        "latitude": 30.7623128,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_external_access_point"
+      },
+      "gateId": "osm_node_2178323767",
+      "gateName": "西北一门",
+      "gatePoints": [
+        {
+          "pointId": "osm_node_2178323767",
+          "longitude": 103.9751882,
+          "latitude": 30.7699378,
+          "coordinateSystem": "WGS84",
+          "positionRole": "gate_exit",
+          "direction": "OUTBOUND"
+        }
+      ],
+      "gateExitPoint": {
+        "pointId": "osm_node_2178323767",
+        "longitude": 103.9751882,
+        "latitude": 30.7699378,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "segments": [
+        {
+          "segmentId": "connector_dorm1_northwest_gate_01",
+          "order": 1,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_9893299669",
+          "toPointId": "osm_node_9893299672",
+          "lengthMeters": 95.52,
+          "durationSeconds": 72,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9839831,
+                30.7623128
+              ],
+              [
+                103.9836851,
+                30.7621422
+              ],
+              [
+                103.9837194,
+                30.7618201
+              ],
+              [
+                103.9834906,
+                30.7617049
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1079229882"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_northwest_gate_02",
+          "order": 2,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_9893299672",
+          "toPointId": "osm_node_10156545584",
+          "lengthMeters": 62.18,
+          "durationSeconds": 47,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9834906,
+                30.7617049
+              ],
+              [
+                103.9834804,
+                30.761817
+              ],
+              [
+                103.9834394,
+                30.7622624
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1099340058"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_northwest_gate_03",
+          "order": 3,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_10156545584",
+          "toPointId": "osm_node_10156545577",
+          "lengthMeters": 27.26,
+          "durationSeconds": 21,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9834394,
+                30.7622624
+              ],
+              [
+                103.9833685,
+                30.7623523
+              ],
+              [
+                103.9832792,
+                30.7624653
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1148128322"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_northwest_gate_04",
+          "order": 4,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_10156545577",
+          "toPointId": "osm_node_9893299664",
+          "lengthMeters": 73.18,
+          "durationSeconds": 56,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9832792,
+                30.7624653
+              ],
+              [
+                103.9826087,
+                30.7627834
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1079229880"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_northwest_gate_05",
+          "order": 5,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_9893299664",
+          "toPointId": "osm_node_10175220203",
+          "lengthMeters": 32.88,
+          "durationSeconds": 25,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9826087,
+                30.7627834
+              ],
+              [
+                103.9823556,
+                30.7629042
+              ],
+              [
+                103.9823071,
+                30.7629258
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1112214512"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_northwest_gate_06",
+          "order": 6,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_10175220203",
+          "toPointId": "osm_node_2178323712",
+          "lengthMeters": 57.42,
+          "durationSeconds": 44,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9823071,
+                30.7629258
+              ],
+              [
+                103.9818085,
+                30.7626375
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572447"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_northwest_gate_07",
+          "order": 7,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_2178323712",
+          "toPointId": "osm_node_2178323872",
+          "lengthMeters": 66.67,
+          "durationSeconds": 51,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9818085,
+                30.7626375
+              ],
+              [
+                103.9818242,
+                30.762753
+              ],
+              [
+                103.9817998,
+                30.762835
+              ],
+              [
+                103.9817571,
+                30.7628957
+              ],
+              [
+                103.9816858,
+                30.7629527
+              ],
+              [
+                103.9815943,
+                30.7630013
+              ],
+              [
+                103.9814469,
+                30.7630847
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572451"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_northwest_gate_08",
+          "order": 8,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_2178323872",
+          "toPointId": "osm_node_5195365342",
+          "lengthMeters": 71.76,
+          "durationSeconds": 54,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9814469,
+                30.7630847
+              ],
+              [
+                103.9808136,
+                30.7627378
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "536259149"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_northwest_gate_09",
+          "order": 9,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_5195365342",
+          "toPointId": "osm_node_10059030883",
+          "lengthMeters": 960.27,
+          "durationSeconds": 723,
+          "highway": "residential",
+          "roadName": "菁华路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9808136,
+                30.7627378
+              ],
+              [
+                103.980091,
+                30.7636635
+              ],
+              [
+                103.9796771,
+                30.7641936
+              ],
+              [
+                103.9796206,
+                30.764266
+              ],
+              [
+                103.9795082,
+                30.76441
+              ],
+              [
+                103.9794622,
+                30.764469
+              ],
+              [
+                103.9793651,
+                30.7645934
+              ],
+              [
+                103.9793243,
+                30.7646456
+              ],
+              [
+                103.9792141,
+                30.7647867
+              ],
+              [
+                103.9786162,
+                30.7655526
+              ],
+              [
+                103.97796,
+                30.7663932
+              ],
+              [
+                103.9776789,
+                30.7667534
+              ],
+              [
+                103.9768187,
+                30.7678552
+              ],
+              [
+                103.9765219,
+                30.7682354
+              ],
+              [
+                103.9760579,
+                30.7688298
+              ],
+              [
+                103.9756525,
+                30.7693491
+              ],
+              [
+                103.9752152,
+                30.7699098
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "413859296"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_northwest_gate_10",
+          "order": 10,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_10059030883",
+          "toPointId": "osm_node_2178323767",
+          "lengthMeters": 4.04,
+          "durationSeconds": 4,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9752152,
+                30.7699098
+              ],
+              [
+                103.9751882,
+                30.7699378
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1220208141"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        }
+      ],
+      "walkMeters": 1451.18,
+      "durationSeconds": 1097,
+      "durationBasis": "按 1.33 m/s 估算，各段步行秒数向上取整，总耗时为各段之和。",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
+      "verificationMethod": "项目试用假设与 OSM 步行路网估算",
+      "verificationBasis": [
+        "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "出校点采用应用地图所对应的 OSM 路网节点 osm_node_2178323767。"
+      ],
+      "missingEvidence": [
+        "实际人行通行与开放时段"
+      ],
+      "accessRules": {
+        "direction": "OUTBOUND",
+        "pedestrianAccess": "ASSUMED_OPEN",
+        "pedestrianAccessBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "gateOpenHours": "试用按全天开放处理",
+        "gateOpenHoursStatus": "PROJECT_ASSUMED_UNRESTRICTED",
+        "timeRestrictions": [],
+        "timeRestrictionBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。"
+      },
+      "sourceRefs": [
+        "S04",
+        "web/data/campus.json",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+      ],
+      "unavailableReasonCode": null,
+      "unavailableReason": null
+    },
+    {
+      "id": "connector_dorm1_wind_tunnel_gate",
+      "originId": "osm_way_1099340057",
+      "originName": "天佑斋1号楼",
+      "originPoint": {
+        "pointId": "osm_node_9893299669",
+        "longitude": 103.9839831,
+        "latitude": 30.7623128,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_external_access_point"
+      },
+      "gateId": "osm_node_8386702126",
+      "gateName": "风洞门",
+      "gatePoints": [
+        {
+          "pointId": "osm_node_8386702126",
+          "longitude": 103.9801381,
+          "latitude": 30.7731062,
+          "coordinateSystem": "WGS84",
+          "positionRole": "gate_exit",
+          "direction": "OUTBOUND"
+        }
+      ],
+      "gateExitPoint": {
+        "pointId": "osm_node_8386702126",
+        "longitude": 103.9801381,
+        "latitude": 30.7731062,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "segments": [
+        {
+          "segmentId": "connector_dorm1_wind_tunnel_gate_01",
+          "order": 1,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_9893299669",
+          "toPointId": "osm_node_9893299672",
+          "lengthMeters": 95.52,
+          "durationSeconds": 72,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9839831,
+                30.7623128
+              ],
+              [
+                103.9836851,
+                30.7621422
+              ],
+              [
+                103.9837194,
+                30.7618201
+              ],
+              [
+                103.9834906,
+                30.7617049
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1079229882"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_wind_tunnel_gate_02",
+          "order": 2,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_9893299672",
+          "toPointId": "osm_node_10156545584",
+          "lengthMeters": 62.18,
+          "durationSeconds": 47,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9834906,
+                30.7617049
+              ],
+              [
+                103.9834804,
+                30.761817
+              ],
+              [
+                103.9834394,
+                30.7622624
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1099340058"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_wind_tunnel_gate_03",
+          "order": 3,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_10156545584",
+          "toPointId": "osm_node_2178323811",
+          "lengthMeters": 12.08,
+          "durationSeconds": 10,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9834394,
+                30.7622624
+              ],
+              [
+                103.9833685,
+                30.7623523
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1148128322"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_wind_tunnel_gate_04",
+          "order": 4,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_2178323811",
+          "toPointId": "osm_node_2178323797",
+          "lengthMeters": 73.99,
+          "durationSeconds": 56,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9833685,
+                30.7623523
+              ],
+              [
+                103.9840105,
+                30.7627244
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572452"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_wind_tunnel_gate_05",
+          "order": 5,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_2178323797",
+          "toPointId": "osm_node_2178323710",
+          "lengthMeters": 110.96,
+          "durationSeconds": 84,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9840105,
+                30.7627244
+              ],
+              [
+                103.9837326,
+                30.76306
+              ],
+              [
+                103.9833521,
+                30.7635463
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207594079"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_wind_tunnel_gate_06",
+          "order": 6,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_2178323710",
+          "toPointId": "osm_node_2178323818",
+          "lengthMeters": 105.21,
+          "durationSeconds": 80,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9833521,
+                30.7635463
+              ],
+              [
+                103.9836618,
+                30.7637339
+              ],
+              [
+                103.9842304,
+                30.7641165
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572447"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_wind_tunnel_gate_07",
+          "order": 7,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178323818",
+          "toPointId": "osm_node_2178310121",
+          "lengthMeters": 816.48,
+          "durationSeconds": 614,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9842304,
+                30.7641165
+              ],
+              [
+                103.9841902,
+                30.7641643
+              ],
+              [
+                103.9840947,
+                30.7642781
+              ],
+              [
+                103.9840115,
+                30.7643824
+              ],
+              [
+                103.9837332,
+                30.7647556
+              ],
+              [
+                103.983705,
+                30.764802
+              ],
+              [
+                103.9835619,
+                30.7650376
+              ],
+              [
+                103.9834177,
+                30.7652691
+              ],
+              [
+                103.9834056,
+                30.76529
+              ],
+              [
+                103.9833525,
+                30.7653872
+              ],
+              [
+                103.9831463,
+                30.7657641
+              ],
+              [
+                103.9831146,
+                30.765822
+              ],
+              [
+                103.9827498,
+                30.7663973
+              ],
+              [
+                103.9826771,
+                30.7665064
+              ],
+              [
+                103.9825782,
+                30.7666794
+              ],
+              [
+                103.9824279,
+                30.7668816
+              ],
+              [
+                103.982118,
+                30.7672707
+              ],
+              [
+                103.9819771,
+                30.7674283
+              ],
+              [
+                103.9817486,
+                30.7676682
+              ],
+              [
+                103.9814498,
+                30.7679391
+              ],
+              [
+                103.9811531,
+                30.7682078
+              ],
+              [
+                103.9808205,
+                30.7685185
+              ],
+              [
+                103.9805361,
+                30.7688036
+              ],
+              [
+                103.9802733,
+                30.7690883
+              ],
+              [
+                103.9801411,
+                30.7692403
+              ],
+              [
+                103.980068,
+                30.7693386
+              ],
+              [
+                103.979894,
+                30.7695982
+              ],
+              [
+                103.9798082,
+                30.769803
+              ],
+              [
+                103.9797594,
+                30.7699785
+              ],
+              [
+                103.979733,
+                30.7701276
+              ],
+              [
+                103.979735,
+                30.7702562
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207573054"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_wind_tunnel_gate_08",
+          "order": 8,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178310121",
+          "toPointId": "osm_node_2178310309",
+          "lengthMeters": 47.49,
+          "durationSeconds": 36,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.979735,
+                30.7702562
+              ],
+              [
+                103.9797443,
+                30.7704221
+              ],
+              [
+                103.9797677,
+                30.7705347
+              ],
+              [
+                103.979807,
+                30.7706774
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207573051"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_wind_tunnel_gate_09",
+          "order": 9,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178310309",
+          "toPointId": "osm_node_2178309655",
+          "lengthMeters": 220.04,
+          "durationSeconds": 166,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.979807,
+                30.7706774
+              ],
+              [
+                103.9799255,
+                30.7708587
+              ],
+              [
+                103.9800201,
+                30.770965
+              ],
+              [
+                103.9801386,
+                30.7710737
+              ],
+              [
+                103.9805314,
+                30.7713453
+              ],
+              [
+                103.9807791,
+                30.771515
+              ],
+              [
+                103.9809788,
+                30.771673
+              ],
+              [
+                103.981101,
+                30.7717892
+              ],
+              [
+                103.9811563,
+                30.7718432
+              ],
+              [
+                103.9812492,
+                30.7719711
+              ],
+              [
+                103.9813461,
+                30.7721196
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207570525"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_wind_tunnel_gate_10",
+          "order": 10,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178309655",
+          "toPointId": "osm_node_8386702126",
+          "lengthMeters": 160.91,
+          "durationSeconds": 121,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9813461,
+                30.7721196
+              ],
+              [
+                103.9812794,
+                30.7721802
+              ],
+              [
+                103.9811856,
+                30.7722677
+              ],
+              [
+                103.9810941,
+                30.7723609
+              ],
+              [
+                103.9809097,
+                30.7725551
+              ],
+              [
+                103.9805982,
+                30.7728557
+              ],
+              [
+                103.9804109,
+                30.7729756
+              ],
+              [
+                103.9802198,
+                30.7730772
+              ],
+              [
+                103.9801381,
+                30.7731062
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "532472176"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        }
+      ],
+      "walkMeters": 1704.86,
+      "durationSeconds": 1286,
+      "durationBasis": "按 1.33 m/s 估算，各段步行秒数向上取整，总耗时为各段之和。",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
+      "verificationMethod": "项目试用假设与 OSM 步行路网估算",
+      "verificationBasis": [
+        "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "出校点采用应用地图所对应的 OSM 路网节点 osm_node_8386702126。"
+      ],
+      "missingEvidence": [
+        "实际人行通行与开放时段"
+      ],
+      "accessRules": {
+        "direction": "OUTBOUND",
+        "pedestrianAccess": "ASSUMED_OPEN",
+        "pedestrianAccessBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "gateOpenHours": "试用按全天开放处理",
+        "gateOpenHoursStatus": "PROJECT_ASSUMED_UNRESTRICTED",
+        "timeRestrictions": [],
+        "timeRestrictionBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。"
+      },
+      "sourceRefs": [
+        "S04",
+        "web/data/campus.json",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+      ],
+      "unavailableReasonCode": null,
+      "unavailableReason": null
     },
     {
       "id": "connector_dorm1_southwest_gate",
@@ -1256,10 +5087,7 @@
         "longitude": 103.9839831,
         "latitude": 30.7623128,
         "coordinateSystem": "WGS84",
-        "positionRole": "building_access_point",
-        "evidence": [
-          "S04 OSM 建筑轮廓与相邻人行步道顶点核对；入口门位与开放规则待现场核实"
-        ]
+        "positionRole": "building_external_access_point"
       },
       "gateId": "osm_node_9893305424",
       "gateName": "西南门",
@@ -1269,43 +5097,868 @@
           "longitude": 103.9825419,
           "latitude": 30.759961,
           "coordinateSystem": "WGS84",
-          "direction": "UNKNOWN",
-          "positionRole": "gate_candidate_node",
-          "evidence": [
-            "S04 OSM 西南门节点 barrier=gate、locked=yes；邻接跨校界 residential 边 osm_edge_413859301_9（精勤路）"
+          "positionRole": "gate_exit",
+          "direction": "OUTBOUND"
+        }
+      ],
+      "gateExitPoint": {
+        "pointId": "osm_node_9893305424",
+        "longitude": 103.9825419,
+        "latitude": 30.759961,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "segments": [
+        {
+          "segmentId": "connector_dorm1_southwest_gate_01",
+          "order": 1,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_9893299669",
+          "toPointId": "osm_node_9893299672",
+          "lengthMeters": 95.52,
+          "durationSeconds": 72,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9839831,
+                30.7623128
+              ],
+              [
+                103.9836851,
+                30.7621422
+              ],
+              [
+                103.9837194,
+                30.7618201
+              ],
+              [
+                103.9834906,
+                30.7617049
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1079229882"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_southwest_gate_02",
+          "order": 2,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_9893299672",
+          "toPointId": "osm_node_10156545584",
+          "lengthMeters": 62.18,
+          "durationSeconds": 47,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9834906,
+                30.7617049
+              ],
+              [
+                103.9834804,
+                30.761817
+              ],
+              [
+                103.9834394,
+                30.7622624
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1099340058"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_southwest_gate_03",
+          "order": 3,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_10156545584",
+          "toPointId": "osm_node_2178323811",
+          "lengthMeters": 12.08,
+          "durationSeconds": 10,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9834394,
+                30.7622624
+              ],
+              [
+                103.9833685,
+                30.7623523
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1148128322"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_southwest_gate_04",
+          "order": 4,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_2178323811",
+          "toPointId": "osm_node_2178323785",
+          "lengthMeters": 100.69,
+          "durationSeconds": 76,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9833685,
+                30.7623523
+              ],
+              [
+                103.9830302,
+                30.7621562
+              ],
+              [
+                103.982491,
+                30.761851
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572452"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_southwest_gate_05",
+          "order": 5,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_2178323785",
+          "toPointId": "osm_node_2178323798",
+          "lengthMeters": 110.75,
+          "durationSeconds": 84,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.982491,
+                30.761851
+              ],
+              [
+                103.9826344,
+                30.7616591
+              ],
+              [
+                103.9825883,
+                30.7615299
+              ],
+              [
+                103.9825932,
+                30.7615196
+              ],
+              [
+                103.9826538,
+                30.7613937
+              ],
+              [
+                103.9829674,
+                30.76099
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572451"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_southwest_gate_06",
+          "order": 6,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_2178323798",
+          "toPointId": "osm_node_5150117703",
+          "lengthMeters": 62.64,
+          "durationSeconds": 48,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9829674,
+                30.76099
+              ],
+              [
+                103.9824206,
+                30.7606792
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "530350949"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_southwest_gate_07",
+          "order": 7,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_5150117703",
+          "toPointId": "osm_node_7090470151",
+          "lengthMeters": 21.32,
+          "durationSeconds": 17,
+          "highway": "residential",
+          "roadName": "菁华路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9824206,
+                30.7606792
+              ],
+              [
+                103.9825449,
+                30.76052
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "413859296"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_southwest_gate_08",
+          "order": 8,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_7090470151",
+          "toPointId": "osm_node_7090470150",
+          "lengthMeters": 36.8,
+          "durationSeconds": 28,
+          "highway": "residential",
+          "roadName": "菁华路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9825449,
+                30.76052
+              ],
+              [
+                103.9827534,
+                30.7602417
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "759132561"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_southwest_gate_09",
+          "order": 9,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_7090470150",
+          "toPointId": "osm_node_10060656227",
+          "lengthMeters": 13.84,
+          "durationSeconds": 11,
+          "highway": "residential",
+          "roadName": "菁华路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9827534,
+                30.7602417
+              ],
+              [
+                103.9828339,
+                30.7601382
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "759132560"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_southwest_gate_10",
+          "order": 10,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_10060656227",
+          "toPointId": "osm_node_9893305424",
+          "lengthMeters": 34.17,
+          "durationSeconds": 26,
+          "highway": "residential",
+          "roadName": "精勤路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9828339,
+                30.7601382
+              ],
+              [
+                103.9827606,
+                30.7600888
+              ],
+              [
+                103.9825419,
+                30.759961
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "413859301"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
           ]
         }
       ],
-      "gateExitPoint": null,
-      "segments": [],
-      "walkMeters": null,
-      "durationSeconds": null,
-      "durationBasis": null,
-      "verificationStatus": "REJECTED",
-      "verifiedAt": "2026-11-15",
-      "verificationMethod": "OSM 标签审核：西南门标注 locked=yes，视为当前不开放。",
+      "walkMeters": 549.99,
+      "durationSeconds": 419,
+      "durationBasis": "按 1.33 m/s 估算，各段步行秒数向上取整，总耗时为各段之和。",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
+      "verificationMethod": "项目试用假设与 OSM 步行路网估算",
       "verificationBasis": [
-        "S04 OSM 西南门节点 osm_node_9893305424（barrier=gate、locked=yes，source_updated_at 2022-11-19）",
-        "该门不在 W1-04 首批应用地点校门范围内；无开放时段、人行规则与现场通行证据"
+        "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "出校点采用应用地图所对应的 OSM 路网节点 osm_node_9893305424。",
+        "OSM 历史数据曾标记 locked=yes，现按项目试用规则纳入；现场锁闭时请改走其他校门。"
       ],
       "missingEvidence": [
-        "西南门当前是否仍 locked=yes（OSM 标签更新时间 2022-11-19，需现场核实）",
-        "若开放，出校方向点位、开放时段与人行规则"
+        "实际人行通行与开放时段"
       ],
       "accessRules": {
-        "direction": "UNVERIFIED",
-        "pedestrianAccess": "PROHIBITED",
-        "pedestrianAccessBasis": "S04 OSM 标签 barrier=gate、locked=yes；未取得现场开放证据，按不开放审核。",
-        "gateOpenHours": null,
-        "gateOpenHoursStatus": "EVIDENCE_UNAVAILABLE",
+        "direction": "OUTBOUND",
+        "pedestrianAccess": "ASSUMED_OPEN",
+        "pedestrianAccessBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "gateOpenHours": "试用按全天开放处理",
+        "gateOpenHoursStatus": "PROJECT_ASSUMED_UNRESTRICTED",
         "timeRestrictions": [],
-        "timeRestrictionBasis": "无开放时段证据；locked=yes 表示当前关闭。"
+        "timeRestrictionBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。"
       },
       "sourceRefs": [
-        "S04"
+        "S04",
+        "web/data/campus.json",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20"
       ],
-      "unavailableReasonCode": "GATE_LOCKED",
-      "unavailableReason": "S04 OSM 西南门节点 osm_node_9893305424 标注 barrier=gate、locked=yes，无开放时段与出校方向证据，审核不通过，不生成接驳路线。"
+      "unavailableReasonCode": null,
+      "unavailableReason": null
+    },
+    {
+      "id": "connector_dorm1_west_gate",
+      "originId": "osm_way_1099340057",
+      "originName": "天佑斋1号楼",
+      "originPoint": {
+        "pointId": "osm_node_9893299669",
+        "longitude": 103.9839831,
+        "latitude": 30.7623128,
+        "coordinateSystem": "WGS84",
+        "positionRole": "building_external_access_point"
+      },
+      "gateId": "campus_gate_west",
+      "gateName": "西门",
+      "gatePoints": [
+        {
+          "pointId": "osm_node_11668769188",
+          "longitude": 103.9792051,
+          "latitude": 30.7644976,
+          "coordinateSystem": "WGS84",
+          "positionRole": "gate_exit",
+          "direction": "OUTBOUND"
+        }
+      ],
+      "gateExitPoint": {
+        "pointId": "osm_node_11668769188",
+        "longitude": 103.9792051,
+        "latitude": 30.7644976,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "segments": [
+        {
+          "segmentId": "connector_dorm1_west_gate_01",
+          "order": 1,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_9893299669",
+          "toPointId": "osm_node_9893299672",
+          "lengthMeters": 95.52,
+          "durationSeconds": 72,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9839831,
+                30.7623128
+              ],
+              [
+                103.9836851,
+                30.7621422
+              ],
+              [
+                103.9837194,
+                30.7618201
+              ],
+              [
+                103.9834906,
+                30.7617049
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1079229882"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_west_gate_02",
+          "order": 2,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_9893299672",
+          "toPointId": "osm_node_10156545584",
+          "lengthMeters": 62.18,
+          "durationSeconds": 47,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9834906,
+                30.7617049
+              ],
+              [
+                103.9834804,
+                30.761817
+              ],
+              [
+                103.9834394,
+                30.7622624
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1099340058"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_west_gate_03",
+          "order": 3,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_10156545584",
+          "toPointId": "osm_node_10156545577",
+          "lengthMeters": 27.26,
+          "durationSeconds": 21,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9834394,
+                30.7622624
+              ],
+              [
+                103.9833685,
+                30.7623523
+              ],
+              [
+                103.9832792,
+                30.7624653
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1148128322"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_west_gate_04",
+          "order": 4,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_10156545577",
+          "toPointId": "osm_node_9893299664",
+          "lengthMeters": 73.18,
+          "durationSeconds": 56,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9832792,
+                30.7624653
+              ],
+              [
+                103.9826087,
+                30.7627834
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1079229880"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_west_gate_05",
+          "order": 5,
+          "description": "沿人行步道步行",
+          "fromPointId": "osm_node_9893299664",
+          "toPointId": "osm_node_10175220203",
+          "lengthMeters": 32.88,
+          "durationSeconds": 25,
+          "highway": "footway",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9826087,
+                30.7627834
+              ],
+              [
+                103.9823556,
+                30.7629042
+              ],
+              [
+                103.9823071,
+                30.7629258
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "1112214512"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_west_gate_06",
+          "order": 6,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_10175220203",
+          "toPointId": "osm_node_2178323712",
+          "lengthMeters": 57.42,
+          "durationSeconds": 44,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9823071,
+                30.7629258
+              ],
+              [
+                103.9818085,
+                30.7626375
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572447"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_west_gate_07",
+          "order": 7,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_2178323712",
+          "toPointId": "osm_node_2178323872",
+          "lengthMeters": 66.67,
+          "durationSeconds": 51,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9818085,
+                30.7626375
+              ],
+              [
+                103.9818242,
+                30.762753
+              ],
+              [
+                103.9817998,
+                30.762835
+              ],
+              [
+                103.9817571,
+                30.7628957
+              ],
+              [
+                103.9816858,
+                30.7629527
+              ],
+              [
+                103.9815943,
+                30.7630013
+              ],
+              [
+                103.9814469,
+                30.7630847
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572451"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_west_gate_08",
+          "order": 8,
+          "description": "沿生活性道路步行",
+          "fromPointId": "osm_node_2178323872",
+          "toPointId": "osm_node_5195365342",
+          "lengthMeters": 71.76,
+          "durationSeconds": 54,
+          "highway": "living_street",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9814469,
+                30.7630847
+              ],
+              [
+                103.9808136,
+                30.7627378
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "536259149"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_west_gate_09",
+          "order": 9,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_5195365342",
+          "toPointId": "osm_node_2178309599",
+          "lengthMeters": 248.45,
+          "durationSeconds": 187,
+          "highway": "residential",
+          "roadName": "菁华路",
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9808136,
+                30.7627378
+              ],
+              [
+                103.980091,
+                30.7636635
+              ],
+              [
+                103.9796771,
+                30.7641936
+              ],
+              [
+                103.9796206,
+                30.764266
+              ],
+              [
+                103.9795082,
+                30.76441
+              ],
+              [
+                103.9794622,
+                30.764469
+              ],
+              [
+                103.9793651,
+                30.7645934
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "413859296"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        },
+        {
+          "segmentId": "connector_dorm1_west_gate_10",
+          "order": 10,
+          "description": "沿校园道路步行",
+          "fromPointId": "osm_node_2178309599",
+          "toPointId": "osm_node_11668769188",
+          "lengthMeters": 18.63,
+          "durationSeconds": 15,
+          "highway": "residential",
+          "roadName": null,
+          "passabilityStatus": "ASSUMED_OPEN",
+          "passabilityNote": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 OSM：walk_permission=unspecified，access=None。",
+          "geometry": {
+            "coordinateSystem": "WGS84",
+            "points": [
+              [
+                103.9793651,
+                30.7645934
+              ],
+              [
+                103.9792051,
+                30.7644976
+              ]
+            ]
+          },
+          "osmWayIds": [
+            "207572443"
+          ],
+          "sourceRefs": [
+            "S04",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        }
+      ],
+      "walkMeters": 753.95,
+      "durationSeconds": 572,
+      "durationBasis": "按 1.33 m/s 估算，各段步行秒数向上取整，总耗时为各段之和。",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
+      "verificationMethod": "项目试用假设与 OSM 步行路网估算",
+      "verificationBasis": [
+        "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "出校点采用应用地图所对应的 OSM 路网节点 osm_node_11668769188。",
+        "2026-11-20 高德步行规划至交大兴业北街站 D2 口，项目出校路网点出发约 377 米，西门展示点出发约 316 米。"
+      ],
+      "missingEvidence": [
+        "实际人行通行与开放时段"
+      ],
+      "accessRules": {
+        "direction": "OUTBOUND",
+        "pedestrianAccess": "ASSUMED_OPEN",
+        "pedestrianAccessBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+        "gateOpenHours": "试用按全天开放处理",
+        "gateOpenHoursStatus": "PROJECT_ASSUMED_UNRESTRICTED",
+        "timeRestrictions": [],
+        "timeRestrictionBasis": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。"
+      },
+      "sourceRefs": [
+        "S04",
+        "web/data/campus.json",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20",
+        "https://www.amap.com/place/BX10030840",
+        "https://lbs.amap.com/api/webservice/guide/api/direction/"
+      ],
+      "unavailableReasonCode": null,
+      "unavailableReason": null
     }
   ]
 }

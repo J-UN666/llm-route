@@ -34,7 +34,8 @@ public record JourneyPlan(
         List<JourneySegment> segments,
         List<String> sources,
         OffsetDateTime queriedAt,
-        String campusDataVersion) {
+        String campusDataVersion,
+        JourneyPoint destinationPoint) {
 
     public JourneyPlan {
         segments = segments == null ? List.of() : List.copyOf(segments);

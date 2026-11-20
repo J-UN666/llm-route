@@ -9,6 +9,7 @@ import cn.swjtu.zhixing.campus.CampusConnectorPoint;
 import cn.swjtu.zhixing.campus.CampusConnectorSegment;
 import cn.swjtu.zhixing.campus.CampusConnectorService;
 import cn.swjtu.zhixing.campus.GeoPosition;
+import cn.swjtu.zhixing.campus.OnlinePlaceException;
 import cn.swjtu.zhixing.campus.PlaceCandidate;
 import cn.swjtu.zhixing.campus.PlaceDataLoadException;
 import cn.swjtu.zhixing.campus.PlaceKind;
@@ -134,8 +135,8 @@ public class JourneyService {
         OffsetDateTime departure = parseDeparture(request.departureTime(), requestId);
         TransitPreference preference = parsePreference(request.preference(), requestId);
 
-        PlaceCandidate origin = loadPlace(originId, "起点", requestId);
-        PlaceCandidate destination = loadPlace(destinationId, "终点", requestId);
+        PlaceCandidate origin = loadPlace(originId, "起点", requestId, credentials);
+        PlaceCandidate destination = loadPlace(destinationId, "终点", requestId, credentials);
         if (origin.kind() != PlaceKind.CAMPUS) {
             throw new JourneyApiException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "CAMPUS_CONNECTOR_UNAVAILABLE",
@@ -216,6 +217,18 @@ public class JourneyService {
         if (!candidates.isEmpty()) {
             List<JourneyPlan> plans = JourneyPlanRanking.arrange(candidates, preference);
             List<String> warnings = successWarnings(failures);
+            List<String> trialGates = resolution.available().stream()
+                    .filter(connector -> CampusConnectorService.PROJECT_ASSUMED_OPEN.equals(connector.verificationStatus()))
+                    .filter(connector -> plans.stream().anyMatch(plan -> connector.gateId().equals(plan.gateId())))
+                    .map(CampusConnector::gateName)
+                    .distinct()
+                    .toList();
+            if (!trialGates.isEmpty()) {
+                warnings.add(String.join("、", trialGates) + "按项目试用规则视为开放，实际通行以现场为准。");
+                if (trialGates.contains("西南门")) {
+                    warnings.add("西南门的历史地图数据曾标记门锁，现场锁闭时请改走其他校门。");
+                }
+            }
             return new JourneyResponse(requestId, JourneyStatus.SUCCEEDED, plans, queriedAt,
                     campusDataVersion, providerName, warnings);
         }
@@ -289,7 +302,10 @@ public class JourneyService {
                 segments,
                 List.copyOf(sources),
                 queriedAt,
-                campusDataVersion);
+                campusDataVersion,
+                new JourneyPoint(destination.routingPosition().pointId(), destination.name(),
+                        destination.routingPosition().longitude(), destination.routingPosition().latitude(),
+                        destination.routingPosition().coordinateSystem(), destination.routingPosition().positionRole()));
     }
 
     private JourneySegment campusSegment(PlaceCandidate origin, CampusConnector connector) {
@@ -542,12 +558,14 @@ public class JourneyService {
                 .collect(Collectors.joining("、"));
     }
 
-    private PlaceCandidate loadPlace(String placeId, String label, String requestId) {
+    private PlaceCandidate loadPlace(String placeId, String label, String requestId, Credentials credentials) {
         try {
-            return placeService.getById(placeId);
+            return credentials == null ? placeService.getById(placeId) : placeService.getById(placeId, credentials);
         } catch (PlaceNotFoundException ex) {
             throw new JourneyApiException(HttpStatus.NOT_FOUND, "PLACE_NOT_FOUND",
                     label + "不存在：" + placeId, false, requestId);
+        } catch (OnlinePlaceException ex) {
+            throw new JourneyApiException(ex.status(), ex.code(), ex.getMessage(), ex.retryable(), requestId);
         } catch (PlaceDataLoadException ex) {
             log.error("地点数据加载失败 requestId={} placeId={}", requestId, placeId, ex);
             throw new JourneyApiException(HttpStatus.INTERNAL_SERVER_ERROR, "SERVER_ERROR",

@@ -17,36 +17,21 @@ python3 tools/package_release.py wechat --api-base https://api.example.com --app
 
 小程序可在「设置 → 服务配置」选择默认托管或个人服务。个人 Key 需要 HTTPS，匿名配置会话创建后有效 30 分钟，服务端重启后失效。只验证高德 Web 服务 Key 即可查普通路线。模型由应用列出的 DeepSeek 官方模型中选择。应用关闭后需要重新验证。局域网 HTTP 和离线演示继续使用各自的默认服务。
 
-体验环境使用随包 Nginx 模板在 HTTPS 入口终止 TLS，并由本机反代设置 `X-Forwarded-Proto`。Java 服务监听回环地址。个人 Key 与网页原型的高德 JS API 配置各自独立。
+体验环境使用随包 Nginx 模板在 HTTPS 入口终止 TLS，并由本机反代设置 `X-Forwarded-Proto`。Java 服务监听回环地址。浏览器访问同一 HTTPS 域名下的 `/web/index.html`，网页、地点搜索、行程和个人 Key 配置共用后端。
 
 ## 本机演示个人 Key
 
-以下命令在 macOS 的仓库根目录执行，用微信开发者工具模拟器访问本机 HTTPS。已安装 `mkcert` 时可跳过安装命令。`mkcert -install` 会在本机安装开发 CA，证书文件保存在已忽略的 `.local-https/`。
+在 macOS 的仓库根目录执行：
 
 ```bash
-brew install mkcert
-mkcert -install
-mkdir -p .local-https
-mkcert -cert-file .local-https/localhost.pem -key-file .local-https/localhost-key.pem localhost 127.0.0.1
-openssl pkcs12 -export -in .local-https/localhost.pem -inkey .local-https/localhost-key.pem \
-  -out .local-https/localhost.p12 -passout pass:local-demo
+python3 tools/run_personal_demo.py
 ```
 
-启动后端。普通路线可直接在应用内填高德 Key。演示聊天前按下节初始化 MySQL，并为运行服务提供数据库连接。
+首次按提示确认安装或使用 `mkcert`，并在系统提示中确认信任本机开发证书。证书保存在已忽略的 `.local-https/`，后续可复用。首次构建需要 Maven 和 npm 依赖。启动器会构建小程序，初始化独立演示库及 V2 迁移，然后启动 `https://127.0.0.1:8443` 并打开微信开发者工具。
 
-```bash
-SERVER_PORT=8443 SERVER_ADDRESS=127.0.0.1 SERVER_SSL_ENABLED=true \
-SERVER_SSL_KEY_STORE="file:$PWD/.local-https/localhost.p12" \
-SERVER_SSL_KEY_STORE_TYPE=PKCS12 SERVER_SSL_KEY_STORE_PASSWORD=local-demo \
-./backend/mvnw -f backend/pom.xml spring-boot:run
-```
+小程序导入 `release/personal-key/mp-weixin`，首次可选择「测试号」和「不使用云服务」。网页打开 [本机演示](https://127.0.0.1:8443/web/index.html)。两端都可在服务设置中验证个人 Key。命令加 `--web` 可只启动网页。按 `Ctrl+C` 停止演示，下次启动会复用演示数据库。
 
-另开终端构建并在微信开发者工具导入 `frontend/dist/build/mp-weixin`，使用测试号和「不使用云服务」。进入首页「设置 → 服务配置 → 个人配置」，填高德 Web 服务 Key 并点「验证并启用」，返回首页查询「图书馆 → 天府广场」。如果要问路，再选择支持的 DeepSeek 模型并验证模型 Key。
-
-```bash
-npm --prefix frontend ci
-VITE_DEMO_MODE=0 VITE_API_BASE_URL=https://127.0.0.1:8443 npm --prefix frontend run build:mp-weixin
-```
+Windows 的本机 HTTPS 步骤见 [应用内输入个人 Key](../README.md#在应用内输入个人-key)。
 
 ## 数据库
 
@@ -74,8 +59,6 @@ GRANT SELECT, INSERT, UPDATE ON llmroute.* TO 'llmroute_app'@'127.0.0.1';
 
 会话、消息和行程快照保留 30 天。维护账号按批在同一事务中清理，依次删除 `conversation_turn`、`journey_query`、`conversation_message` 和 `conversation`。
 
-## 数据验收
+## 路线数据
 
-`2026-11-19.2` 已核对图书馆、天佑斋 1 号楼经东门的接驳。两条高德步行复核分别为 894 米和 1,830 米，普通行程各查得 3 条城市段方案（`jr-534c98a2b8a34d06a077`、`jr-bbbee25ea61c47c59d6d`）。应用的校内步行仍按 OSM 接驳估算。已定位 D2 口，高德步行至西门为 318 米，西门暂未启用出校接驳。其余匹配依据和限制随 [地点数据](../backend/src/main/resources/data/application-places.json)及[接驳数据](../backend/src/main/resources/data/campus-connectors.json)保存。
-
-东门出校点到公交规划的首段步行接入点经团队确认可通行。2026-11-19 高德步行接口返回约 30 米的轨迹，首末点约为 GCJ-02 `103.993568,30.769141`、`103.993264,30.769058`。应用只在首段轨迹命中该接入点时补这一段几何，原公交方案汇总沿用供应方数值。
+当前接驳版本 `2026-11-20.1` 覆盖两个校园起点和六座校门。东门接驳及校外首段步道经团队确认。其余五门按项目试用规则纳入全天算路，西南门保留历史门锁提示。地点、坐标与通行依据见 [地点数据](../backend/src/main/resources/data/application-places.json)和[接驳数据](../backend/src/main/resources/data/campus-connectors.json)。

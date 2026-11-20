@@ -30,10 +30,11 @@ class CampusConnectorDataTests {
     private static final String WALKING_SPEED_BASIS = "1.33 m/s";
 
     private static final List<String> EXPECTED_CONNECTOR_IDS = List.of(
-            "connector_library_east_gate",
-            "connector_dorm1_east_gate",
-            "connector_library_west_gate",
-            "connector_dorm1_southwest_gate");
+            "connector_library_east_gate", "connector_dorm1_east_gate",
+            "connector_library_south_gate", "connector_library_northwest_gate", "connector_library_wind_tunnel_gate",
+            "connector_library_southwest_gate", "connector_library_west_gate",
+            "connector_dorm1_south_gate", "connector_dorm1_northwest_gate", "connector_dorm1_wind_tunnel_gate",
+            "connector_dorm1_southwest_gate", "connector_dorm1_west_gate");
     /** 用户确认通行并按演示规则审核可用的两条接驳。 */
     private static final List<String> APPROVED_DEMO_CONNECTOR_IDS = List.of(
             "connector_library_east_gate",
@@ -64,7 +65,7 @@ class CampusConnectorDataTests {
 
     @Test
     void topLevelDataVersionAndConnectorIdsAreStable() {
-        assertThat(root.get("dataVersion").asText()).isEqualTo("2026-11-19.2");
+        assertThat(root.get("dataVersion").asText()).isEqualTo("2026-11-20.1");
         assertThat(connectorsById.keySet()).containsExactlyElementsOf(EXPECTED_CONNECTOR_IDS);
         // 重启读取同版 JSON 得到相同 ID 与版本：直接重读一次比较。
         assertThat(connectorsById.keySet()).containsExactlyElementsOf(loadConnectorIdsAgain());
@@ -94,7 +95,7 @@ class CampusConnectorDataTests {
     }
 
     @Test
-    void approvalRequiresAnExplicitBasisAndKeepsOtherConnectorsUnavailable() {
+    void confirmedAndTrialConnectorsHaveDistinctEvidence() {
         int approved = 0;
         for (JsonNode connector : root.get("connectors")) {
             if ("APPLICATION_VERIFIED".equals(connector.get("verificationStatus").asText())) {
@@ -106,14 +107,14 @@ class CampusConnectorDataTests {
         }
         assertThat(approved).isEqualTo(2);
         assertThat(connectorsById.get("connector_library_west_gate").get("verificationStatus").asText())
-                .isEqualTo("PENDING_VERIFICATION");
+                .isEqualTo("PROJECT_ASSUMED_OPEN");
         assertThat(connectorsById.get("connector_dorm1_southwest_gate").get("verificationStatus").asText())
-                .isEqualTo("REJECTED");
+                .isEqualTo("PROJECT_ASSUMED_OPEN");
     }
 
     @Test
     void segmentSumsMatchTotals() {
-        for (String id : APPROVED_DEMO_CONNECTOR_IDS) {
+        for (String id : EXPECTED_CONNECTOR_IDS) {
             JsonNode connector = connectorsById.get(id);
             double meters = 0;
             int seconds = 0;
@@ -136,7 +137,7 @@ class CampusConnectorDataTests {
 
     @Test
     void geometryEndpointsMatchOriginGateExitAndGraphNodes() {
-        for (String id : APPROVED_DEMO_CONNECTOR_IDS) {
+        for (String id : EXPECTED_CONNECTOR_IDS) {
             JsonNode connector = connectorsById.get(id);
             JsonNode originPoint = connector.get("originPoint");
             JsonNode gateExitPoint = connector.get("gateExitPoint");
@@ -183,7 +184,7 @@ class CampusConnectorDataTests {
 
     @Test
     void segmentGeometryLengthsMatchStatedMeters() {
-        for (String id : APPROVED_DEMO_CONNECTOR_IDS) {
+        for (String id : EXPECTED_CONNECTOR_IDS) {
             for (JsonNode segment : connectorsById.get(id).get("segments")) {
                 JsonNode points = segment.get("geometry").get("points");
                 double meters = 0;
@@ -199,7 +200,7 @@ class CampusConnectorDataTests {
 
     @Test
     void gateExitPointIsTheOutboundPhysicalGatePoint() {
-        for (String id : APPROVED_DEMO_CONNECTOR_IDS) {
+        for (String id : EXPECTED_CONNECTOR_IDS) {
             JsonNode connector = connectorsById.get(id);
             JsonNode gateExitPoint = connector.get("gateExitPoint");
             String exitPointId = gateExitPoint.get("pointId").asText();
@@ -247,26 +248,28 @@ class CampusConnectorDataTests {
     }
 
     @Test
-    void unresolvedConnectorsHaveExplicitReasonsAndNoFakeNumbers() {
-        for (String id : List.of("connector_library_west_gate", "connector_dorm1_southwest_gate")) {
+    void trialConnectorsRetainMissingEvidenceAndExcludeProhibitedSegments() {
+        for (String id : EXPECTED_CONNECTOR_IDS) {
             JsonNode connector = connectorsById.get(id);
-            assertThat(connector.get("verificationStatus").asText()).isIn("PENDING_VERIFICATION", "REJECTED");
-            assertThat(connector.get("gateExitPoint").isNull()).isTrue();
-            assertThat(connector.get("segments")).isEmpty();
-            assertThat(connector.get("walkMeters").isNull()).isTrue();
-            assertThat(connector.get("durationSeconds").isNull()).isTrue();
-            assertThat(connector.get("unavailableReasonCode").asText()).isNotBlank();
-            assertThat(connector.get("unavailableReason").asText()).isNotBlank();
+            if (APPROVED_DEMO_CONNECTOR_IDS.contains(id)) {
+                continue;
+            }
+            assertThat(connector.get("verificationStatus").asText()).isEqualTo("PROJECT_ASSUMED_OPEN");
+            assertThat(connector.get("missingEvidence")).isNotEmpty();
+            assertThat(connector.get("sourceRefs").toString()).contains("PROJECT_ALL_GATES_TRIAL_2026_11_20");
+            assertThat(connector.get("unavailableReasonCode").isNull()).isTrue();
+            assertThat(connector.get("accessRules").get("pedestrianAccess").asText()).isEqualTo("ASSUMED_OPEN");
+            for (JsonNode segment : connector.get("segments")) {
+                assertThat(segment.get("passabilityStatus").asText()).isEqualTo("ASSUMED_OPEN");
+            }
         }
-        assertThat(connectorsById.get("connector_library_west_gate").get("unavailableReasonCode").asText())
-                .isEqualTo("GATE_EXIT_POINT_UNVERIFIED");
-        assertThat(connectorsById.get("connector_dorm1_southwest_gate").get("unavailableReasonCode").asText())
-                .isEqualTo("GATE_LOCKED");
+        assertThat(connectorsById.get("connector_dorm1_southwest_gate").get("verificationBasis").toString())
+                .contains("locked=yes");
     }
 
     @Test
     void walkingSpeedEstimateIsSaneAndMatchesBasis() {
-        for (String id : APPROVED_DEMO_CONNECTOR_IDS) {
+        for (String id : EXPECTED_CONNECTOR_IDS) {
             JsonNode connector = connectorsById.get(id);
             double speed = connector.get("walkMeters").asDouble() / connector.get("durationSeconds").asInt();
             assertThat(speed).as(id + " 的估算步行速度").isBetween(1.2, 1.45);

@@ -64,6 +64,23 @@
 
     <build>
         <finalName>llm-route-backend</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/../web</directory>
+                <targetPath>static/web</targetPath>
+                <includes>
+                    <include>index.html</include>
+                    <include>css/planner.css</include>
+                    <include>js/map.js</include>
+                    <include>js/route-map.js</include>
+                    <include>js/planner.js</include>
+                    <include>data/campus.js</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

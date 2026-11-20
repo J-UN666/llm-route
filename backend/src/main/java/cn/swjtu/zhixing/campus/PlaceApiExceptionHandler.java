@@ -1,5 +1,6 @@
 package cn.swjtu.zhixing.campus;
 
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,12 @@ public class PlaceApiExceptionHandler {
     public ResponseEntity<ApiError> handleInvalidScope(InvalidScopeException exception) {
         return ResponseEntity.badRequest()
                 .body(new ApiError("INVALID_SCOPE", exception.getMessage()));
+    }
+
+    @ExceptionHandler(OnlinePlaceException.class)
+    public ResponseEntity<Map<String, Object>> handleOnlinePlace(OnlinePlaceException exception) {
+        return ResponseEntity.status(exception.status()).body(Map.of(
+                "code", exception.code(), "message", exception.getMessage(), "retryable", exception.retryable()));
     }
 
     @ExceptionHandler(PlaceDataLoadException.class)

@@ -181,7 +181,11 @@ export async function searchPlaces(keyword: string, scope: PlaceScope): Promise<
   const trimmed = keyword.trim();
   if (!trimmed) return [];
   const query = `keyword=${encodeURIComponent(trimmed)}&scope=${encodeURIComponent(scope)}`;
-  const response = await requestRaw({ path: `/api/places?${query}`, method: 'GET' });
+  const response = await requestRaw({
+    path: `/api/places?${query}`,
+    method: 'GET',
+    header: scope === 'CITY' ? personalHeaders() : undefined
+  });
   if (response.statusCode !== 200) {
     throw createHttpError(response.statusCode, response.data);
   }

@@ -109,8 +109,8 @@ class AssistantTools {
         }
     }
 
-    List<PlaceCandidate> search(Search args) {
-        return places.searchForRouting(args.keyword(), args.scope());
+    List<PlaceCandidate> search(Search args, Credentials credentials) {
+        return places.searchForRouting(args.keyword(), args.scope(), credentials);
     }
 
     CampusConnectorService.Resolution connectors(Connectors args) {
@@ -125,8 +125,8 @@ class AssistantTools {
         return journeys.plan(request, credentials);
     }
 
-    PlaceCandidate place(String id) {
-        return places.getById(id);
+    PlaceCandidate place(String id, Credentials credentials) {
+        return places.getById(id, credentials);
     }
 
     String campusDataVersion() {

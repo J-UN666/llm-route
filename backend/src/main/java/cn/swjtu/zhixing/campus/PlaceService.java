@@ -1,10 +1,12 @@
 package cn.swjtu.zhixing.campus;
 
+import cn.swjtu.zhixing.serviceconfig.PersonalServices.Credentials;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,9 +33,11 @@ public class PlaceService {
             .thenComparing(hit -> hit.candidate().id());
 
     private final CampusDataLoader campusDataLoader;
+    private final Optional<AmapCityPlaces> onlinePlaces;
 
-    public PlaceService(CampusDataLoader campusDataLoader) {
+    PlaceService(CampusDataLoader campusDataLoader, Optional<AmapCityPlaces> onlinePlaces) {
         this.campusDataLoader = campusDataLoader;
+        this.onlinePlaces = onlinePlaces;
     }
 
     /**
@@ -46,6 +50,24 @@ public class PlaceService {
     }
 
     public List<PlaceCandidate> search(String keyword, PlaceKind scope) {
+        return search(keyword, scope, null);
+    }
+
+    List<PlaceCandidate> search(String keyword, PlaceKind scope, Credentials credentials) {
+        List<PlaceCandidate> local = searchLocal(keyword, scope);
+        String normalized = normalize(keyword);
+        if (scope != PlaceKind.CITY || normalized.length() < 2 || onlinePlaces.isEmpty()
+                || local.stream().anyMatch(place -> place.routingReady() && score(place, normalized) >= 96)) {
+            return local;
+        }
+        List<PlaceCandidate> online = onlinePlaces.get().search(keyword.strip(), credentials).stream()
+                .filter(place -> normalize(place.name()).contains(normalized)
+                        || normalize(place.address()).contains(normalized))
+                .toList();
+        return online.isEmpty() ? local : online;
+    }
+
+    private List<PlaceCandidate> searchLocal(String keyword, PlaceKind scope) {
         List<PlaceCandidate> all = campusDataLoader.candidates();
         String normalizedKeyword = normalize(keyword);
         if (normalizedKeyword.isEmpty()) {
@@ -69,8 +91,8 @@ public class PlaceService {
     }
 
     /** Prefer exact names and exact aliases together, including same-name candidates. */
-    public List<PlaceCandidate> searchForRouting(String keyword, PlaceKind scope) {
-        List<PlaceCandidate> matches = search(keyword, scope);
+    public List<PlaceCandidate> searchForRouting(String keyword, PlaceKind scope, Credentials credentials) {
+        List<PlaceCandidate> matches = search(keyword, scope, credentials);
         String normalized = normalize(keyword);
         List<PlaceCandidate> exact = matches.stream()
                 .filter(candidate -> score(candidate, normalized) >= 96)
@@ -91,7 +113,15 @@ public class PlaceService {
 
     /** 按稳定 ID 查询；不存在时抛 {@link PlaceNotFoundException}（HTTP 404 / PLACE_NOT_FOUND）。 */
     public PlaceCandidate getById(String id) {
+        return getById(id, null);
+    }
+
+    public PlaceCandidate getById(String id, Credentials credentials) {
         String normalizedId = id == null ? "" : id.trim();
+        if (AmapCityPlaces.isOnlineId(normalizedId)) {
+            return onlinePlaces.orElseThrow(() -> new PlaceNotFoundException(normalizedId))
+                    .getById(normalizedId, credentials);
+        }
         return campusDataLoader.findById(normalizedId)
                 .orElseThrow(() -> new PlaceNotFoundException(normalizedId));
     }

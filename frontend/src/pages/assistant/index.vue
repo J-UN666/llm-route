@@ -45,7 +45,7 @@
           <text class="muted">{{ item.field === 'ORIGIN' ? '选择起点' : '选择终点' }}</text>
           <button v-for="candidate in item.candidates" :key="candidate.id" class="candidate"
             :disabled="!candidate.routingReady" @tap="confirmCandidate(item, candidate)">
-            {{ candidate.name }}{{ candidate.category ? ' · ' + categoryLabel(candidate.category) : '' }}
+            {{ candidate.name }}{{ candidate.address ? ' · ' + candidate.address : candidate.category ? ' · ' + categoryLabel(candidate.category) : '' }}
             <text v-if="!candidate.routingReady" class="muted">
               {{ candidate.unavailableReason || '暂无法算路' }}
             </text>

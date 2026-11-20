@@ -165,6 +165,6 @@ class JourneyControllerTests {
                 new BigDecimal("2248"), 1, new BigDecimal("5.00"),
                 List.of(campus, metro), List.of("campus_connector:connector_library_east_gate"),
                 OffsetDateTime.parse("2026-11-16T15:20:00+08:00"),
-                "places=2026-11-15.2;connectors=2026-11-15.4");
+                "places=2026-11-15.2;connectors=2026-11-15.4", null);
     }
 }

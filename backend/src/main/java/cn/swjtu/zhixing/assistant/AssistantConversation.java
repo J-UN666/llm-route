@@ -33,7 +33,7 @@ final class AssistantConversation {
     }
 
     record Candidate(String id, String name, PlaceKind kind, String category,
-                     boolean routingReady, String unavailableReason) {}
+                     boolean routingReady, String unavailableReason, String address) {}
 
     record Clarification(Field field, Reason reason, String message, List<Candidate> candidates,
                          UUID confirmationId, OffsetDateTime expiresAt) {

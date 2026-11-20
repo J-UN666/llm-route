@@ -6,6 +6,7 @@
 !.env.example
 /deploy/runtime.env
 /.local-https/
+/*.command
 
 # Team notes and local acceptance evidence
 /AGENT.md
@@ -30,6 +31,8 @@ __pycache__/
 
 # IDE and OS metadata
 .DS_Store
+Thumbs.db
+Desktop.ini
 .idea/
 .vscode/
 *.iml

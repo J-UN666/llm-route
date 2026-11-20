@@ -1,5 +1,5 @@
 {
-  "dataVersion": "2026-11-19.2",
+  "dataVersion": "2026-11-20.1",
   "description": "应用地点补充：高德地点搜索返回的 POI 使用 GCJ-02；高德步行端点和轨迹交叉核对另记来源。校园算路接入点、校门方向及其证据单独记录。",
   "places": [
     {
@@ -233,7 +233,7 @@
     {
       "id": "campus_gate_west",
       "kind": "GATE",
-      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
       "verifiedAt": "2026-11-19",
       "displayPosition": {
         "pointId": "amap_poi_B001C80PYA",
@@ -242,8 +242,14 @@
         "coordinateSystem": "GCJ-02",
         "positionRole": "amap_gate_poi"
       },
-      "routingPosition": null,
-      "unavailableReason": "西门为 campusOnly；已核对地图展示点，城市接驳所用出校方向及步行路径待核对。",
+      "routingPosition": {
+        "pointId": "osm_node_11668769188",
+        "longitude": 103.9792051,
+        "latitude": 30.7644976,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "unavailableReason": null,
       "evidence": [
         {
           "kind": "cross_source_correspondence",
@@ -251,15 +257,6 @@
           "sourceRefs": [
             "S01",
             "S04",
-            "web/data/campus.json"
-          ]
-        },
-        {
-          "kind": "application_policy",
-          "detail": "tools/build_campus_data.py 为 campus_gate_west 写入 campusOnly=true，web/js/agent.js 选门规则排除 campusOnly 校门；因此本卡不提供城市出校点。",
-          "sourceRefs": [
-            "tools/build_campus_data.py",
-            "web/js/agent.js",
             "web/data/campus.json"
           ]
         },
@@ -272,28 +269,39 @@
         },
         {
           "kind": "amap_walking_reference",
-          "detail": "2026-11-19 已验证 D2 口至西门展示点可取得高德步行路线，318 米、254 秒。校内出校车道与接驳仍按应用核对状态。",
+          "detail": "高德 D2 口至西门展示点步行约 318 米；西门展示点至 D2 口约 316 米。",
           "sourceRefs": [
             "https://www.amap.com/place/BX10030840",
             "AMAP_WALKING_2026_11_19",
             "https://lbs.amap.com/api/webservice/guide/api/direction/"
           ]
+        },
+        {
+          "kind": "application_policy",
+          "detail": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 出校点采用应用地图所对应的 OSM 路网节点 osm_node_11668769188。 高德步行规划至交大兴业北街站 D2 口，项目出校路网点出发约 377 米，西门展示点出发约 316 米。",
+          "sourceRefs": [
+            "S04",
+            "web/data/campus.json",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20",
+            "https://www.amap.com/place/BX10030840",
+            "https://lbs.amap.com/api/webservice/guide/api/direction/"
+          ]
         }
       ],
       "missingEvidence": [
-        "可接入城市查询的出校方向节点及步行路径"
+        "实际人行通行与开放时段"
       ],
-      "conditions": "项目保留西门的既有 campusOnly 使用范围；高德标记用于展示。",
+      "conditions": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
       "sourceRefs": [
         "S01",
         "S04",
         "web/data/campus.json",
         "tools/build_campus_data.py",
-        "web/js/agent.js",
         "https://ditu.amap.com/place/B001C80PYA",
         "https://www.amap.com/place/BX10030840",
         "AMAP_WALKING_2026_11_19",
-        "https://lbs.amap.com/api/webservice/guide/api/direction/"
+        "https://lbs.amap.com/api/webservice/guide/api/direction/",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20"
       ]
     },
     {
@@ -544,7 +552,7 @@
     {
       "id": "osm_node_2178309445",
       "kind": "GATE",
-      "verificationStatus": "DISPLAY_POSITION_VERIFIED",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
       "verifiedAt": "2026-11-19",
       "displayPosition": {
         "pointId": "amap_poi_B0FFG092LP",
@@ -553,8 +561,14 @@
         "coordinateSystem": "GCJ-02",
         "positionRole": "amap_gate_poi"
       },
-      "routingPosition": null,
-      "unavailableReason": "已核对南门地图展示点，当前应用尚无经该门的城市接驳。",
+      "routingPosition": {
+        "pointId": "osm_node_2178309445",
+        "longitude": 103.9897905,
+        "latitude": 30.7629679,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "unavailableReason": null,
       "evidence": [
         {
           "kind": "amap_poi",
@@ -562,11 +576,27 @@
           "sourceRefs": [
             "https://www.amap.com/place/B0FFG092LP"
           ]
+        },
+        {
+          "kind": "application_policy",
+          "detail": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 出校点采用应用地图所对应的 OSM 路网节点 osm_node_2178309445。",
+          "sourceRefs": [
+            "S04",
+            "web/data/campus.json",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
         }
       ],
       "sourceRefs": [
-        "https://www.amap.com/place/B0FFG092LP"
-      ]
+        "https://www.amap.com/place/B0FFG092LP",
+        "S04",
+        "web/data/campus.json",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+      ],
+      "missingEvidence": [
+        "实际人行通行与开放时段"
+      ],
+      "conditions": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。"
     },
     {
       "id": "swjtu_org_99",
@@ -1154,6 +1184,105 @@
       "sourceRefs": [
         "https://www.amap.com/place/B001C8N5HT",
         "https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch"
+      ]
+    },
+    {
+      "id": "osm_node_2178323767",
+      "kind": "GATE",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
+      "routingPosition": {
+        "pointId": "osm_node_2178323767",
+        "longitude": 103.9751882,
+        "latitude": 30.7699378,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "unavailableReason": null,
+      "evidence": [
+        {
+          "kind": "application_policy",
+          "detail": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 出校点采用应用地图所对应的 OSM 路网节点 osm_node_2178323767。",
+          "sourceRefs": [
+            "S04",
+            "web/data/campus.json",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        }
+      ],
+      "missingEvidence": [
+        "实际人行通行与开放时段"
+      ],
+      "conditions": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+      "sourceRefs": [
+        "S04",
+        "web/data/campus.json",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+      ]
+    },
+    {
+      "id": "osm_node_8386702126",
+      "kind": "GATE",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
+      "routingPosition": {
+        "pointId": "osm_node_8386702126",
+        "longitude": 103.9801381,
+        "latitude": 30.7731062,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "unavailableReason": null,
+      "evidence": [
+        {
+          "kind": "application_policy",
+          "detail": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 出校点采用应用地图所对应的 OSM 路网节点 osm_node_8386702126。",
+          "sourceRefs": [
+            "S04",
+            "web/data/campus.json",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        }
+      ],
+      "missingEvidence": [
+        "实际人行通行与开放时段"
+      ],
+      "conditions": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+      "sourceRefs": [
+        "S04",
+        "web/data/campus.json",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+      ]
+    },
+    {
+      "id": "osm_node_9893305424",
+      "kind": "GATE",
+      "verificationStatus": "PROJECT_ASSUMED_OPEN",
+      "routingPosition": {
+        "pointId": "osm_node_9893305424",
+        "longitude": 103.9825419,
+        "latitude": 30.759961,
+        "coordinateSystem": "WGS84",
+        "positionRole": "gate_exit"
+      },
+      "unavailableReason": null,
+      "evidence": [
+        {
+          "kind": "application_policy",
+          "detail": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。 出校点采用应用地图所对应的 OSM 路网节点 osm_node_9893305424。 OSM 历史数据曾标记 locked=yes，现按项目试用规则纳入；现场锁闭时请改走其他校门。",
+          "sourceRefs": [
+            "S04",
+            "web/data/campus.json",
+            "PROJECT_ALL_GATES_TRIAL_2026_11_20"
+          ]
+        }
+      ],
+      "missingEvidence": [
+        "实际人行通行与开放时段"
+      ],
+      "conditions": "2026-11-20 项目决定六座校门暂按可步行出校、全天开放参与比较，实际通行以现场为准。",
+      "sourceRefs": [
+        "S04",
+        "web/data/campus.json",
+        "PROJECT_ALL_GATES_TRIAL_2026_11_20"
       ]
     }
   ]

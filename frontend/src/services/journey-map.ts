@@ -511,13 +511,12 @@ export function buildJourneyMapModel(
     previousRide = true;
   }
 
-  // 终点：只使用最后一段 toPoint 的已知坐标。没有坐标时不绘制终点标记，
-  // 避免把终点错误地画在最后一个可绘制段的末点（例如缺城市几何时落到校门）。
+  const destinationPoint = plan.destinationPoint || lastSegment?.toPoint || null;
   const destinationMarker = buildMarker(
     'destination',
-    (lastSegment && lastSegment.toPoint && lastSegment.toPoint.name) || '城市终点',
+    destinationPoint?.name || '城市终点',
     lastSegment ? lastSegment.sequence : null,
-    lastSegment ? lastSegment.toPoint : null,
+    destinationPoint,
     lastSegment ? segmentSourceCoordinateSystem(lastSegment) : null
   );
   if (section !== 'campus') pushMarker(markers, destinationMarker);
