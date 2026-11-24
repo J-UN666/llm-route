@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  *
  * <p>所有错误体都带 requestId 与 retryable：4xx 不重试，502/504 与内部错误可重试。</p>
  */
-@RestControllerAdvice(assignableTypes = {JourneyController.class, DecisionMakingController.class})
+@RestControllerAdvice(assignableTypes = {
+        JourneyController.class, DecisionMakingController.class, JourneyModesController.class
+})
 public class JourneyApiExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(JourneyApiExceptionHandler.class);

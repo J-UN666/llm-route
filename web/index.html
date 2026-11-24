@@ -54,14 +54,13 @@
               <button id="departure-now" class="button secondary" type="button">现在</button>
             </div>
           </div>
-          <fieldset class="preference">
-            <legend>出行偏好</legend>
-            <div class="segmented">
-              <label><input type="radio" name="preference" value="RECOMMENDED" checked>综合推荐</label>
-              <label><input type="radio" name="preference" value="LESS_WALKING">少步行</label>
-              <label><input type="radio" name="preference" value="FEWER_TRANSFERS">少换乘</label>
-            </div>
-          </fieldset>
+          <div class="field">
+            <label for="exit-gate">出校校门</label>
+            <select id="exit-gate" aria-describedby="gate-feedback">
+              <option value="">自动选择最快校门</option>
+            </select>
+            <p id="gate-feedback" class="field-feedback" role="status"></p>
+          </div>
           <button id="plan-button" class="button primary full" type="submit">查询路线</button>
         </fieldset>
       </form>

@@ -27,12 +27,14 @@ public class CampusConnectorController {
     @GetMapping
     public CampusConnectorsResponse getConnectors(
             @RequestParam(name = "originId", required = false) String originId,
-            @RequestParam(name = "departureTime", required = false) String departureTime) {
+            @RequestParam(name = "departureTime", required = false) String departureTime,
+            @RequestParam(name = "atExit", defaultValue = "false") boolean atExit) {
         if (originId == null || originId.isBlank()) {
             throw new InvalidOriginIdException("缺少 originId 查询参数，示例：originId=osm_way_1098786977");
         }
         OffsetDateTime departure = parseDepartureTime(departureTime);
-        CampusConnectorService.Resolution resolution = connectorService.resolve(originId.trim(), departure);
+        CampusConnectorService.Resolution resolution = atExit ? connectorService.resolveAtExit(originId.trim(), departure)
+                : connectorService.resolve(originId.trim(), departure);
         if (!"CAMPUS".equals(resolution.originKind())) {
             throw new NoApprovedConnectorException(
                     "地点 " + resolution.originId() + " 不是校园起点（kind=" + resolution.originKind()
