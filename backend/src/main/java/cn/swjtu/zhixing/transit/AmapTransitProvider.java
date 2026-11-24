@@ -233,8 +233,12 @@ public class AmapTransitProvider implements TransitProvider {
             walkingMeters = completeWalkingDistance(segments);
         }
         long rideSegments = segments.stream().filter(s -> !s.lines().isEmpty()).count();
+        // transits[].distance 是方案全程里程，walking_distance 只包含步行。
+        Integer distanceMeters = integer(node, "distance");
         return new TransitPlan(integer(node, "duration"), walkingMeters, (int) Math.max(0, rideSegments - 1),
-                decimal(node, "cost", "transit_fee"), segments, SOURCE);
+                decimal(node, "cost", "transit_fee"), segments, SOURCE,
+                distanceMeters != null && distanceMeters > 0
+                        && (walkingMeters == null || distanceMeters >= walkingMeters) ? distanceMeters : null);
     }
 
     private void parseWalking(JsonNode walking, List<TransitSegment> output) {
