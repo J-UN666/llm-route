@@ -16,7 +16,7 @@
   const defaultMapSection = 'campus';
   const views = {form: {}, chat: {}};
   const labels = {CAMPUS_WALK: '校内步行', WALK: '步行', BUS: '公交', METRO: '地铁',
-    SUBWAY: '地铁', RAILWAY: '铁路', TAXI: '出租车'};
+    SUBWAY: '地铁', RAILWAY: '铁路', TAXI: '打车', TAXI_WAIT: '等车'};
   const formatDeparture = new Intl.DateTimeFormat('sv-SE', {timeZone: 'Asia/Shanghai',
     year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'});
   let mode = 'form';
@@ -25,6 +25,7 @@
   let personalMode = false;
   let settingsBusy = false;
   let formBusy = false;
+  let gateRequest;
   let chatBusy = false;
   let conversation = null;
   let pending = null;
@@ -196,7 +197,7 @@
     return button;
   }
 
-  function placePicker(id, scope) {
+  function placePicker(id, scope, onChange) {
     const input = byId(id);
     const list = byId(`${id}-results`);
     const hint = byId(`${id}-feedback`);
@@ -205,6 +206,7 @@
     let abort;
     input.addEventListener('input', () => {
       current = null;
+      onChange?.();
       clearTimeout(timer);
       abort?.abort();
       list.replaceChildren();
@@ -229,6 +231,7 @@
               input.value = item.name;
               list.hidden = true;
               feedback(hint, item.address || '已选定');
+              onChange?.();
               input.focus();
             });
             const li = element('li');
@@ -244,8 +247,51 @@
     return {selected: () => current, focus: () => input.focus()};
   }
 
-  const origin = placePicker('origin', 'CAMPUS');
+  const origin = placePicker('origin', 'CAMPUS', () => refreshGates(true));
   const destination = placePicker('destination', 'CITY');
+
+  function departureTime() {
+    return byId('departure').value ? `${byId('departure').value}:00+08:00` : '';
+  }
+
+  async function refreshGates(reset = false) {
+    gateRequest?.abort();
+    const select = byId('exit-gate');
+    const hint = byId('gate-feedback');
+    const start = origin.selected();
+    const departure = departureTime();
+    if (reset || !start) {
+      select.replaceChildren(new Option('自动选择最快校门', ''));
+    }
+    select.disabled = !start || !departure;
+    feedback(hint);
+    if (select.disabled) return;
+    const controller = new AbortController();
+    gateRequest = controller;
+    try {
+      const params = new URLSearchParams({originId: start.id, departureTime: departure, atExit: 'true'});
+      const {connectors} = await request(`/api/campus/connectors?${params}`, {signal: controller.signal});
+      if (controller.signal.aborted) return;
+      const chosen = select.value;
+      const oldLabel = select.selectedOptions[0]?.dataset.name;
+      const gates = new Map(connectors.map(gate => [gate.gateId, gate.gateName]));
+      const options = [...gates].map(([id, name]) => {
+        const option = new Option(name, id);
+        option.dataset.name = name;
+        return option;
+      });
+      // 出发时间改变时保留用户指定的校门，让用户确认是否改门。
+      if (chosen && !gates.has(chosen)) {
+        const unavailable = new Option(`${oldLabel || chosen}（当前不可用）`, chosen);
+        unavailable.dataset.name = oldLabel || chosen;
+        options.push(unavailable);
+      }
+      select.replaceChildren(new Option('自动选择最快校门', ''), ...options);
+      select.value = chosen;
+    } catch (error) {
+      if (!controller.signal.aborted) feedback(hint, `暂时无法更新校门。 ${explain(error)}`, true);
+    }
+  }
 
   function setDepartureNow() {
     const nextMinute = new Date(Math.ceil((Date.now() + 1000) / 60000) * 60000);
@@ -253,7 +299,12 @@
     byId('departure').value = `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
   }
   setDepartureNow();
-  byId('departure-now').addEventListener('click', setDepartureNow);
+  refreshGates();
+  byId('departure').addEventListener('change', () => refreshGates());
+  byId('departure-now').addEventListener('click', () => {
+    setDepartureNow();
+    refreshGates();
+  });
 
   function minutes(seconds) {
     return Number.isFinite(seconds) ? `${Math.ceil(seconds / 60)} 分钟` : '耗时未提供';
@@ -271,22 +322,29 @@
 
   function renderJourney() {
     const {journey, selected, section} = views[mode];
-    const plans = journey?.plans || [];
+    const plans = (journey?.plans || []).map(item => item.route ? {...item.route, travelMode: item.mode} : item);
     const plan = plans[selected];
     byId('route-options').hidden = plans.length === 0;
     byId('itinerary').hidden = !plan;
     byId('map-sections').hidden = !plan;
-    byId('provider').textContent = journey?.provider === 'AMAP' ? '高德公交地铁'
+    byId('provider').textContent = journey?.provider === 'AMAP' ? '高德地图'
       : journey?.provider === 'DEMO' ? '离线示例' : journey?.provider || '';
     byId('plan-list').replaceChildren(...plans.map((item, index) => {
       const button = element('button', 'plan-card');
       button.type = 'button';
       button.setAttribute('aria-pressed', String(index === selected));
-      button.append(element('span', '', `方案 ${index + 1} · ${item.gateExitPoint?.name || '校门待定'}`),
-        element('strong', '', minutes(item.totalDurationSeconds)),
-        element('span', '', `步行 ${distance(item.totalWalkingMeters)} · ${item.transferCount == null
-          ? '换乘未提供' : `换乘 ${item.transferCount} 次`}`),
-        element('span', '', item.costYuan == null ? '费用未提供' : `约 ${item.costYuan} 元`));
+      const title = labels[item.travelMode] || `方案 ${index + 1}`;
+      button.append(element('span', '', `${title} · ${item.gateExitPoint?.name || '校门待定'}`),
+        element('strong', '', minutes(item.totalDurationSeconds)));
+      if (item.travelMode) {
+        button.append(element('span', '', `全程 ${distance(item.totalDistanceMeters)}`));
+        const wait = item.segments.find(step => step.mode === 'TAXI_WAIT');
+        if (wait) button.append(element('span', '', `含预估等车 ${minutes(wait.durationSeconds)}`));
+      } else {
+        const transfer = item.transferCount == null ? '换乘未提供' : `换乘 ${item.transferCount} 次`;
+        button.append(element('span', '', `步行 ${distance(item.totalWalkingMeters)} · ${transfer}`));
+      }
+      if (item.costYuan != null) button.append(element('span', '', `约 ${item.costYuan} 元`));
       button.addEventListener('click', () => {
         views[mode].selected = index;
         renderJourney();
@@ -349,17 +407,16 @@
       (start ? destination : origin).focus();
       return;
     }
-    const body = {originId: start.id, destinationId: end.id,
-      departureTime: `${byId('departure').value}:00+08:00`,
-      preference: document.querySelector('input[name="preference"]:checked').value};
+    const body = {originId: start.id, destinationId: end.id, departureTime: departureTime(),
+      gateId: byId('exit-gate').value || null};
     formBusy = true;
     byId('form-fields').disabled = true;
     status('正在查询路线…', false, 'form');
     showJourney('form', null);
     try {
-      const journey = await request('/api/journeys', {method: 'POST', personal: true, body});
+      const journey = await queryRoutes(body);
       showJourney('form', journey);
-      status(journey.status === 'NO_ROUTE' ? '当前出发时间暂无可用公交地铁方案' : '', false, 'form');
+      status(journey.status === 'NO_ROUTE' ? journey.warnings?.join('；') || '当前暂无可用路线' : '', false, 'form');
     } catch (error) {
       status(explain(error), true, 'form');
     } finally {
@@ -367,6 +424,19 @@
       byId('form-fields').disabled = false;
     }
   });
+
+  async function queryRoutes(body) {
+    try {
+      return await request('/api/journeys/by-mode', {method: 'POST', personal: true, body});
+    } catch (error) {
+      // 离线演示继续使用原有的公交地铁示例接口。
+      if (error.status !== 404 || error.code) throw error;
+      if (body.gateId) throw new ApiError('离线演示使用默认校门，请改选自动');
+      const {originId, destinationId, departureTime} = body;
+      return request('/api/journeys', {method: 'POST', personal: true,
+        body: {originId, destinationId, departureTime, preference: 'RECOMMENDED'}});
+    }
+  }
 
   function rememberConversation() {
     try {

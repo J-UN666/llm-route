@@ -15,6 +15,7 @@ import cn.swjtu.zhixing.campus.PlaceDataLoadException;
 import cn.swjtu.zhixing.campus.PlaceKind;
 import cn.swjtu.zhixing.campus.PlaceNotFoundException;
 import cn.swjtu.zhixing.campus.PlaceService;
+import cn.swjtu.zhixing.transit.AmapRoadProvider;
 import cn.swjtu.zhixing.transit.TransitErrorCode;
 import cn.swjtu.zhixing.transit.TransitGeometry;
 import cn.swjtu.zhixing.transit.TransitLine;
@@ -32,10 +33,15 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +79,8 @@ public class JourneyService {
     private static final ZoneId BUSINESS_ZONE = ZoneId.of("Asia/Shanghai");
     private static final String CAMPUS_WALK = "CAMPUS_WALK";
     private static final String CAMPUS_COORDINATE_SYSTEM = "WGS84";
+    private static final int MODE_CONCURRENCY = 3;
+    private static final int MODE_DEADLINE_SECONDS = 40;
     private static final Set<String> SUPPORTED_COORDINATE_SYSTEMS =
             Set.of("WGS84", "WGS-84", "GCJ-02", "GCJ02");
 
@@ -109,13 +117,19 @@ public class JourneyService {
     }
 
     public JourneyResponse plan(JourneyRequest request, Credentials credentials) {
+        return plan(request, credentials, PlaceKind.CAMPUS);
+    }
+
+    /** 为会合推荐查询城市内路线，例如从成都东站到一家餐厅。 */
+    public JourneyResponse planCity(JourneyRequest request, Credentials credentials) {
+        return plan(request, credentials, PlaceKind.CITY);
+    }
+
+    private JourneyResponse plan(JourneyRequest request, Credentials credentials, PlaceKind originKind) {
         String requestId = JourneyIds.requestId();
         try {
-            if (credentials != null && credentials.amapKey() == null) {
-                throw new JourneyApiException(HttpStatus.UNPROCESSABLE_ENTITY, "PERSONAL_AMAP_REQUIRED",
-                        "请先验证个人高德 Web 服务 Key，或在设置中选择默认服务", false, requestId);
-            }
-            JourneyResponse response = plan(request, requestId, credentials);
+            requireAmapCredentials(credentials, requestId);
+            JourneyResponse response = plan(request, requestId, credentials, originKind);
             log.info("journey requestId={} status={} provider={}", requestId, response.status(), response.provider());
             return response;
         } catch (JourneyApiException ex) {
@@ -124,7 +138,173 @@ public class JourneyService {
         }
     }
 
-    private JourneyResponse plan(JourneyRequest request, String requestId, Credentials credentials) {
+    JourneyPair planPair(String campusOriginId, String cityOriginId, String destinationId,
+                         OffsetDateTime departure, Credentials credentials, String requestId) {
+        requireAmapCredentials(credentials, requestId);
+        OffsetDateTime queriedAt = now();
+        // 只解析一次共同终点。先校验双方起点和终点，再向高德请求路线。
+        PlaceCandidate destination = loadPlace(destinationId, "终点", requestId, credentials);
+        RoutePlaces campus = validatePlaces(loadPlace(campusOriginId, "校园起点", requestId, credentials),
+                destination, PlaceKind.CAMPUS, requestId);
+        RoutePlaces city = validatePlaces(loadPlace(cityOriginId, "城市起点", requestId, credentials),
+                destination, PlaceKind.CITY, requestId);
+        TransitPreference preference = TransitPreference.RECOMMENDED;
+        return new JourneyPair(
+                planRoute(campusOriginId, campus, departure, preference, credentials, requestId, queriedAt),
+                planRoute(cityOriginId, city, departure, preference, credentials, requestId, queriedAt));
+    }
+
+    JourneyModes.Reply planModes(JourneyModes.Request request, Credentials credentials, AmapRoadProvider roadProvider) {
+        String requestId = JourneyIds.requestId();
+        requireAmapCredentials(credentials, requestId);
+        if (request == null) {
+            throw new JourneyApiException(HttpStatus.BAD_REQUEST, "INVALID_PARAMETER", "请求体不能为空", false, requestId);
+        }
+        String originId = requireText(request.originId(), "起点 originId", requestId);
+        String destinationId = requireText(request.destinationId(), "终点 destinationId", requestId);
+        OffsetDateTime departure = parseDeparture(request.departureTime(), requestId);
+        OffsetDateTime queriedAt = now();
+        RoutePlaces places = validatePlaces(loadPlace(originId, "起点", requestId, credentials),
+                loadPlace(destinationId, "终点", requestId, credentials), PlaceKind.CAMPUS, requestId);
+        var resolution = resolveConnectors(originId, departure, requestId, true);
+        List<CampusConnector> gates = modeGates(resolution, request.gateId(), requestId);
+        String dataVersion = campusDataVersion(requestId);
+        List<String> warnings = new ArrayList<>();
+        List<ProviderFailure> failures = new ArrayList<>();
+        var bestByMode = new EnumMap<JourneyModes.Mode, JourneyPlan>(JourneyModes.Mode.class);
+        String provider = null;
+        var order = JourneyPlanRanking.orderFor(TransitPreference.RECOMMENDED);
+
+        List<ModeLookup> lookups = new ArrayList<>();
+        for (CampusConnector gate : gates) {
+            validateConnector(gate, requestId);
+            TransitPoint from = toTransitPoint(gate.gateExitPoint(), "实际出校点", requestId);
+            OffsetDateTime exitTime = departure.plusSeconds(gate.durationSeconds());
+            for (JourneyModes.Mode mode : JourneyModes.Mode.values()) {
+                lookups.add(new ModeLookup(gate, mode, from, exitTime));
+            }
+        }
+        List<Future<TransitSearchResult>> searches = queryModes(lookups, places.destinationPoint(),
+                credentials, roadProvider, requestId);
+        for (int index = 0; index < lookups.size(); index++) {
+            ModeLookup lookup = lookups.get(index);
+            Future<TransitSearchResult> search = searches.get(index);
+            TransitSearchResult result = search.state() == Future.State.SUCCESS ? search.resultNow() : null;
+            if (result == null || (result.errorCode() != null && result.errorCode() != TransitErrorCode.NO_ROUTE)) {
+                TransitErrorCode code = result != null ? result.errorCode() : search.isCancelled()
+                        ? TransitErrorCode.NETWORK_TIMEOUT : TransitErrorCode.PROVIDER_ERROR;
+                String detail = result == null ? "未完成高德路线查询" : result.errorMessage();
+                failures.add(new ProviderFailure(lookup.gate().gateId(), code, detail));
+                warnings.add(lookup.gate().gateName() + "的" + lookup.mode().label + "路线查询失败（" + code + "）");
+                continue;
+            }
+            if (result.status() != TransitStatus.OK) {
+                continue;
+            }
+            for (TransitPlan cityPlan : result.plans()) {
+                if (cityPlan.durationSeconds() == null
+                        || (lookup.mode() == JourneyModes.Mode.METRO && !metroOnly(cityPlan))) {
+                    continue;
+                }
+                JourneyPlan candidate = buildPlan(places.origin(), places.destination(), lookup.gate(), result,
+                        cityPlan, departure, queriedAt, dataVersion);
+                JourneyPlan current = bestByMode.get(lookup.mode());
+                if (current == null || order.compare(candidate, current) < 0) {
+                    bestByMode.put(lookup.mode(), candidate);
+                    provider = result.provider();
+                }
+            }
+        }
+        if (bestByMode.isEmpty() && !failures.isEmpty()) {
+            throw mapAllFailures(failures, requestId, credentials != null);
+        }
+        // 每类独立取全程最快的结果，缺少某类时仍可展示其他可用路线。
+        List<JourneyModes.Plan> plans = new ArrayList<>();
+        for (JourneyModes.Mode mode : JourneyModes.Mode.values()) {
+            JourneyPlan plan = bestByMode.get(mode);
+            if (plan != null) {
+                plans.add(new JourneyModes.Plan(mode, plan));
+            } else {
+                warnings.add(mode == JourneyModes.Mode.METRO
+                        ? "高德候选中暂无可用的地铁加步行方案" : "暂无可用的" + mode.label + "方案");
+            }
+        }
+        addTrialGateWarnings(warnings, gates, plans.stream().map(JourneyModes.Plan::route).toList());
+        JourneyModes.Status status = plans.isEmpty() ? JourneyModes.Status.NO_ROUTE
+                : plans.size() == JourneyModes.Mode.values().length ? JourneyModes.Status.SUCCEEDED
+                : JourneyModes.Status.PARTIAL;
+        return new JourneyModes.Reply(requestId, status, provider, List.copyOf(plans), List.copyOf(warnings));
+    }
+
+    private List<Future<TransitSearchResult>> queryModes(List<ModeLookup> lookups, TransitPoint destination,
+                                                        Credentials credentials, AmapRoadProvider roads,
+                                                        String requestId) {
+        String key = credentials == null ? null : credentials.amapKey();
+        List<Callable<TransitSearchResult>> tasks = lookups.stream()
+                .<Callable<TransitSearchResult>>map(lookup -> () -> switch (lookup.mode()) {
+                    case TAXI -> roads.search(AmapRoadProvider.Mode.TAXI, lookup.from(), destination, lookup.exitTime(), key);
+                    case METRO -> searchTransit(lookup.from(), destination, lookup.exitTime(),
+                            TransitPreference.RECOMMENDED, credentials);
+                    case WALK -> roads.search(AmapRoadProvider.Mode.WALK, lookup.from(), destination, lookup.exitTime(), key);
+                }).toList();
+        // 三类交替查询并设总时限，让单类高德服务故障时还能返回已完成的路线。
+        var executor = Executors.newFixedThreadPool(MODE_CONCURRENCY, Thread.ofVirtual().factory());
+        try {
+            return executor.invokeAll(tasks, MODE_DEADLINE_SECONDS, TimeUnit.SECONDS);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new JourneyApiException(HttpStatus.GATEWAY_TIMEOUT, "PROVIDER_TIMEOUT", "路线查询中断", true, requestId);
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    private List<CampusConnector> modeGates(CampusConnectorService.Resolution resolution, String requestedGate,
+                                          String requestId) {
+        String gateId = requestedGate == null ? "" : requestedGate.trim();
+        if (gateId.isEmpty() && !resolution.available().isEmpty()) {
+            return resolution.available();
+        }
+        List<CampusConnector> matches = resolution.available().stream()
+                .filter(gate -> gateId.equals(gate.gateId())).toList();
+        if (!matches.isEmpty()) {
+            return matches;
+        }
+        String reason = gateId.isEmpty() ? unavailableSummary(resolution) : resolution.unavailable().stream()
+                .filter(gate -> gateId.equals(gate.gateId()))
+                .map(gate -> gate.reason())
+                .findFirst().orElse("该起点没有通往指定校门的可用步行路线");
+        throw new JourneyApiException(HttpStatus.UNPROCESSABLE_ENTITY, "CAMPUS_CONNECTOR_UNAVAILABLE",
+                reason, false, requestId);
+    }
+
+    /** 地铁方案只接受含地铁的路线，城市步行以外的其他分段会使该候选退出比较。 */
+    private boolean metroOnly(TransitPlan plan) {
+        boolean hasMetro = false;
+        for (TransitSegment segment : plan.segments()) {
+            String mode = normalizeMode(segment.mode());
+            if ("WALK".equals(mode)) {
+                continue;
+            }
+            // 用高德线路类型判定，避免把名称中带“地铁”的公交接驳线算成地铁。
+            if (!"METRO".equals(mode) || segment.lines().isEmpty()
+                    || segment.lines().stream().anyMatch(line -> !"地铁线路".equals(line.type())
+                            && !"地铁".equals(line.type()))) {
+                return false;
+            }
+            hasMetro = true;
+        }
+        return hasMetro;
+    }
+
+    private static void requireAmapCredentials(Credentials credentials, String requestId) {
+        if (credentials != null && credentials.amapKey() == null) {
+            throw new JourneyApiException(HttpStatus.UNPROCESSABLE_ENTITY, "PERSONAL_AMAP_REQUIRED",
+                    "请先验证个人高德 Web 服务 Key，或在设置中选择默认服务", false, requestId);
+        }
+    }
+
+    private JourneyResponse plan(JourneyRequest request, String requestId, Credentials credentials, PlaceKind originKind) {
         OffsetDateTime queriedAt = now();
         if (request == null) {
             throw new JourneyApiException(HttpStatus.BAD_REQUEST, "INVALID_PARAMETER",
@@ -137,7 +317,17 @@ public class JourneyService {
 
         PlaceCandidate origin = loadPlace(originId, "起点", requestId, credentials);
         PlaceCandidate destination = loadPlace(destinationId, "终点", requestId, credentials);
-        if (origin.kind() != PlaceKind.CAMPUS) {
+        RoutePlaces places = validatePlaces(origin, destination, originKind, requestId);
+        return planRoute(originId, places, departure, preference, credentials, requestId, queriedAt);
+    }
+
+    private RoutePlaces validatePlaces(PlaceCandidate origin, PlaceCandidate destination, PlaceKind originKind,
+                                       String requestId) {
+        if (origin.kind() != originKind) {
+            if (originKind == PlaceKind.CITY) {
+                throw new JourneyApiException(HttpStatus.UNPROCESSABLE_ENTITY, "PLACE_UNAVAILABLE",
+                        "起点“" + origin.name() + "”不是城市地点", false, requestId);
+            }
             throw new JourneyApiException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "CAMPUS_CONNECTOR_UNAVAILABLE",
                     "起点“" + origin.name() + "”不是校园内部地点（kind=" + origin.kind()
@@ -147,7 +337,7 @@ public class JourneyService {
         if (destination.kind() != PlaceKind.CITY) {
             throw new JourneyApiException(HttpStatus.UNPROCESSABLE_ENTITY, "PLACE_UNAVAILABLE",
                     "终点“" + destination.name() + "”不是城市目的地（kind=" + destination.kind()
-                            + "），当前只支持校园到城市方向的查询",
+                            + "），终点必须为城市地点",
                     false, requestId);
         }
         GeoPosition originRouting = requireRoutingPosition(origin, "起点", requestId);
@@ -155,6 +345,21 @@ public class JourneyService {
         validateCoordinateSystem(originRouting.coordinateSystem(), "起点算路位置", requestId);
         validateCoordinateSystem(destinationRouting.coordinateSystem(), "终点算路位置", requestId);
         TransitPoint destinationPoint = toTransitPoint(destinationRouting, "终点算路位置", requestId);
+        TransitPoint cityOriginPoint = originKind == PlaceKind.CITY
+                ? toTransitPoint(originRouting, "起点算路位置", requestId) : null;
+        return new RoutePlaces(origin, destination, cityOriginPoint, destinationPoint);
+    }
+
+    private JourneyResponse planRoute(String originId, RoutePlaces places, OffsetDateTime departure,
+                                      TransitPreference preference, Credentials credentials, String requestId,
+                                      OffsetDateTime queriedAt) {
+        PlaceCandidate origin = places.origin();
+        PlaceCandidate destination = places.destination();
+        TransitPoint destinationPoint = places.destinationPoint();
+        if (places.cityOriginPoint() != null) {
+            return planCityRoute(origin, destination, places.cityOriginPoint(), destinationPoint, departure,
+                    preference, credentials, requestId, queriedAt);
+        }
 
         CampusConnectorService.Resolution resolution = resolveConnectors(originId, departure, requestId);
         if (resolution.available().isEmpty()) {
@@ -179,11 +384,7 @@ public class JourneyService {
 
             TransitSearchResult result;
             try {
-                result = credentials == null
-                        ? transitProvider.search(gateExit, destinationPoint, cityDeparture, preference)
-                        : transitProvider.searchWithKey(
-                                new TransitSearchRequest(gateExit, destinationPoint, cityDeparture, preference),
-                                credentials.amapKey());
+                result = searchTransit(gateExit, destinationPoint, cityDeparture, preference, credentials);
             } catch (RuntimeException ex) {
                 log.warn("城市段查询异常 requestId={} connector={} gate={} type={}",
                         requestId, connector.id(), connector.gateId(), ex.getClass().getSimpleName());
@@ -217,18 +418,7 @@ public class JourneyService {
         if (!candidates.isEmpty()) {
             List<JourneyPlan> plans = JourneyPlanRanking.arrange(candidates, preference);
             List<String> warnings = successWarnings(failures);
-            List<String> trialGates = resolution.available().stream()
-                    .filter(connector -> CampusConnectorService.PROJECT_ASSUMED_OPEN.equals(connector.verificationStatus()))
-                    .filter(connector -> plans.stream().anyMatch(plan -> connector.gateId().equals(plan.gateId())))
-                    .map(CampusConnector::gateName)
-                    .distinct()
-                    .toList();
-            if (!trialGates.isEmpty()) {
-                warnings.add(String.join("、", trialGates) + "按项目试用规则视为开放，实际通行以现场为准。");
-                if (trialGates.contains("西南门")) {
-                    warnings.add("西南门的历史地图数据曾标记门锁，现场锁闭时请改走其他校门。");
-                }
-            }
+            addTrialGateWarnings(warnings, resolution.available(), plans);
             return new JourneyResponse(requestId, JourneyStatus.SUCCEEDED, plans, queriedAt,
                     campusDataVersion, providerName, warnings);
         }
@@ -239,6 +429,45 @@ public class JourneyService {
                 campusDataVersion, providerName, successWarnings(failures));
     }
 
+    private JourneyResponse planCityRoute(PlaceCandidate origin, PlaceCandidate destination, TransitPoint originPoint,
+                                          TransitPoint destinationPoint, OffsetDateTime departure,
+                                          TransitPreference preference, Credentials credentials, String requestId,
+                                          OffsetDateTime queriedAt) {
+        // 城市起点可直接交给高德查询，出发时刻只受高德分钟精度取整影响。
+        TransitSearchResult result;
+        try {
+            result = searchTransit(originPoint, destinationPoint, departure, preference, credentials);
+        } catch (RuntimeException ex) {
+            log.warn("城市路线查询异常 requestId={} type={}", requestId, ex.getClass().getSimpleName());
+            throw mapAllFailures(List.of(new ProviderFailure(null, TransitErrorCode.PROVIDER_ERROR,
+                    "城市段服务调用异常")), requestId, credentials != null);
+        }
+        if (result == null) {
+            throw mapAllFailures(List.of(new ProviderFailure(null, TransitErrorCode.PROVIDER_ERROR,
+                    "城市段服务未返回结果")), requestId, credentials != null);
+        }
+        if (result.errorCode() != null && result.errorCode() != TransitErrorCode.NO_ROUTE) {
+            throw mapAllFailures(List.of(new ProviderFailure(null, result.errorCode(), result.errorMessage())),
+                    requestId, credentials != null);
+        }
+        if (result.status() == TransitStatus.NO_ROUTE || result.plans().isEmpty()) {
+            return new JourneyResponse(requestId, JourneyStatus.NO_ROUTE, List.of(), queriedAt,
+                    null, result.provider(), List.of());
+        }
+        List<JourneyPlan> candidates = result.plans().stream()
+                .map(plan -> buildPlan(origin, destination, null, result, plan, departure, queriedAt, null))
+                .toList();
+        return new JourneyResponse(requestId, JourneyStatus.SUCCEEDED, JourneyPlanRanking.arrange(candidates, preference),
+                queriedAt, null, result.provider(), List.of());
+    }
+
+    private TransitSearchResult searchTransit(TransitPoint origin, TransitPoint destination, OffsetDateTime departure,
+                                              TransitPreference preference, Credentials credentials) {
+        return credentials == null ? transitProvider.search(origin, destination, departure, preference)
+                : transitProvider.searchWithKey(new TransitSearchRequest(origin, destination, departure, preference),
+                        credentials.amapKey());
+    }
+
     private JourneyPlan buildPlan(PlaceCandidate origin,
                                   PlaceCandidate destination,
                                   CampusConnector connector,
@@ -247,7 +476,7 @@ public class JourneyService {
                                   OffsetDateTime departure,
                                   OffsetDateTime queriedAt,
                                   String campusDataVersion) {
-        OffsetDateTime cityDeparture = departure.plusSeconds(connector.durationSeconds());
+        OffsetDateTime cityDeparture = connector == null ? departure : departure.plusSeconds(connector.durationSeconds());
         OffsetDateTime providerDeparture = result.providerDepartureTime() == null
                 ? cityDeparture.plusSeconds(Math.max(0, result.roundingWaitSeconds()))
                 : result.providerDepartureTime().atZoneSameInstant(BUSINESS_ZONE).toOffsetDateTime();
@@ -257,16 +486,21 @@ public class JourneyService {
         Integer totalDuration = arrival == null
                 ? null
                 : Math.toIntExact(Duration.between(departure, arrival).getSeconds());
-        BigDecimal totalWalking = sumWalking(connector.walkMeters(), transitPlan.walkingMeters());
+        BigDecimal totalWalking = sumMeters(connector, transitPlan.walkingMeters());
+        BigDecimal totalDistance = sumMeters(connector, transitPlan.distanceMeters());
 
-        JourneyPoint exitPoint = gateExitPoint(connector);
+        String gateId = connector == null ? null : connector.gateId();
+        JourneyPoint exitPoint = connector == null ? null : gateExitPoint(connector);
         List<String> sources = new ArrayList<>(sources(connector, transitPlan));
         List<JourneySegment> segments = new ArrayList<>();
-        segments.add(campusSegment(origin, connector));
-        int sequence = 2;
+        if (connector != null) {
+            segments.add(campusSegment(origin, connector));
+        }
+        int sequence = segments.size() + 1;
         for (TransitSegment segment : transitPlan.segments()) {
             TransitGeometry geometry = segment.geometry();
-            if (sequence == 2 && "AMAP".equals(result.provider()) && "WALK".equals(normalizeMode(segment.mode()))) {
+            if (exitPoint != null && sequence == 2 && "AMAP".equals(result.provider())
+                    && "WALK".equals(normalizeMode(segment.mode()))) {
                 geometry = EastGateWalkLink.extend(exitPoint, geometry);
             }
             boolean linkedAtGate = geometry != segment.geometry();
@@ -281,14 +515,14 @@ public class JourneyService {
                 origin.id(),
                 destination.id(),
                 departure.format(java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-                connector.gateId(),
+                gateId,
                 JourneyPlanRanking.routeSignature(exitPoint, segments));
 
         return new JourneyPlan(
                 planId,
                 origin.id(),
                 destination.id(),
-                connector.gateId(),
+                gateId,
                 exitPoint,
                 departure,
                 cityDeparture,
@@ -303,9 +537,9 @@ public class JourneyService {
                 List.copyOf(sources),
                 queriedAt,
                 campusDataVersion,
-                new JourneyPoint(destination.routingPosition().pointId(), destination.name(),
-                        destination.routingPosition().longitude(), destination.routingPosition().latitude(),
-                        destination.routingPosition().coordinateSystem(), destination.routingPosition().positionRole()));
+                routingPoint(destination),
+                routingPoint(origin),
+                totalDistance);
     }
 
     private JourneySegment campusSegment(PlaceCandidate origin, CampusConnector connector) {
@@ -414,6 +648,7 @@ public class JourneyService {
                     + (stationPart == null ? "" : "：" + stationPart);
             case "RAILWAY" -> "乘坐铁路" + (line == null || line.name() == null ? "" : line.name())
                     + (stationPart == null ? "" : "：" + stationPart);
+            case "TAXI_WAIT" -> "在校门外等车（固定预估）";
             case "TAXI" -> "乘坐出租车" + (stationPart == null ? "" : "：" + stationPart);
             default -> "城市交通" + (stationPart == null ? "" : "：" + stationPart);
         };
@@ -437,9 +672,11 @@ public class JourneyService {
 
     private List<String> sources(CampusConnector connector, TransitPlan transitPlan) {
         LinkedHashSet<String> sources = new LinkedHashSet<>();
-        sources.add("campus_connector:" + connector.id());
-        if (connector.sourceRefs() != null) {
-            sources.addAll(connector.sourceRefs());
+        if (connector != null) {
+            sources.add("campus_connector:" + connector.id());
+            if (connector.sourceRefs() != null) {
+                sources.addAll(connector.sourceRefs());
+            }
         }
         if (transitPlan.source() != null && !transitPlan.source().isBlank()) {
             sources.add(transitPlan.source());
@@ -470,6 +707,21 @@ public class JourneyService {
         return warnings;
     }
 
+    private void addTrialGateWarnings(List<String> warnings, List<CampusConnector> gates, List<JourneyPlan> plans) {
+        List<String> trialGates = gates.stream()
+                .filter(connector -> CampusConnectorService.PROJECT_ASSUMED_OPEN.equals(connector.verificationStatus()))
+                .filter(connector -> plans.stream().anyMatch(plan -> connector.gateId().equals(plan.gateId())))
+                .map(CampusConnector::gateName)
+                .distinct()
+                .toList();
+        if (!trialGates.isEmpty()) {
+            warnings.add(String.join("、", trialGates) + "按项目试用规则视为开放，实际通行以现场为准。");
+            if (trialGates.contains("西南门")) {
+                warnings.add("西南门的历史地图数据曾标记门锁，现场锁闭时请改走其他校门。");
+            }
+        }
+    }
+
     private JourneyApiException mapAllFailures(List<ProviderFailure> failures, String requestId, boolean personal) {
         ProviderFailure primary = failures.get(0);
         boolean timeout = failures.stream().anyMatch(f -> f.code() == TransitErrorCode.NETWORK_TIMEOUT);
@@ -482,8 +734,7 @@ public class JourneyService {
         String detail = primary.message() == null || primary.message().isBlank()
                 ? "上游城市公共交通服务不可用"
                 : primary.message();
-        String message = "所有校门出校点的城市段查询均失败"
-                + (gates.isBlank() ? "" : "（" + gates + "）")
+        String message = (gates.isBlank() ? "城市路线查询失败" : "所有校门出校点的城市段查询均失败（" + gates + "）")
                 + "，本次没有可展示的候选方案。上游错误：" + detail;
         if (timeout) {
             return new JourneyApiException(HttpStatus.GATEWAY_TIMEOUT, "PROVIDER_TIMEOUT",
@@ -521,8 +772,14 @@ public class JourneyService {
     private CampusConnectorService.Resolution resolveConnectors(String originId,
                                                                OffsetDateTime departure,
                                                                String requestId) {
+        return resolveConnectors(originId, departure, requestId, false);
+    }
+
+    private CampusConnectorService.Resolution resolveConnectors(String originId, OffsetDateTime departure,
+                                                                String requestId, boolean atExit) {
         try {
-            return connectorService.resolve(originId, departure);
+            return atExit ? connectorService.resolveAtExit(originId, departure)
+                    : connectorService.resolve(originId, departure);
         } catch (PlaceNotFoundException ex) {
             throw new JourneyApiException(HttpStatus.NOT_FOUND, "PLACE_NOT_FOUND",
                     ex.getMessage(), false, requestId);
@@ -667,7 +924,7 @@ public class JourneyService {
         return value.trim();
     }
 
-    private OffsetDateTime parseDeparture(String raw, String requestId) {
+    static OffsetDateTime parseDeparture(String raw, String requestId) {
         if (raw == null || raw.isBlank()) {
             throw new JourneyApiException(HttpStatus.BAD_REQUEST, "INVALID_PARAMETER",
                     "缺少必填参数：出发时间 departureTime", false, requestId);
@@ -696,12 +953,23 @@ public class JourneyService {
         }
     }
 
-    private BigDecimal sumWalking(Double connectorWalkMeters, Integer providerWalkingMeters) {
-        if (connectorWalkMeters == null || providerWalkingMeters == null) {
+    /** 有校园接驳时加上校内步行里程，任一必需的里程缺失时保留未知。 */
+    private BigDecimal sumMeters(CampusConnector connector, Integer providerMeters) {
+        if (providerMeters == null) {
             return null;
         }
-        return BigDecimal.valueOf(connectorWalkMeters)
-                .add(BigDecimal.valueOf(providerWalkingMeters));
+        BigDecimal cityMeters = BigDecimal.valueOf(providerMeters);
+        if (connector == null) {
+            return cityMeters;
+        }
+        Double campusMeters = connector.walkMeters();
+        return campusMeters == null ? null : BigDecimal.valueOf(campusMeters).add(cityMeters);
+    }
+
+    private JourneyPoint routingPoint(PlaceCandidate place) {
+        GeoPosition point = place.routingPosition();
+        return new JourneyPoint(point.pointId(), place.name(), point.longitude(), point.latitude(),
+                point.coordinateSystem(), point.positionRole());
     }
 
     private JourneyPoint gateExitPoint(CampusConnector connector) {
@@ -724,6 +992,14 @@ public class JourneyService {
     private static String safeMessage(String message) {
         return message == null || message.isBlank() ? "上游服务未提供具体原因" : message;
     }
+
+    record JourneyPair(JourneyResponse campus, JourneyResponse city) {}
+
+    private record ModeLookup(CampusConnector gate, JourneyModes.Mode mode, TransitPoint from, OffsetDateTime exitTime) {}
+
+    // 校园起点通过校门接驳，只有城市起点会直接提供给高德。
+    private record RoutePlaces(PlaceCandidate origin, PlaceCandidate destination, TransitPoint cityOriginPoint,
+                               TransitPoint destinationPoint) {}
 
     /** 单个出校点城市段查询失败记录；只用于 warnings 与全部失败时的错误映射。 */
     private record ProviderFailure(String gateId, TransitErrorCode code, String message) {

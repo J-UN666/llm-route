@@ -1,11 +1,12 @@
 package cn.swjtu.zhixing.journey;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
- * 一条“校园步行 → 城市公共交通”的完整候选方案。
+ * 一条完整候选方案。城市地点出发时，校门字段为空，校园接驳耗时为零。
  *
  * <p>时间合计口径：{@code departureTime} 为请求的校园出发时刻；
  * {@code cityDepartureTime = departureTime + 接驳 durationSeconds}；
@@ -35,10 +36,23 @@ public record JourneyPlan(
         List<String> sources,
         OffsetDateTime queriedAt,
         String campusDataVersion,
-        JourneyPoint destinationPoint) {
+        JourneyPoint destinationPoint,
+        @JsonInclude(JsonInclude.Include.NON_NULL) JourneyPoint originPoint,
+        @JsonInclude(JsonInclude.Include.NON_NULL) BigDecimal totalDistanceMeters) {
 
     public JourneyPlan {
         segments = segments == null ? List.of() : List.copyOf(segments);
         sources = sources == null ? List.of() : List.copyOf(sources);
+    }
+
+    public JourneyPlan(String planId, String originId, String destinationId, String gateId,
+                       JourneyPoint gateExitPoint, OffsetDateTime departureTime, OffsetDateTime cityDepartureTime,
+                       OffsetDateTime providerDepartureTime, Integer roundingWaitSeconds, OffsetDateTime arrivalTime,
+                       Integer totalDurationSeconds, BigDecimal totalWalkingMeters, Integer transferCount,
+                       BigDecimal costYuan, List<JourneySegment> segments, List<String> sources,
+                       OffsetDateTime queriedAt, String campusDataVersion, JourneyPoint destinationPoint) {
+        this(planId, originId, destinationId, gateId, gateExitPoint, departureTime, cityDepartureTime,
+                providerDepartureTime, roundingWaitSeconds, arrivalTime, totalDurationSeconds, totalWalkingMeters,
+                transferCount, costYuan, segments, sources, queriedAt, campusDataVersion, destinationPoint, null, null);
     }
 }

@@ -58,7 +58,7 @@ public class AmapTransitProvider implements TransitProvider {
                                AmapProperties properties,
                                ObjectMapper objectMapper,
                                Validator validator) {
-        this(buildRestClient(restClientBuilder, properties), properties, objectMapper,
+        this(buildRestClient(restClientBuilder, properties, properties.getTransitBaseUrl()), properties, objectMapper,
                 Clock.systemUTC(), validator);
     }
 
@@ -233,8 +233,12 @@ public class AmapTransitProvider implements TransitProvider {
             walkingMeters = completeWalkingDistance(segments);
         }
         long rideSegments = segments.stream().filter(s -> !s.lines().isEmpty()).count();
+        // transits[].distance 是方案全程里程，walking_distance 只包含步行。
+        Integer distanceMeters = integer(node, "distance");
         return new TransitPlan(integer(node, "duration"), walkingMeters, (int) Math.max(0, rideSegments - 1),
-                decimal(node, "cost", "transit_fee"), segments, SOURCE);
+                decimal(node, "cost", "transit_fee"), segments, SOURCE,
+                distanceMeters != null && distanceMeters > 0
+                        && (walkingMeters == null || distanceMeters >= walkingMeters) ? distanceMeters : null);
     }
 
     private void parseWalking(JsonNode walking, List<TransitSegment> output) {
@@ -356,13 +360,13 @@ public class AmapTransitProvider implements TransitProvider {
         return error(queriedAt, requested, providerDeparture, roundingWaitSeconds, code, "高德服务请求失败");
     }
 
-    private static RestClient buildRestClient(RestClient.Builder builder, AmapProperties properties) {
+    static RestClient buildRestClient(RestClient.Builder builder, AmapProperties properties, String baseUrl) {
         java.net.http.HttpClient httpClient = java.net.http.HttpClient.newBuilder()
                 .connectTimeout(Duration.ofMillis(properties.getConnectTimeoutMillis()))
                 .build();
         JdkClientHttpRequestFactory requestFactory = new JdkClientHttpRequestFactory(httpClient);
         requestFactory.setReadTimeout(Duration.ofMillis(properties.getReadTimeoutMillis()));
-        return builder.requestFactory(requestFactory).baseUrl(properties.getTransitBaseUrl()).build();
+        return builder.requestFactory(requestFactory).baseUrl(baseUrl).build();
     }
 
     private static Validator defaultValidator() {
@@ -385,7 +389,7 @@ public class AmapTransitProvider implements TransitProvider {
         return (int) Math.ceil(nanos / 1_000_000_000.0);
     }
 
-    private static String formatCoordinate(TransitPoint point) {
+    static String formatCoordinate(TransitPoint point) {
         return String.format(Locale.ROOT, "%.6f,%.6f", point.longitude(), point.latitude());
     }
 
@@ -397,7 +401,7 @@ public class AmapTransitProvider implements TransitProvider {
         };
     }
 
-    private static String text(JsonNode node, String field) {
+    static String text(JsonNode node, String field) {
         if (node == null || node.isNull() || !node.has(field) || node.get(field).isNull()) {
             return null;
         }
@@ -409,7 +413,7 @@ public class AmapTransitProvider implements TransitProvider {
         return value.isEmpty() ? null : value;
     }
 
-    private static Integer integer(JsonNode node, String field) {
+    static Integer integer(JsonNode node, String field) {
         String value = text(node, field);
         if (value == null) {
             return null;
@@ -425,7 +429,7 @@ public class AmapTransitProvider implements TransitProvider {
         }
     }
 
-    private static BigDecimal decimal(JsonNode node, String... fields) {
+    static BigDecimal decimal(JsonNode node, String... fields) {
         for (String field : fields) {
             String value = text(node, field);
             if (value != null) {
@@ -439,7 +443,7 @@ public class AmapTransitProvider implements TransitProvider {
         return null;
     }
 
-    private static void appendPolyline(List<List<Double>> target, String polyline) {
+    static void appendPolyline(List<List<Double>> target, String polyline) {
         if (polyline == null || polyline.isBlank()) {
             return;
         }
@@ -456,7 +460,7 @@ public class AmapTransitProvider implements TransitProvider {
         }
     }
 
-    private static TransitGeometry geometry(List<List<Double>> points) {
+    static TransitGeometry geometry(List<List<Double>> points) {
         return points.isEmpty() ? null : new TransitGeometry("GCJ-02", points);
     }
 
@@ -515,7 +519,7 @@ public class AmapTransitProvider implements TransitProvider {
         return false;
     }
 
-    private static boolean validBusinessEnvelope(JsonNode root) {
+    static boolean validBusinessEnvelope(JsonNode root) {
         if (root == null || !root.isObject()) {
             return false;
         }
@@ -529,7 +533,7 @@ public class AmapTransitProvider implements TransitProvider {
         return "1".equals(status) == "10000".equals(infoCode);
     }
 
-    private static TransitErrorCode classifyProviderCode(String infoCode) {
+    static TransitErrorCode classifyProviderCode(String infoCode) {
         if (infoCode == null || !infoCode.matches("[0-9]{5}")) {
             return TransitErrorCode.RESPONSE_STRUCTURE_ERROR;
         }
@@ -548,7 +552,7 @@ public class AmapTransitProvider implements TransitProvider {
         return TransitErrorCode.PROVIDER_ERROR;
     }
 
-    private static String providerErrorMessage(TransitErrorCode code, String infoCode) {
+    static String providerErrorMessage(TransitErrorCode code, String infoCode) {
         String suffix = infoCode == null || infoCode.isBlank() ? "" : "（infocode=" + infoCode + "）";
         return switch (code) {
             case AMAP_KEY_PLATFORM_MISMATCH -> "请使用高德 Web 服务 Key，当前 Key 平台不符";
@@ -569,7 +573,7 @@ public class AmapTransitProvider implements TransitProvider {
                 roundingWaitSeconds, TransitStatus.NO_ROUTE, List.of(), code, message);
     }
 
-    private static boolean hasTimeoutCause(Throwable throwable) {
+    static boolean hasTimeoutCause(Throwable throwable) {
         Throwable current = throwable;
         while (current != null) {
             if (current instanceof SocketTimeoutException || current instanceof HttpTimeoutException

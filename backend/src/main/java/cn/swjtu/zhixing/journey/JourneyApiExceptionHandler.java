@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * 普通行程接口错误映射，只作用于 {@link JourneyController}，不影响既有地点/接驳接口的响应格式。
+ * 普通行程和会合行程共用错误响应格式。
  *
  * <p>所有错误体都带 requestId 与 retryable：4xx 不重试，502/504 与内部错误可重试。</p>
  */
-@RestControllerAdvice(assignableTypes = JourneyController.class)
+@RestControllerAdvice(assignableTypes = {
+        JourneyController.class, DecisionMakingController.class, JourneyModesController.class
+})
 public class JourneyApiExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(JourneyApiExceptionHandler.class);
@@ -36,7 +38,7 @@ public class JourneyApiExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<JourneyError> handleUnexpected(Exception ex) {
         String requestId = JourneyIds.requestId();
-        log.error("普通行程查询出现未处理异常 requestId={}", requestId, ex);
+        log.error("行程查询出现未处理异常 requestId={}", requestId, ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new JourneyError(requestId, "SERVER_ERROR",
                         "行程服务内部错误，请稍后重试", true));

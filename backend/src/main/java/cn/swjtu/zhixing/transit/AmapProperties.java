@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 public class AmapProperties {
     private String webServiceKey = "";
     private String transitBaseUrl = "https://restapi.amap.com/v3/direction/transit/integrated";
+    private String roadBaseUrl = "https://restapi.amap.com";
     @Min(1)
     private int connectTimeoutMillis = 3000;
     @Min(1)
@@ -30,6 +31,16 @@ public class AmapProperties {
     public void setTransitBaseUrl(String transitBaseUrl) {
         if (transitBaseUrl != null && !transitBaseUrl.isBlank()) {
             this.transitBaseUrl = transitBaseUrl.trim();
+        }
+    }
+
+    public String getRoadBaseUrl() {
+        return roadBaseUrl;
+    }
+
+    public void setRoadBaseUrl(String roadBaseUrl) {
+        if (roadBaseUrl != null && !roadBaseUrl.isBlank()) {
+            this.roadBaseUrl = roadBaseUrl.trim();
         }
     }
 

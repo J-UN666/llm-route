@@ -4,7 +4,7 @@
   const {MapCanvas, pathPolyline, project, gcjToWgs84} = window.MapEngine;
   const campus = window.__CAMPUS_DATA__;
   const colors = {CAMPUS_WALK: '#18774f', WALK: '#276496', METRO: '#6949ad',
-    SUBWAY: '#6949ad', BUS: '#b44c24', RAILWAY: '#43559b'};
+    SUBWAY: '#6949ad', BUS: '#b44c24', RAILWAY: '#43559b', TAXI: '#a65a00'};
   const tileUrl = 'https://tile.openstreetmap.org';
 
   function coordinates(lng, lat, system) {

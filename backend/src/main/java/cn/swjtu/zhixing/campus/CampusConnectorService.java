@@ -100,6 +100,15 @@ public class CampusConnectorService {
      * 在组合行程时解释某个校门为何不可用。</p>
      */
     public Resolution resolve(String originId, OffsetDateTime departureTime) {
+        return resolve(originId, departureTime, false);
+    }
+
+    /** 多方式行程检查预计走到门口时能否出校。 */
+    public Resolution resolveAtExit(String originId, OffsetDateTime departureTime) {
+        return resolve(originId, departureTime, true);
+    }
+
+    private Resolution resolve(String originId, OffsetDateTime departureTime, boolean checkAtExit) {
         if (originId == null || originId.isBlank()) {
             throw new InvalidOriginIdException("缺少 originId 查询参数，示例：originId=osm_way_1098786977");
         }
@@ -119,7 +128,7 @@ public class CampusConnectorService {
         List<CampusConnector> available = new ArrayList<>();
         List<CampusConnectorUnavailability> unavailable = new ArrayList<>();
         for (CampusConnector connector : current.byOrigin().getOrDefault(normalizedOriginId, List.of())) {
-            Optional<CampusConnectorUnavailability> reason = evaluateAvailability(connector, departure);
+            Optional<CampusConnectorUnavailability> reason = evaluateAvailability(connector, departure, checkAtExit);
             if (reason.isPresent()) {
                 unavailable.add(reason.get());
             } else {
@@ -149,7 +158,8 @@ public class CampusConnectorService {
     // 可用性判断
     // ------------------------------------------------------------------
 
-    private Optional<CampusConnectorUnavailability> evaluateAvailability(CampusConnector connector, ZonedDateTime departure) {
+    private Optional<CampusConnectorUnavailability> evaluateAvailability(CampusConnector connector, ZonedDateTime departure,
+                                                                           boolean checkAtExit) {
         String status = connector.verificationStatus();
         if (!usableStatus(status)) {
             String code = connector.unavailableReasonCode() == null || connector.unavailableReasonCode().isBlank()
@@ -177,14 +187,17 @@ public class CampusConnectorService {
                         "接驳包含禁行分段 " + segment.segmentId() + "，不能用于全程规划。"));
             }
         }
-        Optional<CampusConnectorTimeRestriction> closed = findClosedRestriction(connector.accessRules(), departure);
+        ZonedDateTime gateTime = checkAtExit ? departure.plusSeconds(connector.durationSeconds()) : departure;
+        Optional<CampusConnectorTimeRestriction> closed = findClosedRestriction(connector.accessRules(), gateTime);
         if (closed.isPresent()) {
             CampusConnectorTimeRestriction restriction = closed.get();
             String detail = restriction.reason() == null || restriction.reason().isBlank()
                     ? "开放限制时段 " + restriction.from() + "–" + restriction.to()
                     : restriction.reason();
-            return Optional.of(unavailable(connector, "GATE_CLOSED_AT_DEPARTURE_TIME",
-                    "出发时刻 " + departure.toLocalTime() + " 位于不可用时段 " + restriction.from() + "–" + restriction.to()
+            String code = checkAtExit ? "GATE_CLOSED_AT_EXIT_TIME" : "GATE_CLOSED_AT_DEPARTURE_TIME";
+            String timeLabel = checkAtExit ? "预计出校时刻 " : "出发时刻 ";
+            return Optional.of(unavailable(connector, code,
+                    timeLabel + gateTime.toLocalTime() + " 位于不可用时段 " + restriction.from() + "–" + restriction.to()
                             + "（Asia/Shanghai）：" + detail));
         }
         return Optional.empty();
